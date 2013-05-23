@@ -1,6 +1,0 @@
-{
-  "LocalDir": "c:\\private\\RenderBlobs\\RenderBlobs\\bin\\debug",
-  "AccountConnectionString": "DefaultEndpointsProtocol=http;AccountName=nugetgalleryqa;AccountKey=ZC8CJWYTJtpIOJGu4j5vLvEtC9qbXSprz3a8BjRlUAnqsAtfaqbIiHsnduh/olqHxV7QseCus2lnkfIHVmMHQA==",
-  "Container": "sb-funcs-render",
-  "ServiceUrl": "http://simplebatch3.cloudapp.net/"
-}
