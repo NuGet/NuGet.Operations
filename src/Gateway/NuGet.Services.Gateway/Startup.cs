@@ -11,7 +11,6 @@ namespace NuGet.Services.Gateway
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseWelcomePage();
         }
     }
 }
