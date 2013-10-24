@@ -26,10 +26,10 @@
 			"http://api.nuget.org#feeds-all",
 			"http://api.nuget.org#feeds-microsoftdotnet",
 			"http://api.nuget.org#feeds-webmatrix",
+			"http://api.nuget.org#feeds-followed-packages",
 		],
 		"data" : {
 			"name" : "NuGet Feeds"
-			// other data about the service
 		}
 	},
 	"http://api.nuget.org#feeds-all": {
@@ -53,14 +53,17 @@
 			"description": "Packages for Web projects"
 		}
 	},
+	"http://api.nuget.org#feeds-followed-packages": {
+		"self": "http://api.nuget.org/feeds/followed-packages",
+		"data": {
+			"name": "Packages I Follow",
+			"description": "My very own personalized packge list"
+		}
+	},
 	"http://api.nuget.org#suggestions" : {
 		"self" : "http://api.nuget.org/suggestions",
 		"data" : {
 			"name" : "Package Suggestions"
-			// other data about the service
 		}
 	}
 }
-
-
-"followedPackages" : "/follows", // part of feeds
