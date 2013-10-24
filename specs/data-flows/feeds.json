@@ -1,0 +1,55 @@
+{
+	"http://api.nuget.org/feeds": {
+		"feeds": [
+			"http://api.nuget.org/feeds#all",
+			"http://api.nuget.org/feeds#microsoftdotnet",
+			"http://api.nuget.org/feeds#webmatrix",
+			"http://api.nuget.org/feeds#windows8"
+			"http://api.nuget.org/feeds#followed-packages/mvc",
+		],
+		"data" : {
+			"name" : "NuGet Feeds"
+		}
+	},
+	"http://api.nuget.org/feeds#all": {
+		"self": "http://api.nuget.org/feeds/all",
+		"data": {
+			"name": "All Packages",
+			"description": "The consolidated list of all NuGet packages",
+			"public": true
+		}
+	},
+	"http://api.nuget.org/feeds#microsoftdotnet": {
+		"self": "http://api.nuget.org/feeds/microsoftdotnet",
+		"data": {
+			"name": "Microsoft and .NET",
+			"description": "Microsoft-supported and .NET Framework packages",
+			"public": true
+		}
+	},
+	"http://api.nuget.org/feeds#webmatrix": {
+		"self": "http://api.nuget.org/feeds/webmatrix",
+		"data": {
+			"name": "WebMatrix packages",
+			"description": "Packages for Web projects",
+			"public": true
+		}
+	},
+	"http://api.nuget.org/feeds#windows8": {
+		"self": "http://api.nuget.org/feeds/windows8",
+		"data": {
+			"name": "Windows 8 Packages",
+			"description": "Packages for Windows 8 projects",
+			"public": true
+		}
+	},
+	"http://api.nuget.org/feeds#followed-packages/mvc": {
+		"self": "http://api.nuget.org/feeds/followed-packages/mvc",
+		"data": {
+			"name": "Tagged with MVC",
+			"description": "Packages I use regularly for MVC applications",
+			"public": false,
+			"feed-list": "MVC"
+		}
+	}
+}

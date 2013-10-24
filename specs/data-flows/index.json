@@ -60,7 +60,7 @@
 			"name": "Windows 8 Packages",
 			"description": "Packages for Windows 8 projects"
 		}
-	}
+	},
 	"http://api.nuget.org#feeds/followed-packages": {
 		"self": "http://api.nuget.org/feeds/followed-packages",
 		"data": {
