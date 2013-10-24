@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Common", "src\NuGet.Services.Common\NuGet.Services.Common.csproj", "{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway.Facts", "src\Gateway\NuGet.Services.Gateway.Facts\NuGet.Services.Gateway.Facts.csproj", "{966C1CAC-5A49-4D47-B455-C96149207CF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway.FunctionalTests", "src\Gateway\NuGet.Services.Gateway.FunctionalTests\NuGet.Services.Gateway.FunctionalTests.csproj", "{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}"
@@ -17,6 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Local.testsettings = Local.testsettings
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "@Common", "@Common", "{94A3010D-B1D1-481A-858E-AFDF50322E48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Common", "src\Common\NuGet.Services.Common\NuGet.Services.Common.csproj", "{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Common.Facts", "src\Common\NuGet.Services.Common.Facts\NuGet.Services.Common.Facts.csproj", "{70B6DE0C-281D-4454-B214-F2E8858EE67E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +32,6 @@ Global
 		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +40,14 @@ Global
 		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +57,7 @@ Global
 		{966C1CAC-5A49-4D47-B455-C96149207CF9} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
 		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
 		{DA577E9C-F872-4D0E-8122-4EDE9C63F4F2} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D} = {94A3010D-B1D1-481A-858E-AFDF50322E48}
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E} = {94A3010D-B1D1-481A-858E-AFDF50322E48}
 	EndGlobalSection
 EndGlobal
