@@ -5,7 +5,7 @@
 			"http://api.someothermirror.com"
 		],
 		"services": {
-			"feed": "http://api.nuget.org#feeds",
+			"feeds": "http://api.nuget.org#feeds",
 			"suggestion": "http://api.nuget.org#suggestion",
 			"signin": "http://api.nuget.org/logon",
 			"alerts": "http://api.nuget.org/alerts",
@@ -23,37 +23,45 @@
 	"http://api.nuget.org#feeds" : {
 		"self" : "http://api.nuget.org/feeds",
 		"feeds": [
-			"http://api.nuget.org#feeds-all",
-			"http://api.nuget.org#feeds-microsoftdotnet",
-			"http://api.nuget.org#feeds-webmatrix",
-			"http://api.nuget.org#feeds-followed-packages",
+			"http://api.nuget.org#feeds/all",
+			"http://api.nuget.org#feeds/microsoftdotnet",
+			"http://api.nuget.org#feeds/webmatrix",
+			"http://api.nuget.org#feeds/windows8"
+			"http://api.nuget.org#feeds/followed-packages",
 		],
 		"data" : {
 			"name" : "NuGet Feeds"
 		}
 	},
-	"http://api.nuget.org#feeds-all": {
+	"http://api.nuget.org#feeds/all": {
 		"self": "http://api.nuget.org/feeds/all",
 		"data": {
 			"name": "All Packages",
 			"description": "The consolidated list of all NuGet packages"
 		}
 	},
-	"http://api.nuget.org#feeds-microsoftdotnet": {
+	"http://api.nuget.org#feeds/microsoftdotnet": {
 		"self": "http://api.nuget.org/feeds/microsoftdotnet",
 		"data": {
 			"name": "Microsoft and .NET",
 			"description": "Microsoft-supported and .NET Framework packages"
 		}
 	},
-	"http://api.nuget.org#feeds-webmatrix": {
+	"http://api.nuget.org#feeds/webmatrix": {
 		"self": "http://api.nuget.org/feeds/webmatrix",
 		"data": {
 			"name": "WebMatrix packages",
 			"description": "Packages for Web projects"
 		}
 	},
-	"http://api.nuget.org#feeds-followed-packages": {
+	"http://api.nuget.org#feeds/windows8": {
+		"self": "http://api.nuget.org/feeds/windows8",
+		"data": {
+			"name": "Windows 8 Packages",
+			"description": "Packages for Windows 8 projects"
+		}
+	}
+	"http://api.nuget.org#feeds/followed-packages": {
 		"self": "http://api.nuget.org/feeds/followed-packages",
 		"data": {
 			"name": "Packages I Follow",
