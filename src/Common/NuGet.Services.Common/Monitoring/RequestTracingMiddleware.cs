@@ -13,7 +13,6 @@ namespace NuGet.Services.Monitoring
         
         public RequestTracingMiddleware(OwinMiddleware next) : base(next)
         {
-            _trace = trace;
         }
 
         public override async Task Invoke(IOwinContext context)

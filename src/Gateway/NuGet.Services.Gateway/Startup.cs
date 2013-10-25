@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Diagnostics.Eventing;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Microsoft.Owin.Logging;
@@ -16,12 +14,10 @@ namespace NuGet.Services.Gateway
         public void Configuration(IAppBuilder app)
         {
             // Configure ETW
-            MonitoringSystem.ConfigureDefault();
-
+            MonitoringSystem.Start();
+            
             // Log to ETW
             app.SetLoggerFactory(new DiagnosticsLoggerFactory());
-            Trace.Listeners.Clear();
-            Trace.Listeners.Add(new EventProviderTraceListener("NuGet-NetFxTrace"));
    
             app.UseRequestTracing();
             app.UseWelcomePage();

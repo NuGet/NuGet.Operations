@@ -36,7 +36,7 @@ namespace NuGet.Services.Monitoring
             Task = Tasks.HttpRequest, 
             Opcode = EventOpcode.Stop, 
             Level = EventLevel.Informational)]
-        public void EndRequest(string requestId, int statusCode, string reasonPhrase, long contentLength, string contentType) { WriteEvent(2, statusCode, reasonPhrase, contentLength, contentType); }
+        public void EndRequest(string requestId, int statusCode, string reasonPhrase, long contentLength, string contentType) { WriteEvent(2, requestId, statusCode, reasonPhrase ?? String.Empty, contentLength, contentType ?? String.Empty); }
 
         public class Tasks
         {
