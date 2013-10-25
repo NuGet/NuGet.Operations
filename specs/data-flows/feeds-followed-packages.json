@@ -16,6 +16,7 @@
 		"self": "http://api.nuget.org/packages/Microsoft.AspNet.MVC",
 		"data": {
 			"package-id": "Microsoft.AspNet.MVC",
+			// TODO: Version Branches are not represented here
 			"versions": ["2.0.0", "3.0.0", "4.0.0", "5.0.0-alpha", "5.0.0-beta", "5.0.0"],
 			"title": "ASP.NET MVC",	// predicate is that we change data model such that some data is scoped to the package registration
 			"description": "description"
