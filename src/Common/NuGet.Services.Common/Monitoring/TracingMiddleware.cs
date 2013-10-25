@@ -9,6 +9,7 @@ namespace NuGet.Services.Monitoring
 {
     public class TracingMiddleware : OwinMiddleware
     {
+        internal const string RequestIdEnvironmentKey = "nuget.requestId";
         private RequestTraceEventSource _trace;
 
         public TracingMiddleware(OwinMiddleware next, RequestTraceEventSource trace) : base(next)
@@ -20,7 +21,8 @@ namespace NuGet.Services.Monitoring
         {
             string requestId = Guid.NewGuid().ToString("N");
             _trace.StartRequest(requestId, context.Request.Method, context.Request.Uri.AbsoluteUri);
-
+            context.Environment[RequestIdEnvironmentKey] = requestId;
+            
             try
             {
                 await Next.Invoke(context);
@@ -41,6 +43,11 @@ namespace Owin
         public static IAppBuilder UseTracing(this IAppBuilder app, NuGet.Services.Monitoring.RequestTraceEventSource eventSource)
         {
             return app.Use(typeof(NuGet.Services.Monitoring.TracingMiddleware), eventSource);
+        }
+
+        public static string GetRequestId(this IOwinContext context)
+        {
+            return context.Environment[RequestIdEnvironmentKey];
         }
     }
 }

@@ -21,7 +21,7 @@ namespace NuGet.Services.Monitoring
         [Event(
             eventId: 1, 
             Message = "http {1} {2} (ID: {0})", 
-            Task = Tasks.HttpRequest, 
+            Task = Tasks.HttpRequest,
             Opcode = EventOpcode.Start, 
             Level = EventLevel.Informational)]
         public void StartRequest(string requestId, string method, string url) { WriteEvent(1, requestId, method, url); }
