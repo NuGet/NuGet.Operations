@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Monitoring\RequestTraceEventSource.cs" />
-    <Compile Include="Monitoring\TracingMiddleware.cs" />
+    <Compile Include="Monitoring\RequestTracingMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

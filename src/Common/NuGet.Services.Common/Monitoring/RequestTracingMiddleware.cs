@@ -7,12 +7,11 @@ using Microsoft.Owin;
 
 namespace NuGet.Services.Monitoring
 {
-    public class TracingMiddleware : OwinMiddleware
+    public class RequestTracingMiddleware : OwinMiddleware
     {
         internal const string RequestIdEnvironmentKey = "nuget.requestId";
-        private RequestTraceEventSource _trace;
-
-        public TracingMiddleware(OwinMiddleware next, RequestTraceEventSource trace) : base(next)
+        
+        public RequestTracingMiddleware(OwinMiddleware next) : base(next)
         {
             _trace = trace;
         }
@@ -20,7 +19,7 @@ namespace NuGet.Services.Monitoring
         public override async Task Invoke(IOwinContext context)
         {
             string requestId = Guid.NewGuid().ToString("N");
-            _trace.StartRequest(requestId, context.Request.Method, context.Request.Uri.AbsoluteUri);
+            RequestTraceEventSource.Log.StartRequest(requestId, context.Request.Method, context.Request.Uri.AbsoluteUri);
             context.Environment[RequestIdEnvironmentKey] = requestId;
             
             try
@@ -30,7 +29,7 @@ namespace NuGet.Services.Monitoring
             finally
             {
                 long contentLength = context.Response.ContentLength ?? -1;
-                _trace.EndRequest(requestId, context.Response.StatusCode, context.Response.ReasonPhrase, contentLength, context.Response.ContentType);
+                RequestTraceEventSource.Log.EndRequest(requestId, context.Response.StatusCode, context.Response.ReasonPhrase, contentLength, context.Response.ContentType);
             }
         }
     }
@@ -38,16 +37,16 @@ namespace NuGet.Services.Monitoring
 
 namespace Owin
 {
-    public static class TracingMiddlewareExtensions
+    public static class RequestTracingMiddlewareExtensions
     {
-        public static IAppBuilder UseTracing(this IAppBuilder app, NuGet.Services.Monitoring.RequestTraceEventSource eventSource)
+        public static IAppBuilder UseRequestTracing(this IAppBuilder app)
         {
-            return app.Use(typeof(NuGet.Services.Monitoring.TracingMiddleware), eventSource);
+            return app.Use(typeof(NuGet.Services.Monitoring.RequestTracingMiddleware));
         }
 
         public static string GetRequestId(this IOwinContext context)
         {
-            return context.Environment[RequestIdEnvironmentKey];
+            return (string)context.Environment[NuGet.Services.Monitoring.RequestTracingMiddleware.RequestIdEnvironmentKey];
         }
     }
 }

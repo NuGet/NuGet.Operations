@@ -11,6 +11,10 @@ namespace NuGet.Services.Monitoring
     [EventSource(Name = "NuGet-Services-Requests")]
     public sealed class RequestTraceEventSource : EventSource
     {
+        public static readonly RequestTraceEventSource Log = new RequestTraceEventSource();
+
+        private RequestTraceEventSource() { }
+
         // This class is a bit funky because of ETW stuff
         // DO NOT change the order of methods, it is important to ETW
 
