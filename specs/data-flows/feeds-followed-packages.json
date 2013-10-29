@@ -49,12 +49,58 @@
 	},
 	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1": {
 		"self": "http://api.nuget.org/packages/Microsoft.AspNet.Mvc/3.0.20105.1",
+		"facets": {
+			"runtime": "",
+			"sdk": "http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/facets/sdk",
+			"build": "",
+			"localization": "",
+			"debug": "",
+		},
+		
+
 		"dependencies": [
 			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/dependencies/Microsoft.AspNet.WebPages",
 			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/dependencies/Microsoft.AspNet.Razor"
 		],
 		"data": {
-			
+			// TODO: handle target FX pivots
+			// TODO: rationalize other package system concerns (likely move many of these up to links)
+			"framework-references": [],	
+			"files": [],
+			"references": [],
+			"build-dependencies": [],
+			"exports": [],
+			"source": "",
+			"build-type": "Debug|Retail",
+			"content": [],
+			"tools": [],
+			"config-xforms": [],
+			"libs": [],
+			"msbuild": [],
+			"signing-instructions": "",
+			"localization": "",
+			"item-capabilities": []
+		}
+	},
+
+	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/facets/sdk": {
+		"self": "http://api.nuget.org/feeds/followed-packages/mvc/Microsoft.AspNet.MVC/3.0.20105.1/facets/sdk",
+		
+		"data": {
+			"libs": [
+				"foo.dll",
+				"bar.dll"
+			]
+		}
+	},
+
+	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/dependencies/Microsoft.AspNet.WebPages": {
+		"self": "",
+		"package": "http://api.nuget.org/packages/Microsoft.AspNet.WebPages",
+		"data": {
+			"range": "[3.0.0]",
+			"package-id": "Microsoft.AspNet.WebPages",
+			"cardinality": "required"
 		}
 	},
 	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery": {
@@ -64,7 +110,7 @@
 			// same model as http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC
 		}
 	},
-	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/version-scheme": {
+	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/version-scheme": {	// todo: version-scheme -> compat families
 		"version-lines": [
 			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.0",
 			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.9",
