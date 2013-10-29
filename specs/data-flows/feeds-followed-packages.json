@@ -2,24 +2,105 @@
 	"http://api.nuget.org/feeds/followed-packages/mvc": {
 		"packages": [
 			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC",
-			"http://api.nuget.org/feeds/followed-packages/mvc#Newtonsoft.Json"
+			"http://api.nuget.org/feeds/followed-packages/mvc#Newtonsoft.Json",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery"
 		],
 		"next": "",
 		"home": "http://api.nuget.org",
 		"feeds": "http://api.nuget.org/feeds",
 		"data": {
 			"name": "Packages I Follow",
-			"description": "My very own personalized packge list"
+			"description": "My very own personalized package list"
 		}
 	},
 	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC": {
 		"self": "http://api.nuget.org/packages/Microsoft.AspNet.MVC",
+		"owners": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#owners/microsoft",
+			"http://api.nuget.org/feeds/followed-packages/mvc#owners/aspnet"	// TODO: flesh this out
+		],
+		"project": "http://aspnetwebstack.codeplex.com",
+		"icon": "http://icons.nuget.org/microsoft.aspnet.mvc.ico",
+		"license": "https://aspnetwebstack.codeplex.com/license",
+		"tags": ["http://api.nuget.org/feeds/followed-packages/mvc#tags/aspnet"],
 		"data": {
 			"package-id": "Microsoft.AspNet.MVC",
-			// TODO: Version Branches are not represented here
-			"versions": ["2.0.0", "3.0.0", "4.0.0", "5.0.0-alpha", "5.0.0-beta", "5.0.0"],
+			"version-scheme": "http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/version-scheme",
 			"title": "ASP.NET MVC",	// predicate is that we change data model such that some data is scoped to the package registration
-			"description": "description"
+			"description": "description",
+			"authors": "Microsoft Open Technologies, Inc.",
+			"summary": "lorem ipsum",
+			"copyright": "",
+
 		}
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/version-scheme": {
+		"version-lines": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0",
+			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/4.0",
+			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/5.0",
+		]
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0": {
+		"self": "",
+		"versions": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1"
+		]
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1": {
+		"self": "http://api.nuget.org/packages/Microsoft.AspNet.Mvc/3.0.20105.1",
+		"dependencies": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/dependencies/Microsoft.AspNet.WebPages",
+			"http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC/3.0.20105.1/dependencies/Microsoft.AspNet.Razor"
+		],
+		"data": {
+			
+		}
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery": {
+		"self": "http://api.nuget.org/packages/jQuery",
+		"version-scheme": "http://api.nuget.org/feeds/followed-packages/mvc#jQuery/version-scheme",	//optional: we consider it semver if not present; TODO: look at namespacing local link with packages
+		"data": {
+			// same model as http://api.nuget.org/feeds/followed-packages/mvc#Microsoft.AspNet.MVC
+		}
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/version-scheme": {
+		"version-lines": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.0",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.9",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0"
+		]
+	}, 
+	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.0": {
+		"self": "",
+		"versions": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.4.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.4.2",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.4.3",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.8.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.8.2",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.8.3",
+		]
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.9": {
+		"self": "",
+		"versions": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.9.0",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.9.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.10.0",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.10.0.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.10.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/1.10.2"
+		]
+	},
+	"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0": {
+		"self": "",
+		"versions": [
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0.0",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0.1.1",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0.2",
+			"http://api.nuget.org/feeds/followed-packages/mvc#jQuery/2.0.3"
+		]
 	}
 }
