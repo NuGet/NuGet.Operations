@@ -18,11 +18,12 @@ namespace NuGet.Services.Monitoring
 
         public override async Task Invoke(IOwinContext context)
         {
+            // Generate a request ID and trace it
             string requestId = Guid.NewGuid().ToString("N");
             RequestTraceEventSource.Log.StartRequest(requestId, context.Request.Method, context.Request.Uri.AbsoluteUri);
+            
+            // Put the request ID in a response header and an Owin environment key
             context.Environment[RequestIdEnvironmentKey] = requestId;
-
-            // Put the request ID in a response header
             context.Response.Headers[RequestIdHeader] = requestId;
 
             try

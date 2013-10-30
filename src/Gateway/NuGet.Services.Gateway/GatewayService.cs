@@ -5,22 +5,22 @@ using NuGet.Services.Monitoring;
 using NuGet.Services.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(NuGet.Services.Gateway.Startup))]
+[assembly: OwinStartup(typeof(NuGet.Services.Gateway.GatewayService))]
 
 namespace NuGet.Services.Gateway
 {
-    public class Startup
+    public class GatewayService
     {
         public void Configuration(IAppBuilder app)
         {
             // Build up the app
-            BuildApp(app);
+            App(app);
 
             // Configure console tracing
             InteractiveTracing.Enable();
         }
 
-        private static void BuildApp(IAppBuilder app)
+        public static void App(IAppBuilder app)
         {
             // Enable common Owin Middleware
             CommonOwinMiddleware.Attach(app);
