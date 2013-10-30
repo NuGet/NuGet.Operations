@@ -8,7 +8,7 @@ using Microsoft.Owin;
 
 namespace NuGet.Services.Monitoring
 {
-    [EventSource(Name = "NuGet-Services-Requests")]
+    [EventSource(Name = EventSourceNames.RequestTrace)]
     public sealed class RequestTraceEventSource : EventSource
     {
         public static readonly RequestTraceEventSource Log = new RequestTraceEventSource();

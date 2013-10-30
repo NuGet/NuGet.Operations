@@ -10,6 +10,7 @@ namespace NuGet.Services.Monitoring
     public class RequestTracingMiddleware : OwinMiddleware
     {
         internal const string RequestIdEnvironmentKey = "nuget.requestId";
+        internal const string RequestIdHeader = "NuGet-RequestId";
         
         public RequestTracingMiddleware(OwinMiddleware next) : base(next)
         {
@@ -20,7 +21,10 @@ namespace NuGet.Services.Monitoring
             string requestId = Guid.NewGuid().ToString("N");
             RequestTraceEventSource.Log.StartRequest(requestId, context.Request.Method, context.Request.Uri.AbsoluteUri);
             context.Environment[RequestIdEnvironmentKey] = requestId;
-            
+
+            // Put the request ID in a response header
+            context.Response.Headers[RequestIdHeader] = requestId;
+
             try
             {
                 await Next.Invoke(context);

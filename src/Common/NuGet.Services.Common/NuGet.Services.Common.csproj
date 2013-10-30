@@ -51,9 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Monitoring\MonitoringSystem.cs" />
+    <Compile Include="Monitoring\AutoAttachObservableEventListener.cs" />
+    <Compile Include="Monitoring\EventSourceNames.cs" />
+    <Compile Include="Monitoring\InteractiveTracing.cs" />
+    <Compile Include="Monitoring\Internal\EventEntrySubject.cs" />
     <Compile Include="Monitoring\RequestTraceEventSource.cs" />
     <Compile Include="Monitoring\RequestTracingMiddleware.cs" />
+    <Compile Include="Owin\CommonOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

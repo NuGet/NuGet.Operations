@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Owin;
-using Microsoft.Owin.Logging;
 using NuGet.Services.Monitoring;
+using NuGet.Services.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(NuGet.Services.Gateway.Startup))]
@@ -13,13 +13,19 @@ namespace NuGet.Services.Gateway
     {
         public void Configuration(IAppBuilder app)
         {
-            // Configure ETW
-            MonitoringSystem.Start();
+            // Build up the app
+            BuildApp(app);
+
+            // Configure console tracing
+            InteractiveTracing.Enable();
+        }
+
+        private static void BuildApp(IAppBuilder app)
+        {
+            // Enable common Owin Middleware
+            CommonOwinMiddleware.Attach(app);
             
-            // Log to ETW
-            app.SetLoggerFactory(new DiagnosticsLoggerFactory());
-   
-            app.UseRequestTracing();
+            // Configure the app-specific stuff
             app.UseWelcomePage();
         }
     }
