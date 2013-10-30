@@ -10,7 +10,7 @@ namespace FormatProcessor.Specs
     {
         private void Sandbox() {
 
-//            var resource = Processor.Load(sampleString);    // should also enable loading stream, URL, and UNC (string, URL and UNC may be extension methods that return the appropriate stream)
+//            var resource = Processor.LoadString(sampleString);    // should also enable loading stream, URL, and UNC (string, URL and UNC may be extension methods that return the appropriate stream)
 //
 //            // note: may eventually want to allow configuring different link resolvers (e.g. local vs. external vs. UNC, vs. other?)
 //

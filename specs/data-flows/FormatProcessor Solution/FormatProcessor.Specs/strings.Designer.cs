@@ -62,17 +62,45 @@ namespace FormatProcessor.Specs {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///        &quot;http://api.nuget.org&quot;: {
-        ///                &quot;alternates&quot;: [
-        ///                        &quot;http://myget.org&quot;,
-        ///                        &quot;http://api.someothermirror.com&quot;
-        ///                ],
-        ///                &quot;services&quot;: {
-        ///                        &quot;feeds&quot;: &quot;http://api.nuget.org#feeds&quot;,
-        ///                        &quot;suggestion&quot;: &quot;http://api.nuget.org#suggestion&quot;,
-        ///                        &quot;signin&quot;: &quot;http://api.nuget.org/logon&quot;,
-        ///                        &quot;alerts&quot;: &quot;http://api.nuget.org/alerts&quot;,
-        ///                   [rest of string was truncated]&quot;;.
+        ///	&quot;http://api.nuget.org&quot;: {
+        ///		&quot;alternates&quot;: [
+        ///			&quot;http://myget.org&quot;
+        ///			&quot;http://api.someothermirror.com&quot;
+        ///		],
+        ///		&quot;services&quot;: {
+        ///			&quot;feeds&quot;: &quot;http://api.nuget.org#feeds&quot;,
+        ///			&quot;suggestion&quot;: &quot;http://api.nuget.org#suggestion&quot;,
+        ///			&quot;signin&quot;: &quot;http://api.nuget.org/logon&quot;,
+        ///			&quot;alerts&quot;: &quot;http://api.nuget.org/alerts&quot;,
+        ///			&quot;packages&quot;: &quot;http://api.nuget.org/packages&quot;,
+        ///			&quot;packageIncompatibilities&quot;: &quot;http://api.nuget.org/incompatibilities&quot;
+        ///		},
+        ///		&quot;terms&quot; : &quot;http://www.nuget.org/policies/Terms&quot;,
+        ///		&quot;privacy&quot; :  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string nuget_index_invalid_json {
+            get {
+                return ResourceManager.GetString("nuget_index_invalid_json", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///	&quot;http://api.nuget.org&quot;: {
+        ///		&quot;alternates&quot;: [
+        ///			&quot;http://myget.org&quot;,
+        ///			&quot;http://api.someothermirror.com&quot;
+        ///		],
+        ///		&quot;services&quot;: {
+        ///			&quot;feeds&quot;: &quot;http://api.nuget.org#feeds&quot;,
+        ///			&quot;suggestion&quot;: &quot;http://api.nuget.org#suggestion&quot;,
+        ///			&quot;signin&quot;: &quot;http://api.nuget.org/logon&quot;,
+        ///			&quot;alerts&quot;: &quot;http://api.nuget.org/alerts&quot;,
+        ///			&quot;packages&quot;: &quot;http://api.nuget.org/packages&quot;,
+        ///			&quot;packageIncompatibilities&quot;: &quot;http://api.nuget.org/incompatibilities&quot;
+        ///		},
+        ///		&quot;terms&quot; : &quot;http://www.nuget.org/policies/Terms&quot;,
+        ///		&quot;privacy&quot; : [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string nuget_index_json {
             get {

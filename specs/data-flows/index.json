@@ -26,7 +26,7 @@
 			"http://api.nuget.org#feeds/all",
 			"http://api.nuget.org#feeds/microsoftdotnet",
 			"http://api.nuget.org#feeds/webmatrix",
-			"http://api.nuget.org#feeds/windows8"
+			"http://api.nuget.org#feeds/windows8",
 			"http://api.nuget.org#feeds/followed-packages",
 		],
 		"data" : {
