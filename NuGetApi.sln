@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway", "src\Gateway\NuGet.Services.Gateway\NuGet.Services.Gateway.csproj", "{789A0198-5AC4-4EF7-B143-D450E020B8B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway.Facts", "src\Gateway\NuGet.Services.Gateway.Facts\NuGet.Services.Gateway.Facts.csproj", "{966C1CAC-5A49-4D47-B455-C96149207CF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway.FunctionalTests", "src\Gateway\NuGet.Services.Gateway.FunctionalTests\NuGet.Services.Gateway.FunctionalTests.csproj", "{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA577E9C-F872-4D0E-8122-4EDE9C63F4F2}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "@Common", "@Common", "{94A3010D-B1D1-481A-858E-AFDF50322E48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Common", "src\Common\NuGet.Services.Common\NuGet.Services.Common.csproj", "{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Common.Facts", "src\Common\NuGet.Services.Common.Facts\NuGet.Services.Common.Facts.csproj", "{70B6DE0C-281D-4454-B214-F2E8858EE67E}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "NuGet.Services.Gateway.Cloud", "src\Gateway\NuGet.Services.Gateway.Cloud\NuGet.Services.Gateway.Cloud.ccproj", "{83FC35D3-A4B3-4796-88C9-ED78C5B8380E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway.Role", "src\Gateway\NuGet.Services.Gateway.Role\NuGet.Services.Gateway.Role.csproj", "{857D062A-101B-4FC5-9B44-5916A9C3CF81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Azure", "src\NuGet.Services.Azure\NuGet.Services.Azure.csproj", "{B27C69A8-9A31-4639-A092-C46813BB55C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{789A0198-5AC4-4EF7-B143-D450E020B8B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{966C1CAC-5A49-4D47-B455-C96149207CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83FC35D3-A4B3-4796-88C9-ED78C5B8380E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83FC35D3-A4B3-4796-88C9-ED78C5B8380E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83FC35D3-A4B3-4796-88C9-ED78C5B8380E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83FC35D3-A4B3-4796-88C9-ED78C5B8380E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{857D062A-101B-4FC5-9B44-5916A9C3CF81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857D062A-101B-4FC5-9B44-5916A9C3CF81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857D062A-101B-4FC5-9B44-5916A9C3CF81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857D062A-101B-4FC5-9B44-5916A9C3CF81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B27C69A8-9A31-4639-A092-C46813BB55C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B27C69A8-9A31-4639-A092-C46813BB55C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B27C69A8-9A31-4639-A092-C46813BB55C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B27C69A8-9A31-4639-A092-C46813BB55C2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{789A0198-5AC4-4EF7-B143-D450E020B8B1} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{966C1CAC-5A49-4D47-B455-C96149207CF9} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{CD81F2BC-3ED3-4429-8E8A-2686A4533E65} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{DA577E9C-F872-4D0E-8122-4EDE9C63F4F2} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{83FC35D3-A4B3-4796-88C9-ED78C5B8380E} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{857D062A-101B-4FC5-9B44-5916A9C3CF81} = {7CA11D86-BD89-4C23-B58A-2C8BFF3AC6EE}
+		{8D3BD1FE-5CBA-41D6-A4DE-0BD486BBBC2D} = {94A3010D-B1D1-481A-858E-AFDF50322E48}
+		{70B6DE0C-281D-4454-B214-F2E8858EE67E} = {94A3010D-B1D1-481A-858E-AFDF50322E48}
+		{B27C69A8-9A31-4639-A092-C46813BB55C2} = {94A3010D-B1D1-481A-858E-AFDF50322E48}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="NuGet.Services.Gateway.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
+    <LoadBalancerProbes>
+        <LoadBalancerProbe path="/" port="80" protocol="http" name="HTTP"/>
+    </LoadBalancerProbes>
+    <WorkerRole name="NuGet.Services.Gateway.Role" vmsize="Small">
+        <Startup>
+            <!--<Task commandLine="Startup\posh.cmd EnableServerGC.ps1" executionContext="elevated" taskType="simple" />-->
+        </Startup>
+        <Imports>
+            <Import moduleName="Diagnostics" />
+        </Imports>
+        <Endpoints>
+            <InputEndpoint name="http" protocol="http" port="80" localPort="80" loadBalancerProbe="HTTP" />
+        </Endpoints>
+    </WorkerRole>
+</ServiceDefinition>
