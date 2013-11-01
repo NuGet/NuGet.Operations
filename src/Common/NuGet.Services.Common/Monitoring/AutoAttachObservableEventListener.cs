@@ -41,7 +41,7 @@ namespace NuGet.Services.Monitoring
             {
                 schema = this.schemaCache.GetSchema(eventData.EventId, eventData.EventSource);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Not sure what to do with this since this event is internal to SLAB...
                 //SemanticLoggingEventSource.Log.ParsingEventSourceManifestFailed(eventData.EventSource.Name, eventData.EventId, ex.ToString());

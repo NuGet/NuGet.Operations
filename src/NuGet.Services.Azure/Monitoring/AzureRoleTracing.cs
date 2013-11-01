@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,21 @@ namespace NuGet.Services.Monitoring
 {
     public static class AzureRoleTracing
     {
+        public static class TableNames
+        {
+            public static readonly string Prefix = "NuGetTrace";
+            public static readonly string ServiceActivity = Prefix + "ServiceActivity";
+        }
+
         public static void Enable(string instanceName, string storageConnectionString)
         {
-            var listener = new AutoAttachObservableEventListener();
-            listener.LogToWindowsAzureTable(instanceName, storageConnectionString);
+            // Set up NuGetTraceServiceActivity table
+            var listener = WindowsAzureTableLog.CreateListener(
+                instanceName,
+                storageConnectionString,
+                tableAddress: TableNames.ServiceActivity);
+            listener.EnableEvents(HttpTraceEventSource.Log, EventLevel.LogAlways);
+            listener.EnableEvents(ServiceLifetimeEventSource.Log, EventLevel.LogAlways);
         }
     }
 }

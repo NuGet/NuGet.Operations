@@ -13,17 +13,5 @@ namespace NuGet.Services.Owin
 {
     public static class CommonOwinMiddleware
     {
-        public static void Attach(IAppBuilder app)
-        {
-            // Trace to ETW
-            Trace.Listeners.Clear();
-            Trace.Listeners.Add(new EventProviderTraceListener(EventSourceNames.NetFxTraceProviderId, EventSourceNames.NetFxTrace));
-
-            // Log to System.Diagnostics.Trace
-            app.SetLoggerFactory(new DiagnosticsLoggerFactory());
-
-            // Trace requests
-            app.UseRequestTracing();
-        }
     }
 }

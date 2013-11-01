@@ -11,16 +11,23 @@ namespace NuGet.Services.Monitoring
     {
         internal const string RequestIdEnvironmentKey = "nuget.requestId";
         internal const string RequestIdHeader = "NuGet-RequestId";
+
+        private string _serviceName;
         
-        public RequestTracingMiddleware(OwinMiddleware next) : base(next)
+        public RequestTracingMiddleware(OwinMiddleware next, string serviceName) : base(next)
         {
+            _serviceName = serviceName;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
             // Generate a request ID and trace it
             string requestId = Guid.NewGuid().ToString("N");
-            RequestTraceEventSource.Log.StartRequest(requestId, context.Request.Method, context.Request.Uri.AbsoluteUri);
+            HttpTraceEventSource.Log.Received(
+                requestId, 
+                _serviceName, 
+                context.Request.Method, 
+                context.Request.Uri.AbsoluteUri);
             
             // Put the request ID in a response header and an Owin environment key
             context.Environment[RequestIdEnvironmentKey] = requestId;
@@ -30,10 +37,26 @@ namespace NuGet.Services.Monitoring
             {
                 await Next.Invoke(context);
             }
+            catch (Exception ex)
+            {
+                HttpTraceEventSource.Log.Faulted(
+                    requestId,
+                    _serviceName,
+                    context.Response.StatusCode,
+                    context.Response.ReasonPhrase,
+                    ex.ToString(),
+                    ex.StackTrace);
+            }
             finally
             {
                 long contentLength = context.Response.ContentLength ?? -1;
-                RequestTraceEventSource.Log.EndRequest(requestId, context.Response.StatusCode, context.Response.ReasonPhrase, contentLength, context.Response.ContentType);
+                HttpTraceEventSource.Log.Responding(
+                    requestId, 
+                    _serviceName, 
+                    context.Response.StatusCode, 
+                    context.Response.ReasonPhrase, 
+                    contentLength, 
+                    context.Response.ContentType);
             }
         }
     }
@@ -43,9 +66,9 @@ namespace Owin
 {
     public static class RequestTracingMiddlewareExtensions
     {
-        public static IAppBuilder UseRequestTracing(this IAppBuilder app)
+        public static IAppBuilder UseRequestTracing(this IAppBuilder app, string serviceName)
         {
-            return app.Use(typeof(NuGet.Services.Monitoring.RequestTracingMiddleware));
+            return app.Use(typeof(NuGet.Services.Monitoring.RequestTracingMiddleware), serviceName);
         }
 
         public static string GetRequestId(this IOwinContext context)

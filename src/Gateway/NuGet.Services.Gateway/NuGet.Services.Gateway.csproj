@@ -82,13 +82,13 @@
     <Compile Include="GatewayService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Common\NuGet.Services.Common\NuGet.Services.Common.csproj">
       <Project>{8d3bd1fe-5cba-41d6-a4de-0bd486bbbc2d}</Project>
       <Name>NuGet.Services.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

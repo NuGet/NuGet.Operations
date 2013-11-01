@@ -56,8 +56,10 @@
     <Compile Include="Monitoring\EventSourceNames.cs" />
     <Compile Include="Monitoring\InteractiveTracing.cs" />
     <Compile Include="Monitoring\Internal\EventEntrySubject.cs" />
-    <Compile Include="Monitoring\RequestTraceEventSource.cs" />
+    <Compile Include="Monitoring\HttpTraceEventSource.cs" />
     <Compile Include="Monitoring\RequestTracingMiddleware.cs" />
+    <Compile Include="Monitoring\ServiceLifetimeEventSource.cs" />
+    <Compile Include="NuGetService.cs" />
     <Compile Include="Owin\CommonOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
