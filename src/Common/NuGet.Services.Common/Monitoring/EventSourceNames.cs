@@ -12,6 +12,7 @@ namespace NuGet.Services.Monitoring
         public const string Http = Prefix + "Http";
         public const string ServiceLifetime = Prefix + "ServiceLifetime";
         public const string SystemDiagnostics = Prefix + "SystemDiagnostics";
+        public const string ExternalCommunications = Prefix + "ExternalCommunications";
 
         public const string SystemDiagnosticsProviderId = "{6CC8C9C3-1B86-44DB-A651-C020C3073720}";
     }
