@@ -90,10 +90,6 @@
       <Project>{8d3bd1fe-5cba-41d6-a4de-0bd486bbbc2d}</Project>
       <Name>NuGet.Services.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NuGet.Services.Azure\NuGet.Services.Azure.csproj">
-      <Project>{b27c69a8-9a31-4639-a092-c46813bb55c2}</Project>
-      <Name>NuGet.Services.Azure</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NuGet.Services.Gateway\NuGet.Services.Gateway.csproj">
       <Project>{789a0198-5ac4-4ef7-b143-d450e020b8b1}</Project>
       <Name>NuGet.Services.Gateway</Name>

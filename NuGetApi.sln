@@ -26,7 +26,7 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "NuGet.Services.Gateway.Clou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Gateway.Role", "src\Gateway\NuGet.Services.Gateway.Role\NuGet.Services.Gateway.Role.csproj", "{857D062A-101B-4FC5-9B44-5916A9C3CF81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Azure", "src\NuGet.Services.Azure\NuGet.Services.Azure.csproj", "{B27C69A8-9A31-4639-A092-C46813BB55C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Azure", "src\Common\NuGet.Services.Azure\NuGet.Services.Azure.csproj", "{B27C69A8-9A31-4639-A092-C46813BB55C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
