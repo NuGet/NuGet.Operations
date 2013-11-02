@@ -7,7 +7,7 @@
     <ProjectGuid>{70B6DE0C-281D-4454-B214-F2E8858EE67E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuGet.Services.Common.Facts</RootNamespace>
+    <RootNamespace>NuGet.Services</RootNamespace>
     <AssemblyName>NuGet.Services.Common.Facts</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -56,7 +56,10 @@
   <ItemGroup>
     <Compile Include="AsyncAssert.cs" />
     <Compile Include="Communications\FailFastManagerFacts.cs" />
+    <Compile Include="Communications\PipelineBuilderFacts.cs" />
+    <Compile Include="Spy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpyFacts.cs" />
     <Compile Include="TestClock.cs" />
   </ItemGroup>
   <ItemGroup>

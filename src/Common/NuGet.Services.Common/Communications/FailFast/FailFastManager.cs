@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NuGet.Services.Communications
+namespace NuGet.Services.Communications.FailFast
 {
     /// <summary>
     /// Component that manages communication with an underlying service. This is not used

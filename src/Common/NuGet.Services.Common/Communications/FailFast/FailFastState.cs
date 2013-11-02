@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NuGet.Services.Communications
+namespace NuGet.Services.Communications.FailFast
 {
     public enum FailFastState
     {

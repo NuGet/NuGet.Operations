@@ -4,6 +4,7 @@ using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Services.Communications.FailFast;
 using NuGet.Services.Monitoring;
 
 namespace NuGet.Services.Communications

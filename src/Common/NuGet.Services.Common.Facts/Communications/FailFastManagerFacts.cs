@@ -7,7 +7,7 @@ using Moq;
 using NuGet.Services.Communications;
 using Xunit;
 
-namespace NuGet.Services.Common.Facts.Communications
+namespace NuGet.Services.Communications.FailFast
 {
     public class FailFastManagerFacts
     {

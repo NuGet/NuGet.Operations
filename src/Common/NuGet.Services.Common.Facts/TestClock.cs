@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NuGet.Services.Common.Facts
+namespace NuGet.Services
 {
     internal class TestClock : Clock
     {

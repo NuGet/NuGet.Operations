@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NuGet.Services.Common.Facts
+namespace NuGet.Services
 {
     public static class AsyncAssert
     {
