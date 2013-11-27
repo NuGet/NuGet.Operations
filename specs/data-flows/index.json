@@ -1,8 +1,10 @@
 {
 	"http://api.nuget.org": {
+		"self" : "http://api.nuget.org",
 		"alternates": [
 			"http://myget.org",
-			"http://api.someothermirror.com"
+			"http://api.someothermirror.com",
+			"http://static.api.nuget.org"
 		],
 		"services": {
 			"feeds": "http://api.nuget.org#feeds",
@@ -10,7 +12,9 @@
 			"signin": "http://api.nuget.org/logon",
 			"alerts": "http://api.nuget.org/alerts",
 			"packages": "http://api.nuget.org/packages",
-			"packageIncompatibilities": "http://api.nuget.org/incompatibilities"
+			"packageIncompatibilities": "http://api.nuget.org/incompatibilities",
+			"packageDownload" : "http://api.nuget.org#download",
+			"v2": "http://api.nuget.org#v2"
 		},
 		"terms" : "http://www.nuget.org/policies/Terms",
 		"privacy" : "http://www.nuget.org/policies/Privacy",
@@ -19,6 +23,11 @@
 			"version" : 3,
 			"other" : "more data about the gallery"
 		}
+	},
+	"http://api.nuget.org#download" : {
+		"self" : "http://api.nuget.org/download",
+		"package" : "http://api.nuget.org/download/package/{packageid}/{version}",
+		"packages" : "http://api.nuget.org/download/packages"
 	},
 	"http://api.nuget.org#feeds" : {
 		"self" : "http://api.nuget.org/feeds",
@@ -73,5 +82,11 @@
 		"data" : {
 			"name" : "Package Suggestions"
 		}
+	},
+	"http://api.nuget.org#v2" : {
+		"self" : "http://api.nuget.org/v2",
+		"nuget.org" : "http://www.nuget.org/api/v2/",
+		"Windows 8 Packages" : "http://www.nuget.org/api/v2/curated-feeds/Windows8/",
+		"WebMatrix Package Source" : "http://www.nuget.org/api/v2/curated-feeds/WebMatrix"
 	}
 }

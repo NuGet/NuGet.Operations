@@ -1,0 +1,7 @@
+{
+	"http://api.nuget.org/download" : {
+		"self" : "http://api.nuget.org/download",
+		"package" : "http://api.nuget.org/download/package/{packageid}/{version}",
+		"packages" : "http://api.nuget.org/download/packages"
+	}
+}
