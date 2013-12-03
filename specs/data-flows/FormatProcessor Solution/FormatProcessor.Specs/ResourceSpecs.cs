@@ -39,4 +39,28 @@ namespace FormatProcessor.Specs
         static string url;
         static Resource resource;
     }
+
+    class When_looking_at_resource_surface {
+        It should_have_non_null_data_value;
+        It should_have_1_item_in_data;
+        It should_have_2_links;
+        It should_have_1_self_link;
+        It should_have_1_local_link;
+    }
+
+    class When_resource_has_duplicate_link_relationships {
+        It should_fail;
+    }
+
+    class When_resolving_a_local_link {
+        
+    }
+
+    class When_resolving_an_external_link {
+        
+    }
+
+    class When_a_form_link_type_is_provided {
+        
+    }
 }

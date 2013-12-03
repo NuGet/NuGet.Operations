@@ -7,6 +7,7 @@ namespace FormatProcessor {
     public class Resource {
         readonly JObject _jsonDoc;
 
+        // consider creating IResource so that processors can be created that use a different implemenation than Json.Net
         protected Resource(JObject jsonDoc) {
             _jsonDoc = jsonDoc;
         }
