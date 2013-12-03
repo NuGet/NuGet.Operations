@@ -14,6 +14,7 @@
 			"packages": "http://api.nuget.org/packages",
 			"packageIncompatibilities": "http://api.nuget.org/incompatibilities",
 			"packageDownload" : "http://api.nuget.org#download",
+			"packageManifest" : "http://api.nuget.org#manifest",
 			"v2": "http://api.nuget.org#v2"
 		},
 		"terms" : "http://www.nuget.org/policies/Terms",
@@ -28,6 +29,11 @@
 		"self" : "http://api.nuget.org/download",
 		"package" : "http://api.nuget.org/download/package/{packageid}/{version}",
 		"packages" : "http://api.nuget.org/download/packages"
+	},
+	"http://api.nuget.org#manifest" : {
+		"self" : "http://api.nuget.org/manifest",
+		"package" : "http://api.nuget.org/manifest/package/{packageid}/{version}",
+		"packages" : "http://api.nuget.org/manifest/packages"
 	},
 	"http://api.nuget.org#feeds" : {
 		"self" : "http://api.nuget.org/feeds",

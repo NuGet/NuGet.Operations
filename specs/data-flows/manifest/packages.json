@@ -1,0 +1,99 @@
+{
+	"http://api.nuget.org/manifest/packages" : {
+		"self" : "http://api.nuget.org/manifest/packages",
+		"data" : [
+			"http://api.nuget.org/manifest/package#EntityFramework/5.0.0",
+			"http://api.nuget.org/manifest/package#EntityFramework/6.0.0",
+			"http://api.nuget.org/manifest/package#EntityFramework/6.0.0"
+		]
+	},
+	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0" : {
+		"self" : "http://api.nuget.org/manifest/package/EntityFramework/5.0.0",
+		"core-properties" : "http://api.nuget.org/manifest/package#EntityFramework/5.0.0/core-properties",
+		"package-properties" : "http://api.nuget.org/manifest/package#EntityFramework/5.0.0/package-properties",
+		"nuget-properties" : "http://api.nuget.org/manifest/package#EntityFramework/5.0.0/nuget-properties",
+	},
+	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/core-properties" : {
+		"self" : "http://api.nuget.org/manifest/package/EntityFramework/5.0.0#core-properties",
+		// Link to XML file that contains the full file list of the package
+		"tableOfContents" : "http://manifest.api.nuget.org/package/EntityFramework/5.0.0/tableofcontents.xml",
+		"data" : {
+			// Summary
+			"abstract" : "Entity Framework is Microsoft's recommended data access technology for new applications.",
+			// Published
+			"available" : "2012-08-11",
+			// Authors
+			"contributor" : "Microsoft",
+			"description" : "Entity Framework is Microsoft's recommended data access technology for new applications.",
+			"identifier" : "EntityFramework",
+			"language" : "en-US",
+			// License URL
+			"license" : "http://go.microsoft.com/fwlink/?LinkId=253898&clcid=0x409",
+			"modified" : "2013-12-12T1738",
+			// Owners
+			"publisher" : [
+				"http://api.nuget.org#user/microsoft",
+				"http://api.nuget.org#user/EntityFramework"
+			],
+			// Copyright
+			"rights" : "2012 Microsoft Corporation",
+			// Project URL
+			"source" : "http://go.microsoft.com/fwlink/?LinkId=253891&clcid=0x409",
+			// Tags
+			"subject" : [ "data", "entity", "framework", "orm", "database" ],
+			"title" : "EntityFramework",
+			// Fixed as 'Software' for all software packages
+			"type" : "Software"
+		}
+	},
+	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/package-properties" : {
+		"self" : "http://api.nuget.org/manifest/package/EntityFramework/5.0.0#package-properties",
+		"data" : {
+			"version" : "5.0.0",
+			"releaseNotes" : "",
+			"iconUrl" : "",
+			"requireLicenseAcceptance" : true
+		}
+	},
+	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/nuget-properties" : {
+		"self" : "http://api.nuget.org/manifest/package/EntityFramework/5.0.0#nuget-properties",
+		"capabilities" : {
+				"install.ps1" : "http://www.nuget.org/package/EntityFramework/5.0.0/install.ps1/view",
+				"App.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/App.config.transform/view",
+				"Web.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/Web.config.transform/view"
+		},
+		"nuspec" : "http://manifest.api.nuget.org/package/EntityFramework/5.0.0/EntityFramework.5.0.0.nuspec",
+		"targetFrameworks" : {
+			"net40" : "http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net40",
+			"net45" : "http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net45"
+		}
+	},
+	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net40" : {
+		"data" : {
+			"framework" : "net40",
+			"frameworkAssemblies" : [ "System.Data.Entity", "System.ComponentModel.DataAnnotations" ],
+			"assemblyReferences" : [ "EntityFramework.dll" ]
+		}
+	},
+	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net45" : {
+		"data" : {
+			"framework" : "net45",
+			"frameworkAssemblies" : [ "System.Data.Entity", "System.ComponentModel.DataAnnotations" ],
+			"assemblyReferences" : [ "EntityFramework.dll" ]
+		}
+	},
+	"http://api.nuget.org#user/microsoft" : {
+		"self" : "http://api.nuget.org/user/microsoft",
+		"packages" : "http://api.nuget.org/user/microsoft/packages",
+		"data" : {
+			"username" : "microsoft"
+		}
+	},
+	"http://api.nuget.org#user/EntityFramework" : {
+		"self" : "http://api.nuget.org/user/EntityFramework",
+		"packages", "http://api.nuget.org/user/EntityFramework/packages",
+		"data" : {
+			"username" : "EntityFramework"
+		}
+	}
+}

@@ -1,0 +1,19 @@
+<!--
+	"Content/App.config.transform",
+	"Content/Web.config.transform",
+	"lib/net40/EntityFramework.dll",
+	"lib/net40/EntityFramework.xml",
+	"lib/net45/EntityFramework.dll",
+	"lib/net45/EntityFramework.xml",
+	"tools/about_EntityFramework.help.txt",
+	"tools/EntityFramework.PowerShell.dll",
+	"tools/EntityFramework.PowerShell.Utility.dll",
+	"tools/EntityFramework.PS3.psd1",
+	"tools/EntityFramework.psd1",
+	"tools/EntityFramework.psm1",
+	"tools/init.ps1",
+	"tools/install.ps1",
+	"tools/migrate.exe",
+	"tools/Redirect.config",
+	"tools/Redirect.CS11.config"
+-->
