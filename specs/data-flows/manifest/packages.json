@@ -57,11 +57,6 @@
 	},
 	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/nuget-properties" : {
 		"self" : "http://api.nuget.org/manifest/package/EntityFramework/5.0.0#nuget-properties",
-		"capabilities" : {
-				"install.ps1" : "http://www.nuget.org/package/EntityFramework/5.0.0/install.ps1/view",
-				"App.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/App.config.transform/view",
-				"Web.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/Web.config.transform/view"
-		},
 		"nuspec" : "http://manifest.api.nuget.org/package/EntityFramework/5.0.0/EntityFramework.5.0.0.nuspec",
 		"targetFrameworks" : {
 			"net40" : "http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net40",
@@ -69,6 +64,11 @@
 		}
 	},
 	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net40" : {
+		"capabilities" : {
+				"install.ps1" : "http://www.nuget.org/package/EntityFramework/5.0.0/install.ps1/view",
+				"App.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/App.config.transform/view",
+				"Web.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/Web.config.transform/view"
+		},
 		"data" : {
 			"framework" : "net40",
 			"frameworkAssemblies" : [ "System.Data.Entity", "System.ComponentModel.DataAnnotations" ],
@@ -76,6 +76,11 @@
 		}
 	},
 	"http://api.nuget.org/manifest/package#EntityFramework/5.0.0/targetframeworks/net45" : {
+		"capabilities" : {
+				"install.ps1" : "http://www.nuget.org/package/EntityFramework/5.0.0/install.ps1/view",
+				"App.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/App.config.transform/view",
+				"Web.config.transform" : "http://www.nuget.org/package/EntityFramework/5.0.0/Web.config.transform/view"
+		},
 		"data" : {
 			"framework" : "net45",
 			"frameworkAssemblies" : [ "System.Data.Entity", "System.ComponentModel.DataAnnotations" ],
@@ -91,7 +96,7 @@
 	},
 	"http://api.nuget.org#user/EntityFramework" : {
 		"self" : "http://api.nuget.org/user/EntityFramework",
-		"packages", "http://api.nuget.org/user/EntityFramework/packages",
+		"packages" : "http://api.nuget.org/user/EntityFramework/packages",
 		"data" : {
 			"username" : "EntityFramework"
 		}
