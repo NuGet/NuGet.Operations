@@ -1,6 +1,7 @@
 {
 	"http://api.nuget.org/manifest/packages" : {
 		"self" : "http://api.nuget.org/manifest/packages",
+		"next" : "http://api.nuget.org/manifest/packages?start=4",
 		"data" : [
 			"http://api.nuget.org/manifest/package#EntityFramework/5.0.0",
 			"http://api.nuget.org/manifest/package#EntityFramework/6.0.0",
