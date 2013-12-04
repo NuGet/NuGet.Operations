@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace UriTemplateProcessor {
@@ -16,43 +17,61 @@ namespace UriTemplateProcessor {
             );
 
         List<TemplateExpression> _expressions;
+        Queue<IUrlPart> _urlParts;
+        const char expressionStartToken = '{';
+        const char expressionEndToken = '}';
 
         protected UriTemplate() {
             _expressions = new List<TemplateExpression>();
+            _urlParts = new Queue<IUrlPart>();
         }
 
         public static bool TryParse(string uri, out UriTemplate template) {
-            if(UriTemplateExpression.IsMatch(uri)) {
-                template = CreateUriTemplate(uri);
+            if(UriTemplateExpression.IsMatch(uri)) { 
+                template = new UriTemplate {_urlParts = ParseTemplate(uri)};
                 return true;
             }
             template = null;
             return false;
         }
 
-        static UriTemplate CreateUriTemplate(string uri) {
-            var template = new UriTemplate();
+        static Queue<IUrlPart> ParseTemplate(string uri) {
+            var parts = new Queue<IUrlPart>();
             
-            throw new NotImplementedException();
+            var stringStartPos = 0;
+            var expressionStartPos = uri.IndexOf(expressionStartToken, stringStartPos);
+            int expressionEndPos;
             
-            // get match groups
+            while (expressionStartPos > -1) {
+                parts.Enqueue(new LiteralUrlPart(uri.Substring(stringStartPos, expressionStartPos - stringStartPos)));
+                
+                expressionEndPos = uri.IndexOf(expressionEndToken, expressionStartPos);
 
-            // for each Expression match/group
-            string match = null;
-            template._expressions.Add(CreateExpression(match));
+                parts.Enqueue(new TemplateExpression(uri.Substring(expressionStartPos + 1, expressionEndPos - expressionStartPos - 1)));
 
+                stringStartPos = expressionEndPos + 1;
+                expressionStartPos = uri.IndexOf(expressionStartToken, stringStartPos);
+            }
+
+            if(stringStartPos <= uri.Length - 1)
+                parts.Enqueue((new LiteralUrlPart(uri.Substring(stringStartPos))));
+
+            return parts;
         }
 
         public IEnumerable<TemplateExpression> Expressions {
-            get { return _expressions; }
+            get {
+                return
+                    _urlParts.Where(part => part.GetType() == typeof (TemplateExpression)).Cast<TemplateExpression>();
+            }
         }
 
-        static TemplateExpression CreateExpression(string match) {
-            // factory method that creates a different concrete expression object based on the expression type.
-            // We'll start out by creating a simple level 1 template (which is just string expansion)
-            throw new NotImplementedException();
+        public override string ToString() {
+            var sb = new StringBuilder();
+            while (_urlParts.Count > 0) {
+                sb.Append(_urlParts.Dequeue().ToString());
+            }
+            return sb.ToString();
         }
     }
-
-    public class TemplateExpression {}
 }

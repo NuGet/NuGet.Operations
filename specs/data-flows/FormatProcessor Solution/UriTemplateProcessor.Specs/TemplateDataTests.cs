@@ -5,9 +5,9 @@ namespace UriTemplateProcessor.Specs
 {
     public class TemplateDataTests {
         [Theory,
-        InlineData("http://example.com/~{username}/"),
-        InlineData("http://example.com/dictionary/{term:1}/{term}"),
-        InlineData("http://example.com/search{?q,lang}")]
+        InlineData(TemplateData.SimpleString),
+        InlineData(TemplateData.MultipleStringsPlusLengthConstraint),
+        InlineData(TemplateData.MultipleQueryStrings)]
         public void Parse_RfcExampleTemplates_Succeeds(string uri) {
             UriTemplate template = null;
             var parsed = UriTemplate.TryParse(uri, out template);

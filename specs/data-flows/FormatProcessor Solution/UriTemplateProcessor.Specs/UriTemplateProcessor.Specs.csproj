@@ -51,6 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SimpleStringExpansionSpecs.cs" />
+    <Compile Include="TemplateData.cs" />
     <Compile Include="TemplateDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
