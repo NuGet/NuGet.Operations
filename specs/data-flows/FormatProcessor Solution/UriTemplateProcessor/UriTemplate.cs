@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -72,6 +73,10 @@ namespace UriTemplateProcessor {
                 sb.Append(_urlParts.Dequeue().ToString());
             }
             return sb.ToString();
+        }
+
+        public Expression GetExpression(string expressionName) {
+            return Expressions.First(e => e.Name == expressionName);
         }
     }
 }
