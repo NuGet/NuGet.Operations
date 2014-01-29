@@ -1,1 +1,0 @@
-@powershell -ExecutionPolicy Unrestricted -NoLogo -NoProfile -NonInteractive -File %* >> %~dp0%1.err.log
