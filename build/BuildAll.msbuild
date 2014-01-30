@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MsBuildThisFileDirectory)\NuGet.props" />
+    <Import Project="$(MsBuildThisFileDirectory)\NuGet.tasks" />
+
+    <PropertyGroup Condition="'$(Configuration)' == ''">
+        <Configuration>Debug</Configuration>
+        <TargetSolution>$(MSBuildThisFileDirectory)..\NuGetApi.sln</TargetSolution>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <RoleProject Include="$(SourceDirectory)\Work\NuGet.Services.Work.Cloud\NuGet.Services.Work.Cloud.ccproj">
+            <AdditionalProperties>OutputDir="$(ArtifactsDirectory)";VMSize="$(VMSize_Work)"</AdditionalProperties>
+        </RoleProject>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <VisualStudioVersion>12.0</VisualStudioVersion>
+    </PropertyGroup>
+
+    <Target Name="Clean">
+        <MSBuild Projects="$(TargetSolution)" Targets="Clean" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+    </Target>
+
+    <Target Name="RestorePackages">
+        <ItemGroup>
+            <!-- Package sources used to restore packages. By default will used the registered sources under %APPDATA%\NuGet\NuGet.Config -->
+            <PackageSource Include="https://www.nuget.org/" />
+        </ItemGroup>
+        <PropertyGroup>
+            <NuGetExePath>$(MsBuildThisFileDirectory)\nuget.exe</NuGetExePath>
+            <RestoreCommandV2>$(NuGetExePath) restore -source "@(PackageSources)" "$(TargetSolution)" -NonInteractive -Verbosity Quiet</RestoreCommandV2>
+        </PropertyGroup>
+    
+        <Message Text="Restoring packages ... " Importance="high" />
+        <DownloadNuGet OutputFilename="$(NuGetExePath)" Condition=" !Exists('$(NuGetExePath)')" />
+        <Exec Command="$(RestoreCommandV2)" LogStandardErrorAsError="true" />
+    </Target>
+  
+    <Target Name="CoreBuild">
+        <MSBuild Projects="$(TargetSolution)" Targets="Build" Properties="VisualStudioVersion=12.0;Configuration=$(Configuration);CodeAnalysis=true;Platform=$(Platform);RunFacts=true;TargetProfile=Local" BuildInParallel="true" ToolsVersion="12.0"  />
+        <MSBuild Projects="@(RoleProject)" Targets="Publish" Properties="VisualStudioVersion=12.0;Configuration=$(Configuration);Platform=AnyCPU;TargetProfile=Local" BuildInParallel="false" ToolsVersion="12.0" />
+    </Target>
+
+    <Target Name="Build" DependsOnTargets="Clean;RestorePackages;CoreBuild" />
+</Project>

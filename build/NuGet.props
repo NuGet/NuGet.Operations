@@ -23,6 +23,7 @@
     <!-- Directories -->
     <RootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'NuGetApi.sln'))</RootDirectory>
     <BuildToolsDirectory>$(RootDirectory)\build</BuildToolsDirectory>
-    <CommonSourceDirectory>$(RootDirectory)\src\Common</CommonSourceDirectory>
+    <SourceDirectory>$(RootDirectory)\src</SourceDirectory>
+    <CommonSourceDirectory>$(SourceDirectory)\Common</CommonSourceDirectory>
   </PropertyGroup>
 </Project>
