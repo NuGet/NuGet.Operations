@@ -45,9 +45,9 @@ namespace NuGet.Services.Work.Jobs
         public SqlConnectionStringBuilder PackageDatabase { get; set; }
 
         /// <summary>
-        /// Gets or sets a boolean indicating if the job should do a full rescan of package backups.
+        /// Run the job in parallel (note: the job is not able to update it's lease on the invocation request in this mode)
         /// </summary>
-        public bool FullRescan { get; set; }
+        public bool RunInParallel { get; set; }
 
         protected ConfigurationHub Config { get; private set; }
         protected StorageHub Storage { get; private set; }
@@ -75,100 +75,85 @@ namespace NuGet.Services.Work.Jobs
                 String.IsNullOrEmpty(DestinationContainerName) ? BlobContainerNames.Backups : DestinationContainerName);
             Log.PreparingToBackup(Source.Credentials.AccountName, SourceContainer.Name, Destination.Credentials.AccountName, DestinationContainer.Name, PackageDatabase.DataSource, PackageDatabase.InitialCatalog);
 
-            // Load package state if we aren't doing a full rescan
-            Log.LoadingBackupState(Destination.Credentials.AccountName, DestinationContainer.Name);
-            var lastBackup = FullRescan ? 
-                (DateTimeOffset?)null :
-                await LoadBackupState(DestinationContainer);
-            Log.LoadedBackupState(Destination.Credentials.AccountName, DestinationContainer.Name);
-
             // Gather packages
-            Log.GatheringListOfPackages(PackageDatabase.DataSource, PackageDatabase.InitialCatalog, lastBackup);
+            Log.GatheringListOfPackages(PackageDatabase.DataSource, PackageDatabase.InitialCatalog);
             IList<PackageRef> packages;
             using(var connection = await PackageDatabase.ConnectTo()) {
                 packages = (await connection.QueryAsync<PackageRef>(@"
                     SELECT pr.Id, p.NormalizedVersion AS Version, p.Hash
                     FROM Packages p
-                    INNER JOIN PackageRegistrations pr ON p.PackageRegistrationKey = pr.[Key]
-                    WHERE @lastBackup IS NULL AND [NormalizedVersion] IS NOT NULL
-                    OR (
-                        (p.[LastEdited] IS NULL AND p.[Published] > @lastBackup) OR
-                        (p.[LastEdited] IS NOT NULL AND p.[LastEdited] > @lastBackup)
-                    )", new { lastBackup })).ToList();
+                    INNER JOIN PackageRegistrations pr ON p.PackageRegistrationKey = pr.[Key]"))
+                    .ToList();
             }
             Log.GatheredListOfPackages(packages.Count, PackageDatabase.DataSource, PackageDatabase.InitialCatalog);
+
+            // Collect a list of backups
+            Log.GatheringBackupList(Destination.Credentials.AccountName, DestinationContainer.Name);
+            var backups = await LoadBackupsList();
+            Log.GatheredBackupList(Destination.Credentials.AccountName, DestinationContainer.Name, backups.Count);
+            
+            // Calculate needed backups
+            Log.CalculatingBackupSet(packages.Count, backups.Count);
+            var backupSet = CalculateBackupSet(packages, backups);
+            Log.CalculatedBackupSet(packages.Count, backupSet.Count);
 
             if (!WhatIf)
             {
                 await DestinationContainer.CreateIfNotExistsAsync();
             }
 
-            var action = new TransformBlock<PackageRef, object>(package =>
-            {
-                InvocationContext.SetCurrentInvocationId(Invocation.Id);
-                return BackupPackage(package);
-            }, new ExecutionDataflowBlockOptions() {
-                CancellationToken = Context.CancelToken,
-                MaxDegreeOfParallelism = TaskPerCoreFactor * Environment.ProcessorCount,
-                MaxMessagesPerTask = 1,
-            });
-            var extendIfNecessary = new ActionBlock<object>(async blob =>
-            {
-                InvocationContext.SetCurrentInvocationId(Invocation.Id);
-                if ((Invocation.NextVisibleAt - DateTimeOffset.UtcNow) < TimeSpan.FromMinutes(1))
-                {
-                    // Running out of time! Extend the job
-                    Log.ExtendingJobLeaseWhileBackupProgresses();
-                    await Extend(TimeSpan.FromMinutes(5));
-                    Log.ExtendedJobLease();
-                }
-                else
-                {
-                    Log.JobLeaseOk();
-                }
-            }, new ExecutionDataflowBlockOptions()
-            {
-                CancellationToken = Context.CancelToken,
-                MaxDegreeOfParallelism = 1,
-            });
-            action.LinkTo(extendIfNecessary);
-            
             Log.StartingBackup(packages.Count);
-            foreach (var package in packages)
+            if (RunInParallel)
             {
-                action.Post(package);
+                Parallel.ForEach(
+                    backupSet,
+                    new ParallelOptions() { MaxDegreeOfParallelism = TaskPerCoreFactor * Environment.ProcessorCount },
+                    t => BackupPackage(t.Item1, t.Item2).Wait());
             }
-            action.Complete();
-            Log.StartedBackup();
-            await extendIfNecessary.Completion;
+            else
+            {
+                foreach (var backupRecord in backupSet)
+                {
+                    await BackupPackage(backupRecord.Item1, backupRecord.Item2);
 
-            // Write backup state
-            if (!Context.CancelToken.IsCancellationRequested)
-            {
-                Log.SavingBackupState(Destination.Credentials.AccountName, DestinationContainer.Name);
-                await WriteBackupState(DestinationContainer, now);
-                Log.SavedBackupState(Destination.Credentials.AccountName, DestinationContainer.Name);
+                    if ((Invocation.NextVisibleAt - DateTimeOffset.UtcNow) < TimeSpan.FromMinutes(1))
+                    {
+                        // Running out of time! Extend the job
+                        Log.ExtendingJobLeaseWhileBackupProgresses();
+                        await Extend(TimeSpan.FromMinutes(5));
+                        Log.ExtendedJobLease();
+                    }
+                    else
+                    {
+                        Log.JobLeaseOk();
+                    }
+                }
             }
+            Log.StartedBackup();
         }
 
-        private static readonly object Unit = new object();
-        private async Task<object> BackupPackage(PackageRef package)
+        private IList<Tuple<string, string>> CalculateBackupSet(IList<PackageRef> packages, ISet<string> backups)
+        {
+            return packages
+                .AsParallel()
+                .Select(r => Tuple.Create(StorageHelpers.GetPackageBlobName(r), StorageHelpers.GetPackageBackupBlobName(r)))
+                .Where(t => !backups.Contains(t.Item2))
+                .ToList();
+        }
+
+        private async Task BackupPackage(string sourceBlobName, string destinationBlobName)
         {
             // Identify the source and destination blobs
-            var sourceBlob = SourceContainer.GetBlockBlobReference(
-                PackageHelpers.GetPackageBlobName(package));
-            var destBlob = DestinationContainer.GetBlockBlobReference(
-                PackageHelpers.GetPackageBackupBlobName(package));
+            var sourceBlob = SourceContainer.GetBlockBlobReference(sourceBlobName);
+            var destBlob = DestinationContainer.GetBlockBlobReference(destinationBlobName);
 
             if (await destBlob.ExistsAsync())
             {
                 Log.BackupExists(destBlob.Name);
-                return Unit;
             }
             else if (!await sourceBlob.ExistsAsync())
             {
                 Log.SourceBlobMissing(sourceBlob.Name);
-                return Unit;
             }
             else
             {
@@ -179,33 +164,35 @@ namespace NuGet.Services.Work.Jobs
                     await destBlob.StartCopyFromBlobAsync(sourceBlob);
                 }
                 Log.StartedCopy(sourceBlob.Name, destBlob.Name);
-                return Unit;
             }
         }
 
-        private async Task WriteBackupState(CloudBlobContainer container, DateTimeOffset now)
+        private async Task<HashSet<string>> LoadBackupsList()
         {
-            if (!WhatIf)
+            var results = new HashSet<string>();
+            BlobContinuationToken token = new BlobContinuationToken();
+            BlobResultSegment segment;
+            var options = new BlobRequestOptions();
+            var context = new OperationContext();
+            do
             {
-                await container.CreateIfNotExistsAsync();
-                var blob = container.GetBlockBlobReference(BackupStateBlobName);
-                await blob.UploadTextAsync(now.ToString("O"));
-            }
-        }
-
-        private async Task<DateTimeOffset?> LoadBackupState(CloudBlobContainer container)
-        {
-            if (!await container.ExistsAsync())
-            {
-                return null;
-            }
-            var blob = container.GetBlockBlobReference(BackupStateBlobName);
-            if (!await blob.ExistsAsync())
-            {
-                return null;
-            }
-            await blob.FetchAttributesAsync();
-            return blob.Properties.LastModified;
+                segment = await DestinationContainer.ListBlobsSegmentedAsync(
+                    prefix: StorageHelpers.PackageBackupsDirectory + "/",
+                    useFlatBlobListing: true,
+                    blobListingDetails: BlobListingDetails.None,
+                    maxResults: null,
+                    currentToken: token,
+                    options: options,
+                    operationContext: context);
+                results.AddRange(
+                    segment
+                        .Results
+                        .OfType<CloudBlockBlob>()
+                        .Select(b => b.Name));
+                Log.GatheredBackupListSegment(Destination.Credentials.AccountName, DestinationContainer.Name, results.Count);
+                token = segment.ContinuationToken;
+            } while (token != null);
+            return results;
         }
     }
 
@@ -221,31 +208,15 @@ namespace NuGet.Services.Work.Jobs
             Message = "Preparing to backup package blobs from {0}/{1} to {2}/{3} using package data from {4}/{5}")]
         public void PreparingToBackup(string sourceAccount, string sourceContainer, string destAccount, string destContainer, string dbServer, string dbName) { WriteEvent(1, sourceAccount, sourceContainer, destAccount, destContainer, dbServer, dbName); }
 
-        [Event(
-            eventId: 2,
-            Level = EventLevel.Informational,
-            Task = Tasks.LoadingBackupState,
-            Opcode = EventOpcode.Start,
-            Message = "Loading Backup state from {0}/{1}")]
-        public void LoadingBackupState(string account, string container) { WriteEvent(2, account, container); }
-
-        [Event(
-            eventId: 3,
-            Level = EventLevel.Informational,
-            Task = Tasks.LoadingBackupState,
-            Opcode = EventOpcode.Stop,
-            Message = "Loaded Backup state from {0}/{1}")]
-        public void LoadedBackupState(string account, string container) { WriteEvent(3, account, container); }
+        // [anurse] EventIDs 2 and 3 were removed. There's no need to reuse them and I'd rather keep the event IDs sequential
 
         [Event(
             eventId: 4,
             Level = EventLevel.Informational,
             Task = Tasks.GatheringPackages,
             Opcode = EventOpcode.Start,
-            Message = "Gathering list of packages from {0}/{1} published or edited since {2}")]
-        private void GatheringListOfPackages(string dbServer, string dbName, string modifiedSince) { WriteEvent(4, dbServer, dbName, modifiedSince); }
-        [NonEvent]
-        public void GatheringListOfPackages(string dbServer, string dbName, DateTimeOffset? modifiedSince) { GatheringListOfPackages(dbServer, dbName, modifiedSince == null ? "the beginning of time" : modifiedSince.Value.ToString("O")); }
+            Message = "Gathering list of packages from {0}/{1}")]
+        public void GatheringListOfPackages(string dbServer, string dbName) { WriteEvent(4, dbServer, dbName); }
 
         [Event(
             eventId: 5,
@@ -279,7 +250,7 @@ namespace NuGet.Services.Work.Jobs
 
         [Event(
             eventId: 9,
-            Level = EventLevel.Error,
+            Level = EventLevel.Warning,
             Message = "Source Blob does not exist: {0}")]
         public void SourceBlobMissing(string blobName) { WriteEvent(9, blobName); }
 
@@ -318,24 +289,48 @@ namespace NuGet.Services.Work.Jobs
         [Event(
             eventId: 14,
             Level = EventLevel.Informational,
-            Task = Tasks.SavingBackupState,
+            Task = Tasks.GatheringBackupList,
             Opcode = EventOpcode.Start,
-            Message = "Saving backup stage to {0}/{1}")]
-        public void SavingBackupState(string destAccount, string destContainer) { WriteEvent(14, destAccount, destContainer); }
+            Message = "Loading list of available backups from {0}/{1}")]
+        public void GatheringBackupList(string destAccount, string destContainer) { WriteEvent(14, destAccount, destContainer); }
 
         [Event(
             eventId: 15,
             Level = EventLevel.Informational,
-            Task = Tasks.SavingBackupState,
+            Task = Tasks.GatheringBackupList,
             Opcode = EventOpcode.Stop,
-            Message = "Saved backup stage to {0}/{1}")]
-        public void SavedBackupState(string destAccount, string destContainer) { WriteEvent(15, destAccount, destContainer); }
+            Message = "Loaded {2} backups from {0}/{1}")]
+        public void GatheredBackupList(string destAccount, string destContainer, int count) { WriteEvent(15, destAccount, destContainer, count); }
 
         [Event(
             eventId: 16,
             Level = EventLevel.Informational,
             Message = "Job lease OK")]
         public void JobLeaseOk() { WriteEvent(16); }
+
+        [Event(
+            eventId: 17,
+            Level = EventLevel.Informational,
+            Task = Tasks.GatheringBackupList,
+            Opcode = EventOpcode.Receive,
+            Message = "Retrieved {2} backups from {0}/{1}")]
+        public void GatheredBackupListSegment(string destAccount, string destContainer, int totalSoFar) { WriteEvent(17, destAccount, destContainer, totalSoFar); }
+
+        [Event(
+            eventId: 18,
+            Level = EventLevel.Informational,
+            Task = Tasks.CalculatingBackupSet,
+            Opcode = EventOpcode.Start,
+            Message = "Calculating Backup Set. Intersecting {0} packages and {1} backups")]
+        public void CalculatingBackupSet(int packages, int backups) { WriteEvent(18, packages, backups); }
+
+        [Event(
+            eventId: 19,
+            Level = EventLevel.Informational,
+            Task = Tasks.CalculatingBackupSet,
+            Opcode = EventOpcode.Stop,
+            Message = "Calculated {1} packages out of {0} must be backed up.")]
+        public void CalculatedBackupSet(int packages, int toBackup) { WriteEvent(19, packages, toBackup); }
 
         public static class Tasks
         {
@@ -344,7 +339,8 @@ namespace NuGet.Services.Work.Jobs
             public const EventTask BackingUpPackages = (EventTask)0x3;
             public const EventTask StartingPackageCopy = (EventTask)0x4;
             public const EventTask ExtendingJobLease = (EventTask)0x5;
-            public const EventTask SavingBackupState = (EventTask)0x6;
+            public const EventTask GatheringBackupList = (EventTask)0x6;
+            public const EventTask CalculatingBackupSet = (EventTask)0x7;
         }
     }
 }

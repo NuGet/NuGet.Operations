@@ -163,14 +163,14 @@ namespace NuGet.Services.Work.Jobs
                 }
                 originalPath = Path.Combine(directory, "original.nupkg");
                 var sourceBlob = SourceContainer.GetBlockBlobReference(
-                    PackageHelpers.GetPackageBlobName(edit.Id, edit.Version));
+                    StorageHelpers.GetPackageBlobName(edit.Id, edit.Version));
                 Log.DownloadingOriginal(edit.Id, edit.Version);
                 await sourceBlob.DownloadToFileAsync(originalPath, FileMode.Create);
                 Log.DownloadedOriginal(edit.Id, edit.Version);
 
                 // Check that a backup exists
                 var backupBlob = BackupsContainer.GetBlockBlobReference(
-                    PackageHelpers.GetPackageBackupBlobName(edit.Id, edit.Version, edit.Hash));
+                    StorageHelpers.GetPackageBackupBlobName(edit.Id, edit.Version, edit.Hash));
                 if (!WhatIf && !await backupBlob.ExistsAsync())
                 {
                     Log.BackingUpOriginal(edit.Id, edit.Version);

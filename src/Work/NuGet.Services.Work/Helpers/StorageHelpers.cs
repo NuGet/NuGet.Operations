@@ -9,10 +9,12 @@ using NuGet.Services.Work.Jobs.Models;
 
 namespace NuGet.Services.Work
 {
-    public static class PackageHelpers
+    public static class StorageHelpers
     {
-        private const string PackageBlobNameFormat = "{0}.{1}.nupkg";
-        private const string PackageBackupBlobNameFormat = "packages/{0}/{1}/{2}.nupkg";
+        public static readonly string PackageBackupsDirectory = "packages";
+
+        private static readonly string PackageBlobNameFormat = "{0}.{1}.nupkg";
+        private static readonly string PackageBackupBlobNameFormat = PackageBackupsDirectory + "/{0}/{1}/{2}.nupkg";
 
         public static string GetPackageBlobName(PackageRef package)
         {
