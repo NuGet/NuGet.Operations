@@ -5,6 +5,9 @@
 
     <PropertyGroup Condition="'$(Configuration)' == ''">
         <Configuration>Debug</Configuration>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <TargetSolution>$(MSBuildThisFileDirectory)..\NuGetApi.sln</TargetSolution>
     </PropertyGroup>
 
