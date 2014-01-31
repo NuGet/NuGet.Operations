@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminKeyAuthenticationHandler_CannotAuthenticateOverHttp" xml:space="preserve">
+    <value>This request cannot be performed over an insecure connection. Retry your request using HTTPS.</value>
+  </data>
   <data name="DatacenterName_InvalidName" xml:space="preserve">
     <value>Expected a name in the format: "&lt;environment&gt;_DC&lt;datacenter id&gt;"</value>
   </data>
@@ -125,6 +128,12 @@
   </data>
   <data name="MaxSizeStream_PositionIsPastMaximumAllowedLength" xml:space="preserve">
     <value>Operation would cause current position to move beyond the maximum allowed read length of {1}</value>
+  </data>
+  <data name="NuGetServiceInformationMiddleware_Body" xml:space="preserve">
+    <value>Sorry, I don't know how to make coffee. I can make a nice Earl Grey though!</value>
+  </data>
+  <data name="NuGetServiceInformationMiddleware_ReasonPhrase" xml:space="preserve">
+    <value>I'm a teapot</value>
   </data>
   <data name="NuGetService_HostNotSet" xml:space="preserve">
     <value>Host must be set using SetHost before invoking this method.</value>

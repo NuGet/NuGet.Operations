@@ -59,10 +59,20 @@ namespace NuGet.Services.Http.Authentication
             }
         }
 
-        protected override Task ApplyResponseChallengeAsync()
+        protected override async Task ApplyResponseChallengeAsync()
         {
-            Context.Response.Headers.Add("WWW-Authenticate", new [] { "Basic realm =\"" + Context.Request.Uri.Host + "\"" });
-            return base.ApplyResponseChallengeAsync();
+            if (Context.Request.IsSecure)
+            {
+                // Only challenge if secure
+                Context.Response.Headers.Add("WWW-Authenticate", new[] { "Basic realm =\"" + Context.Request.Uri.Host + "\"" });
+            }
+            else
+            {
+                Context.Response.StatusCode = 403;
+                Context.Response.ContentType = "text/plain";
+                await Context.Response.WriteAsync(Strings.AdminKeyAuthenticationHandler_CannotAuthenticateOverHttp);
+            }
+            return await base.ApplyResponseChallengeAsync();
         }
     }
 }

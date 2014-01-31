@@ -61,6 +61,15 @@ namespace NuGet.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This request cannot be performed over an insecure connection. Retry your request using HTTPS..
+        /// </summary>
+        internal static string AdminKeyAuthenticationHandler_CannotAuthenticateOverHttp {
+            get {
+                return ResourceManager.GetString("AdminKeyAuthenticationHandler_CannotAuthenticateOverHttp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected a name in the format: &apos;&lt;index&gt;-&lt;id&gt;&apos;.
         /// </summary>
         internal static string Datacenter_InvalidName {
@@ -93,6 +102,24 @@ namespace NuGet.Services {
         internal static string NuGetService_HostNotSet {
             get {
                 return ResourceManager.GetString("NuGetService_HostNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, I don&apos;t know how to make coffee. I can make a nice Earl Grey though!.
+        /// </summary>
+        internal static string NuGetServiceInformationMiddleware_Body {
+            get {
+                return ResourceManager.GetString("NuGetServiceInformationMiddleware_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m a teapot.
+        /// </summary>
+        internal static string NuGetServiceInformationMiddleware_ReasonPhrase {
+            get {
+                return ResourceManager.GetString("NuGetServiceInformationMiddleware_ReasonPhrase", resourceCulture);
             }
         }
         

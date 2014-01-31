@@ -21,6 +21,7 @@ namespace NuGet.Services.Http.Middleware
         private static PathString _infoPath = new PathString("/_info");
         private static PathString _infoServicePath = new PathString("/_info/services");
         private static PathString _authPath = new PathString("/_auth");
+        private static PathString _teaPath = new PathString("/_tea");
         
         public ServiceHost Host { get; private set; }
         
@@ -38,6 +39,13 @@ namespace NuGet.Services.Http.Middleware
             {
                 // Root!
                 return HandleRootRequest(context);
+            }
+            else if (path.StartsWithSegments(_teaPath))
+            {
+                context.Response.StatusCode = 418;
+                context.Response.ReasonPhrase = Strings.NuGetServiceInformationMiddleware_ReasonPhrase;
+                context.Response.ContentType = "text/plain";
+                return context.Response.WriteAsync(Strings.NuGetServiceInformationMiddleware_Body);
             }
             else if (path.StartsWithSegments(_authPath))
             {
