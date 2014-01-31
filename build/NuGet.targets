@@ -2,13 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="$(MSBuildThisFileDirectory)\NuGet.tasks" />
 
-	<PropertyGroup>
-		<!-- Sniff the project type -->
-		<ProjectType Condition="'$(CloudToolsVersion)' != ''">Cloud</ProjectType>
-		<ProjectType Condition="'$(ProjectType)' == ''">Code</ProjectType>
-	</PropertyGroup>
-
-	<Target Name="GetGitMetadata" Condition="'$(ProjectType)' == 'Code'">
+	<Target Name="GetGitMetadata">
   		<GetGitMetadata RepositoryRoot="$(MSBuildThisFileDirectory)\..">
 	      <Output TaskParameter="Branch" PropertyName="Branch" />
 	      <Output TaskParameter="CommitId" PropertyName="CommitId" />
@@ -16,7 +10,7 @@
 	    </GetGitMetadata>
 	</Target>
 
-	<Target Name="CreateVersionInfoFile" DependsOnTargets="GetGitMetadata" BeforeTargets="CoreCompile" Condition="'$(ProjectType)' == 'Code'">
+	<Target Name="CreateVersionInfoFile" DependsOnTargets="GetGitMetadata" BeforeTargets="CoreCompile">
 		<WriteVersionInfo Version="$(Version)" Branch="$(Branch)" CommitId="$(CommitId)" RepositoryUrl="$(RepositoryUrl)" BuildDateUtc="$(BuildDateUtc)" InformationalVersion="$(SemanticVersion)" BuiltBy="$(BuildUser)" BuiltOn="$(BuildMachine)">
 			<Output TaskParameter="OutputFilename" PropertyName="VersionInfoFilePath" />
 		</WriteVersionInfo>
@@ -25,33 +19,7 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="CleanVersionInfoFile" AfterTargets="CoreCompile" Condition="'$(ProjectType)' == 'Code'">
+	<Target Name="CleanVersionInfoFile" AfterTargets="CoreCompile">
 		<Delete Files="$(VersionInfoFilePath)" Condition="('$(VersionInfoFilePath)' != '') And (Exists('$(VersionInfoFilePath)'))" />
-	</Target>
-
-	<!-- <Target Name="WhatTheSourceIs" BeforeTargets DependsOnTargets="ResolveRoleReferences" Condition="'$(ProjectType)' == 'Cloud'">
-		<Error Text="%(RoleReferences.SourceDir)" />
-	</Target>
-
-	<Target Name="CopyRoleConfigurations" BeforeTargets="AfterPackageComputeService" Condition="'$(ProjectType)' == 'Cloud'">
-
-		<Copy SourceFiles="..\%(ProjectReference.Name)\bin\$(Configuration)\%(ProjectReference.RoleName).dll.config" DestinationFolder="$(IntermediateOutputPath)NuGet.Services.Gateway.Role" OverwriteReadOnlyFiles="true" Condition="Exists('..\%(ProjectReference.Name)\bin\$(Configuration)\%(ProjectReference.RoleName).dll.config')" />
-	</Target> -->
-
-	<PropertyGroup Condition="'$(ProjectType)' == 'Cloud'">
-		<CollectRoleFilesDependsOn>
-			$(CollectRoleFilesDependsOn);
-			CollectWorkerAppConfig
-		</CollectRoleFilesDependsOn>
-	</PropertyGroup>
-	<Target Name="CollectWorkerAppConfig">
-		<!-- Add the app config file from SourceFilesOutputGroup -->
-		<ItemGroup>
-	      <WorkerFiles Include="@(SourceFilesOutputGroup)" Condition=" '%(SourceFilesOutputGroup.TargetPath)' == '$(WorkerEntryPoint).config' " >
-	        <TargetPath>%(TargetPath)</TargetPath>
-	        <RoleOwner>$(_WorkerRoleProject)</RoleOwner>
-	        <RoleOwnerName>$(_WorkerRoleProjectName)</RoleOwnerName>
-	      </WorkerFiles>
-	    </ItemGroup>
 	</Target>
 </Project>

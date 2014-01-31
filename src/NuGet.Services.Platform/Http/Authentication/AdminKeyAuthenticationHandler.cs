@@ -72,7 +72,7 @@ namespace NuGet.Services.Http.Authentication
                 Context.Response.ContentType = "text/plain";
                 await Context.Response.WriteAsync(Strings.AdminKeyAuthenticationHandler_CannotAuthenticateOverHttp);
             }
-            return await base.ApplyResponseChallengeAsync();
+            await base.ApplyResponseChallengeAsync();
         }
     }
 }
