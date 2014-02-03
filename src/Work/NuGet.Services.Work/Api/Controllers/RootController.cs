@@ -13,6 +13,7 @@ namespace NuGet.Services.Work.Api.Controllers
     public class RootController : NuGetApiController
     {
         [Route("")]
+        [Authorize(Roles = Roles.Admin)]
         public IHttpActionResult GetRoot()
         {
             // Get the API Explorer service
@@ -27,9 +28,9 @@ namespace NuGet.Services.Work.Api.Controllers
                     {
                         Invocation = new
                         {
-                            Get = 
+                            Get =
                                 Enumerable.Concat(
-                                    new [] {
+                                    new[] {
                                         Tuple.Create("detail", Url.RouteUri(Routes.GetSingleInvocation, new { id = "{id}" })),
                                         Tuple.Create("log", Url.RouteUri(Routes.GetInvocationLog, new { id = "{id}" })),
                                         Tuple.Create("active", Url.RouteUri(Routes.GetActiveInvocations))
@@ -46,7 +47,8 @@ namespace NuGet.Services.Work.Api.Controllers
                         {
                             Stats = Url.RouteUri(Routes.GetWorkerStatistics)
                         },
-                        Jobs = new {
+                        Jobs = new
+                        {
                             All = Url.RouteUri(Routes.GetJobs),
                             Stats = Url.RouteUri(Routes.GetJobStatistics)
                         }

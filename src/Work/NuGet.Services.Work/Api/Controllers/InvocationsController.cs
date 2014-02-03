@@ -57,7 +57,7 @@ namespace NuGet.Services.Work.Api.Controllers
         }
 
         [Route("", Name = Routes.GetActiveInvocations)]
-        public Task<IHttpActionResult> GetActive(int? limit)
+        public Task<IHttpActionResult> GetActive(int? limit = null)
         {
             return Get(InvocationListCriteria.Active, limit);
         }
