@@ -49,7 +49,7 @@ if($accounts.Length -eq 0) {
 $NuGetAppModel = $env:NUOPS_APP_MODEL
 if(!$NuGetInternalRepo) {
 	# Try to find it
-	$DefaultInternalRepo = Join-Path (Split-Path -Parent $RepoRoot) "NuGetInternal\ServiceModel.xml"
+	$DefaultInternalRepo = Join-Path (Split-Path -Parent $RepoRoot) "Deployment\AppModel.xml"
 	if(Test-Path "$DefaultInternalRepo") {
 		$NuGetAppModel = $DefaultInternalRepo
 		$env:NUOPS_APP_MODEL = $NuGetAppModel

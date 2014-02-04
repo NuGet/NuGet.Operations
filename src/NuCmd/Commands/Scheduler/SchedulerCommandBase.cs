@@ -16,8 +16,12 @@ namespace NuCmd.Commands.Scheduler
         {
             if (Session == null || 
                 Session.CurrentEnvironment == null || 
-                Session.CurrentEnvironment.Subscription == null ||
-                Session.CurrentEnvironment.Subscription.Certificate == null)
+                Session.CurrentEnvironment.Subscription == null)
+            {
+                throw new InvalidOperationException(Strings.Command_RequiresManagementCert);
+            }
+            Session.CurrentEnvironment.Subscription.ResolveCertificate();
+            if (Session.CurrentEnvironment.Subscription.Certificate == null)
             {
                 throw new InvalidOperationException(Strings.Command_RequiresManagementCert);
             }
