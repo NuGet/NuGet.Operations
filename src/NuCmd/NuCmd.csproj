@@ -171,6 +171,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuGet.Services.Operations\NuGet.Services.Operations.csproj">
+      <Project>{fdfe3b54-1587-4ad2-bed6-7f2a38f906ba}</Project>
+      <Name>NuGet.Services.Operations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuGet.Services.Platform.Client\NuGet.Services.Platform.Client.csproj">
       <Project>{3be823f7-53aa-4263-a953-06bf643f0e43}</Project>
       <Name>NuGet.Services.Platform.Client</Name>
