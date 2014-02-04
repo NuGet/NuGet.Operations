@@ -162,7 +162,7 @@ namespace WASDImportExport
             }
         }
 
-        public string DoImport(string blobUri, bool whatIf, bool async = true)
+        public string DoImport(string blobUri, bool whatIf, bool async = true, int databaseSizeInGB = 5)
         {
             _log.Information(String.Format("Starting Import Operation - {0}\n\r", DateTime.Now));
             string requestGuid = null;
@@ -177,7 +177,7 @@ namespace WASDImportExport
             ImportInput importInputs = new ImportInput
             {
                 AzureEdition = "Web",
-                DatabaseSizeInGB = 1,
+                DatabaseSizeInGB = databaseSizeInGB,
                 BlobCredentials = new BlobStorageAccessKeyCredentials
                 {
                     StorageAccessKey = this.StorageKey,

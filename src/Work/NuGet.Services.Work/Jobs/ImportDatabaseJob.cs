@@ -14,8 +14,6 @@ namespace NuGet.Services.Work.Jobs
         //private static readonly string NorthCentralUSUri = @"https://ch1prod-dacsvc.azure.com/DACWebService.svc";
         private static readonly string EastUSUri = @"https://bl2prod-dacsvc.azure.com/DACWebService.svc";
 
-        //private static readonly string ExportMethod = "Export";
-
         public string SourceStorageAccountName { get; set; }
 
         public string SourceStorageAccountKey { get; set; }
@@ -24,12 +22,14 @@ namespace NuGet.Services.Work.Jobs
 
         public string RequestGUID { get; set; }
 
+        public string EndPointUri { get; set; }
+
         public ImportDatabaseJob(ConfigurationHub configHub) : base(configHub) { }
 
         protected internal override Task<JobContinuation> Execute()
         {
             // Load Defaults
-            var uri = EastUSUri;
+            var endPointUri = EndPointUri ?? EastUSUri;
             var cstr = TargetDatabaseConnection;
 
             if (cstr == null || cstr.InitialCatalog == null || cstr.Password == null || cstr.DataSource == null || cstr.UserID == null)
@@ -49,8 +49,8 @@ namespace NuGet.Services.Work.Jobs
 
             WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
             {
-                EndPointUri = uri,
-                DatabaseName = cstr.InitialCatalog,
+                EndPointUri = endPointUri,
+                DatabaseName = TargetDatabaseName ?? cstr.InitialCatalog,
                 ServerName = cstr.DataSource,
                 UserName = cstr.UserID,
                 Password = cstr.Password,
@@ -61,7 +61,7 @@ namespace NuGet.Services.Work.Jobs
             BacpacFile = dotIndex > -1 ? BacpacFile.Substring(0, dotIndex) : BacpacFile;
             var blobAbsoluteUri = String.Format(@"https://{0}.blob.core.windows.net/bacpac-files/{1}.bacpac", SourceStorageAccountName, BacpacFile);
 
-            var requestGUID = helper.DoImport(blobAbsoluteUri, whatIf: false, async: true);
+            var requestGUID = helper.DoImport(blobAbsoluteUri, whatIf: WhatIf, async: true);
 
             if (requestGUID != null)
             {
@@ -71,8 +71,9 @@ namespace NuGet.Services.Work.Jobs
                 var parameters = new Dictionary<string, string>();
                 parameters["RequestGUID"] = requestGUID;
                 parameters["TargetDatabaseConnection"] = cstr.ConnectionString;
+                parameters["EndPointUri"] = endPointUri;
 
-                return Task.FromResult(Suspend(TimeSpan.FromSeconds(60), parameters));
+                return Task.FromResult(Suspend(TimeSpan.FromMinutes(5), parameters));
             }
             else
             {
@@ -84,13 +85,15 @@ namespace NuGet.Services.Work.Jobs
         {
             Log.Information("Resuming ImportDatabase Job...");
 
-            if (RequestGUID == null || TargetDatabaseConnection == null)
+            if (RequestGUID == null || TargetDatabaseConnection == null || EndPointUri == null)
             {
                 throw new ArgumentNullException("Job could not resume properly due to incorrect parameters");
             }
 
+            var endPointUri = EndPointUri;
             WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
             {
+                EndPointUri = endPointUri,
                 ServerName = TargetDatabaseConnection.DataSource,
                 UserName = TargetDatabaseConnection.UserID,
                 Password = TargetDatabaseConnection.Password,
@@ -118,10 +121,13 @@ namespace NuGet.Services.Work.Jobs
                 return Task.FromResult(Complete());
             }
 
+            Log.Information(String.Format("Still importing the database. Status : {0}", statusInfo.Status));
+
             var parameters = new Dictionary<string, string>();
             parameters["RequestGUID"] = RequestGUID;
             parameters["TargetDatabaseConnection"] = TargetDatabaseConnection.ConnectionString;
-            return Task.FromResult(Suspend(TimeSpan.FromSeconds(60), parameters));
+            parameters["EndPointUri"] = endPointUri;
+            return Task.FromResult(Suspend(TimeSpan.FromMinutes(5), parameters));
         }
     }
 }
