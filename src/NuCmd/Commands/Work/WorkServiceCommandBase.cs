@@ -36,9 +36,9 @@ namespace NuCmd.Commands.Work
             }
 
             // Prefill values that come from the environment
-            if (TargetEnvironment != null && ServiceUri == null)
+            if (Session != null && Session.CurrentEnvironment != null && ServiceUri == null)
             {
-                ServiceUri = TargetEnvironment.GetServiceUri("work");
+                ServiceUri = Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: "work");
             }
 
             if (ServiceUri == null)

@@ -46,15 +46,15 @@ if($accounts.Length -eq 0) {
 
 # Locate the NuGet application model
 # Check the environment Variable
-$NuGetAppModel = $env:NUGET_APP_MODEL
+$NuGetAppModel = $env:NUOPS_APP_MODEL
 if(!$NuGetInternalRepo) {
 	# Try to find it
 	$DefaultInternalRepo = Join-Path (Split-Path -Parent $RepoRoot) "NuGetInternal\ServiceModel.xml"
 	if(Test-Path "$DefaultInternalRepo") {
 		$NuGetAppModel = $DefaultInternalRepo
-		$env:NUGET_APP_MODEL = $NuGetAppModel
+		$env:NUOPS_APP_MODEL = $NuGetAppModel
 	} else {
-		Write-Warning "Could not find App Model file. Use the NUGET_APP_MODEL environment variable to set the location of this repository if it is not in the default location of: $DefaultInternalRepo"
+		Write-Warning "Could not find App Model file. Use the NUOPS_APP_MODEL environment variable to set the location of this repository if it is not in the default location of: $DefaultInternalRepo"
 		Write-Warning "Some commands may not work without this path"
 	}
 }

@@ -124,7 +124,7 @@ namespace NuGet.Services.Operations.Model
                 Name = e.AttributeValueOrDefault("name"),
                 Type = e.Name.LocalName,
                 Value = e.Value,
-                Url = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s))
+                Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s))
             };
         }
     }

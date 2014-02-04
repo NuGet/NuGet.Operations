@@ -61,11 +61,29 @@ namespace NuGet.Services.Operations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown datacenter: {0}..
+        /// </summary>
+        internal static string DeploymentEnvironment_UnknownDatacenter {
+            get {
+                return ResourceManager.GetString("DeploymentEnvironment_UnknownDatacenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; environment variable is empty..
         /// </summary>
         internal static string OperationsSession_EnvironmentVariableIsEmpty {
             get {
                 return ResourceManager.GetString("OperationsSession_EnvironmentVariableIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application model file &apos;{0}&apos; is invalid..
+        /// </summary>
+        internal static string OperationsSession_InvalidAppModel {
+            get {
+                return ResourceManager.GetString("OperationsSession_InvalidAppModel", resourceCulture);
             }
         }
         

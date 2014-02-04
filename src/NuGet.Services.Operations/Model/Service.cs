@@ -7,6 +7,6 @@ namespace NuGet.Services.Operations.Model
 {
     public class Service : EnvironmentComponentBase
     {
-        public Uri Url { get; set; }
+        public Uri Uri { get; set; }
     }
 }

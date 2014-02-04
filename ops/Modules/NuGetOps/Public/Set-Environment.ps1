@@ -11,4 +11,5 @@ function Set-Environment {
         throw "This command requires that an App Model file was located during startup"
     }
     $NuOps.SetCurrentEnvironment($Name)
+    $env:NUOPS_CURRENT_ENVIRONMENT = $Name
 }

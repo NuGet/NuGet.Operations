@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -17,13 +18,26 @@ namespace NuGet.Services.Operations.Model
         {
             get
             {
-                return Datacenters.First(dc => dc.Id == id);
+                return Datacenters.FirstOrDefault(dc => dc.Id == id);
             }
         }
 
         public DeploymentEnvironment()
         {
             Datacenters = new List<Datacenter>();
+        }
+
+        public Uri GetServiceUri(int datacenter, string service)
+        {
+            Datacenter dc = this[datacenter];
+            if (dc == null)
+            {
+                throw new KeyNotFoundException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.DeploymentEnvironment_UnknownDatacenter,
+                    datacenter));
+            }
+            return dc.GetServiceUri(service);
         }
     }
 }

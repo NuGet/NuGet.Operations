@@ -10,11 +10,12 @@ namespace NuGet.Services.Operations
 {
     public class OperationsSession
     {
-        public static readonly string AppModelEnvironmentVariableName = "NUGET_APP_MODEL";
+        public static readonly string AppModelEnvironmentVariableName = "NUOPS_APP_MODEL";
+        public static readonly string CurrentEnvironmentVariableName = "NUOPS_CURRENT_ENVIRONMENT";
 
         public AppModel Model { get; private set; }
         public DeploymentEnvironment CurrentEnvironment { get; private set; }
-ee
+
         private IDictionary<string, DeploymentEnvironment> Environments { get; set; }
 
         public DeploymentEnvironment this[string environmentName]
@@ -50,7 +51,13 @@ ee
                     Strings.OperationsSession_EnvironmentVariableIsEmpty,
                     AppModelEnvironmentVariableName));
             }
-            return Load(serviceModel);
+            var session = Load(serviceModel);
+            string currentEnvironment = Environment.GetEnvironmentVariable(CurrentEnvironmentVariableName);
+            if (!String.IsNullOrEmpty(currentEnvironment))
+            {
+                session.SetCurrentEnvironment(currentEnvironment);
+            }
+            return session;
         }
 
         /// <summary>
@@ -60,6 +67,7 @@ ee
         /// <returns></returns>
         public static OperationsSession Load(string serviceModel)
         {
+            // We want to throw FileNotFound if the service model doesn't exist
             if (!File.Exists(serviceModel))
             {
                 throw new FileNotFoundException(String.Format(
@@ -69,21 +77,28 @@ ee
             }
 
             var model = XmlServiceModelDeserializer.LoadServiceModel(serviceModel);
-
             return new OperationsSession(model);
         }
 
         public void SetCurrentEnvironment(string name)
         {
+            SetCurrentEnvironment(name, throwOnFailure: true);
+        }
+        
+        public void SetCurrentEnvironment(string name, bool throwOnFailure)
+        {
             DeploymentEnvironment env = this[name];
-            if (env == null)
+            if (env == null && throwOnFailure)
             {
                 throw new KeyNotFoundException(String.Format(
                     CultureInfo.CurrentCulture,
                     Strings.OperationsSession_UnknownEnvironment,
                     name));
             }
-            CurrentEnvironment = env;
+            if (env != null)
+            {
+                CurrentEnvironment = env;
+            }
         }
     }
 }

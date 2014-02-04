@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NuCmd.Commands;
+using NuGet.Services.Operations;
 using PowerArgs;
 
 namespace NuCmd
@@ -48,14 +49,32 @@ namespace NuCmd
         {
             await _console.WriteTraceLine("NuCmd v{0}", typeof(Program).Assembly.GetName().Version);
 
+            // Try to load an ops session if the environment variable is provided
+            OperationsSession session;
+            Exception thrown = null;
+            try
+            {
+                session = OperationsSession.LoadFromEnvironment();
+            }
+            catch(Exception ex)
+            {
+                thrown = ex;
+                session = null;
+            }
+
+            if (thrown != null && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable(OperationsSession.AppModelEnvironmentVariableName)))
+            {
+                await _console.WriteWarningLine(Strings.Program_ErrorLoadingSession, thrown.ToString());
+            }   
+
             // Get the command group
             var groupOrCommand = _args.FirstOrDefault();
             
             _args = _args.Skip(1);
-            await DispatchGroup(groupOrCommand ?? "help");
+            await DispatchGroup(session, groupOrCommand ?? "help");
         }
 
-        private async Task DispatchGroup(string groupOrRootCommand)
+        private async Task DispatchGroup(OperationsSession session, string groupOrRootCommand)
         {
             // Commands are classes with the following naming convention
             //  NuCmd.Commands.<CommandName>Command
@@ -101,11 +120,11 @@ namespace NuCmd
             }
             else
             {
-                await Dispatch(command);
+                await Dispatch(session, command);
             }
         }
 
-        private async Task Dispatch(CommandDefinition definition)
+        private async Task Dispatch(OperationsSession session, CommandDefinition definition)
         {
             ICommand cmd = null;
             Exception thrown = null;
@@ -138,7 +157,7 @@ namespace NuCmd
                 thrown = null;
                 try
                 {
-                    await cmd.Execute(_console, definition, _directory);
+                    await cmd.Execute(session, _console, definition, _directory);
                 }
                 catch (AggregateException aex)
                 {

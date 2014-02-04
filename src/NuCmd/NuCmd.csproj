@@ -149,7 +149,6 @@
     <Compile Include="ConsoleTable.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IConsoleFormatter.cs" />
-    <Compile Include="NuGetEnvironment.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strings1.Designer.cs">

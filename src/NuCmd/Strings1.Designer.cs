@@ -99,6 +99,87 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Azure Certificate: {0}.
+        /// </summary>
+        internal static string EnvCommand_Data_Cert {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Cert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  {0} - {1}.
+        /// </summary>
+        internal static string EnvCommand_Data_Datacenter {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Datacenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to   {0} resource &apos;{1}&apos;: {2}.
+        /// </summary>
+        internal static string EnvCommand_Data_Datacenter_Resource {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Datacenter_Resource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to   {0} service: {1}.
+        /// </summary>
+        internal static string EnvCommand_Data_Datacenter_Service {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Datacenter_Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datacenters:.
+        /// </summary>
+        internal static string EnvCommand_Data_Datacenters {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Datacenters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Environment: {0}.
+        /// </summary>
+        internal static string EnvCommand_Data_Env {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Env", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure Subscription: {0} ({1}).
+        /// </summary>
+        internal static string EnvCommand_Data_Sub {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_Sub", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No current environment..
+        /// </summary>
+        internal static string EnvCommand_NoEnv {
+            get {
+                return ResourceManager.GetString("EnvCommand_NoEnv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No current operations session..
+        /// </summary>
+        internal static string EnvCommand_NoSession {
+            get {
+                return ResourceManager.GetString("EnvCommand_NoSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command groups. Type &apos;nucmd help &lt;group&gt;&apos; to see a list of commands available in that group.
         /// </summary>
         internal static string Help_CommandGroupsHeader {
@@ -158,6 +239,15 @@ namespace NuCmd {
         internal static string Program_CommandNotConvertible {
             get {
                 return ResourceManager.GetString("Program_CommandNotConvertible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading session: {0}.
+        /// </summary>
+        internal static string Program_ErrorLoadingSession {
+            get {
+                return ResourceManager.GetString("Program_ErrorLoadingSession", resourceCulture);
             }
         }
         
