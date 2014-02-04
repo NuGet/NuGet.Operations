@@ -178,6 +178,7 @@
     <Compile Include="Jobs\CreateWarehouseReportsJob.cs" />
     <Compile Include="Jobs\ExportDatabaseJob.cs" />
     <Compile Include="Jobs\HandlePackageEditsJob.cs" />
+    <Compile Include="Jobs\ImportDatabaseJob.cs" />
     <Compile Include="Jobs\Models\PackageEdit.cs" />
     <Compile Include="Jobs\Models\PackageRef.cs" />
     <Compile Include="Jobs\PurgeCompletedInvocationsJob.cs" />

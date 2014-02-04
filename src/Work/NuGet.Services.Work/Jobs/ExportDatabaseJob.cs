@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics.Tracing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Services.Client;
 using NuGet.Services.Configuration;
 using NuGet.Services.Work.DACWebService;
-using System.Net;
-using System.IO;
-using NuGet.Services.Client;
-using System.Runtime.Serialization;
 
 namespace NuGet.Services.Work.Jobs
 {
-    [Description("Sync the secondary datacenter with the primary datacenter")]
+    [Description("Exports database from primary datacenter to a bacpac file in secondary datacenter")]
     public class ExportDatabaseJob : DatabaseJobHandlerBase<SyncDatacenterEventSource>
     {
         private static readonly string NorthCentralUSUri = @"https://ch1prod-dacsvc.azure.com/DACWebService.svc";
@@ -54,7 +54,7 @@ namespace NuGet.Services.Work.Jobs
 
             WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
             {
-                EndPointUri = NorthCentralUSUri,
+                EndPointUri = uri,
                 DatabaseName = cstr.InitialCatalog,
                 ServerName = cstr.DataSource,
                 UserName = cstr.UserID,
@@ -66,17 +66,27 @@ namespace NuGet.Services.Work.Jobs
 
             var requestGUID = helper.DoExport(blobAbsoluteUri, whatIf: false, async: true);
 
-            Log.Information(String.Format("\n\n Request GUID is : {0}", requestGUID));
 
-            var parameters = new Dictionary<string, string>();
-            parameters["RequestGUID"] = requestGUID;
-            parameters["TargetDatabaseConnection"] = cstr.ConnectionString;
+            if (requestGUID != null)
+            {
+                Log.Information(String.Format("\n\n Successful Request and Response. Request GUID is : {0}", requestGUID));
 
-            return Task.FromResult(Suspend(TimeSpan.FromSeconds(60), parameters));
+                var parameters = new Dictionary<string, string>();
+                parameters["RequestGUID"] = requestGUID;
+                parameters["TargetDatabaseConnection"] = cstr.ConnectionString;
+
+                return Task.FromResult(Suspend(TimeSpan.FromSeconds(60), parameters));
+            }
+            else
+            {
+                return Task.FromResult(Complete());
+            }
         }
 
         protected internal override Task<JobContinuation> Resume()
         {
+            Log.Information("Resuming ExportDatabase Job...");
+
             if (RequestGUID == null || TargetDatabaseConnection == null)
             {
                 throw new ArgumentNullException("Job could not resume properly due to incorrect parameters");
@@ -96,14 +106,14 @@ namespace NuGet.Services.Work.Jobs
 
             if (statusInfo.Status == "Failed")
             {
-                Log.Information(String.Format("Database export failed: {0}", statusInfo.ErrorMessage));
+                Log.Information(String.Format("After Resuming, Database export failed: {0}", statusInfo.ErrorMessage));
                 exportComplete = true;
             }
 
             if (statusInfo.Status == "Completed")
             {
                 var exportedBlobPath = statusInfo.BlobUri;
-                Log.Information(String.Format("Export Complete - Database exported to: {0}", exportedBlobPath));
+                Log.Information(String.Format("After Resuming, Export Completed - Database has been exported to: {0}", exportedBlobPath));
                 exportComplete = true;
             }
 

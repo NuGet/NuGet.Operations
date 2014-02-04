@@ -123,7 +123,7 @@ namespace WASDImportExport
 
                     //Get Export Operation Status
                     string last = null;
-                    while (!async || !exportComplete)
+                    while (!async && !exportComplete)
                     {
                         List<StatusInfo> statusInfoList = CheckRequestStatus(requestGuid);
                         var status = statusInfoList.FirstOrDefault().Status;
@@ -162,7 +162,7 @@ namespace WASDImportExport
             }
         }
 
-        public bool DoImport(string blobUri, bool whatIf, bool async = true)
+        public string DoImport(string blobUri, bool whatIf, bool async = true)
         {
             _log.Information(String.Format("Starting Import Operation - {0}\n\r", DateTime.Now));
             string requestGuid = null;
@@ -196,54 +196,86 @@ namespace WASDImportExport
             _log.Information("Making Web Request for Import Operation...");
             Stream webRequestStream = webRequest.GetRequestStream();
             DataContractSerializer dataContractSerializer = new DataContractSerializer(importInputs.GetType());
-            dataContractSerializer.WriteObject(webRequestStream, importInputs);
-            webRequestStream.Close();
 
-            //Get Response and Extract Request Identifier
-            _log.Information("Serializing response and extracting guid...");
-            WebResponse webResponse = null;
-            XmlReader xmlStreamReader = null;
-
-            try
+            if (whatIf)
             {
-                //Initialize the WebResponse to the response from the WebRequest
-                webResponse = webRequest.GetResponse();
+                _log.Information("Would have sent:");
 
-                xmlStreamReader = XmlReader.Create(webResponse.GetResponseStream());
-                xmlStreamReader.ReadToFollowing("guid");
-                requestGuid = xmlStreamReader.ReadElementContentAsString();
-                _log.Information(String.Format("Request Guid: {0}", requestGuid));
-
-                //Get Status of Import Operation
-                while (!async && !importComplete)
+                using (var strm = new MemoryStream())
                 {
-                    _log.Information("Checking status of Import...");
-                    List<StatusInfo> statusInfoList = CheckRequestStatus(requestGuid);
-                    _log.Information(statusInfoList.FirstOrDefault().Status);
-
-                    if (statusInfoList.FirstOrDefault().Status == "Failed")
+                    dataContractSerializer.WriteObject(strm, importInputs);
+                    strm.Flush();
+                    strm.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(strm))
                     {
-                        _log.Information(String.Format("Database import failed: {0}", statusInfoList.FirstOrDefault().ErrorMessage));
-                        importComplete = true;
-                    }
-
-                    if (statusInfoList.FirstOrDefault().Status == "Completed")
-                    {
-                        _log.Information(String.Format("Import Complete - Database imported to: {0}\n\r", statusInfoList.FirstOrDefault().DatabaseName));
-                        importComplete = true;
+                        _log.Information(reader.ReadToEnd());
                     }
                 }
-                return importComplete;
+                return null;
             }
-            catch (WebException responseException)
+            else
             {
-                _log.Error(String.Format("Request Falied: {0}", responseException.Message));
+                _log.Information("Sending: ");
+                using (var strm = new MemoryStream())
                 {
-                    _log.Error(String.Format("Status Code: {0}", ((HttpWebResponse)responseException.Response).StatusCode));
-                    _log.Error(String.Format("Status Description: {0}\n\r", ((HttpWebResponse)responseException.Response).StatusDescription));
+                    dataContractSerializer.WriteObject(strm, importInputs);
+                    strm.Flush();
+                    strm.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(strm))
+                    {
+                        _log.Information(reader.ReadToEnd());
+                    }
                 }
 
-                return importComplete;
+                dataContractSerializer.WriteObject(webRequestStream, importInputs);
+                webRequestStream.Close();
+
+                //Get Response and Extract Request Identifier
+                _log.Information("Serializing response and extracting guid...");
+                WebResponse webResponse = null;
+                XmlReader xmlStreamReader = null;
+
+                try
+                {
+                    //Initialize the WebResponse to the response from the WebRequest
+                    webResponse = webRequest.GetResponse();
+
+                    xmlStreamReader = XmlReader.Create(webResponse.GetResponseStream());
+                    xmlStreamReader.ReadToFollowing("guid");
+                    requestGuid = xmlStreamReader.ReadElementContentAsString();
+                    _log.Information(String.Format("Request Guid: {0}", requestGuid));
+
+                    //Get Status of Import Operation
+                    while (!async && !importComplete)
+                    {
+                        _log.Information("Checking status of Import...");
+                        List<StatusInfo> statusInfoList = CheckRequestStatus(requestGuid);
+                        _log.Information(statusInfoList.FirstOrDefault().Status);
+
+                        if (statusInfoList.FirstOrDefault().Status == "Failed")
+                        {
+                            _log.Information(String.Format("Database import failed: {0}", statusInfoList.FirstOrDefault().ErrorMessage));
+                            importComplete = true;
+                        }
+
+                        if (statusInfoList.FirstOrDefault().Status == "Completed")
+                        {
+                            _log.Information(String.Format("Import Complete - Database imported to: {0}\n\r", statusInfoList.FirstOrDefault().DatabaseName));
+                            importComplete = true;
+                        }
+                    }
+                    return requestGuid;
+                }
+                catch (WebException responseException)
+                {
+                    _log.Error(String.Format("Request Falied: {0}", responseException.Message));
+                    {
+                        _log.Error(String.Format("Status Code: {0}", ((HttpWebResponse)responseException.Response).StatusCode));
+                        _log.Error(String.Format("Status Description: {0}\n\r", ((HttpWebResponse)responseException.Response).StatusDescription));
+                    }
+
+                    return null;
+                }
             }
         }
 
