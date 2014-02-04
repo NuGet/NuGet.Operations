@@ -47,8 +47,8 @@ namespace NuGet.Services.Work.Jobs
             _globalReportBuilders = new List<Func<Task>>() {
                 () => CreateReport(NuGetClientVersion, "NuGet.Services.Work.Jobs.Scripts.DownloadReport_NuGetClientVersion.sql"),
                 () => CreateReport(Last6Months, "NuGet.Services.Work.Jobs.Scripts.DownloadReport_Last6Months.sql"),
-                () => CreateReport(RecentPopularity, "NuGet.Services.Work.Jobs.Scripts.DownloadReport_RecentPopularityDetail.sql"),
-                () => CreateReport(RecentPopularityDetail, "NuGet.Services.Work.Jobs.Scripts.DownloadReport_RecentPopularity.sql")
+                () => CreateReport(RecentPopularity, "NuGet.Services.Work.Jobs.Scripts.DownloadReport_RecentPopularity.sql"),
+                () => CreateReport(RecentPopularityDetail, "NuGet.Services.Work.Jobs.Scripts.DownloadReport_RecentPopularityDetail.sql")
             };
         }
 
