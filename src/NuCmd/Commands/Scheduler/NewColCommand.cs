@@ -56,10 +56,6 @@ namespace NuCmd.Commands.Scheduler
                 await Console.WriteErrorLine(Strings.Scheduler_ColNewCommand_MaxRecurrenceIncomplete);
             }
             else {
-                CloudService = String.IsNullOrEmpty(CloudService) ?
-                    String.Format("nuget-{0}-0-scheduler", TargetEnvironment.Name) :
-                    CloudService;
-
                 JobCollectionMaxRecurrence maxRecurrence = null;
                 if(MaxRecurrenceFrequency != null) {
                     maxRecurrence = new JobCollectionMaxRecurrence()
@@ -95,6 +91,18 @@ namespace NuCmd.Commands.Scheduler
                     }
                     await Console.WriteInfoLine(Strings.Scheduler_ColNewCommand_CreatedCollection, Name, CloudService);
                 }
+            }
+        }
+
+        protected override async Task LoadDefaultsFromContext()
+        {
+            await base.LoadDefaultsFromContext();
+
+            if (Session != null && Session.CurrentEnvironment != null)
+            {
+                CloudService = String.IsNullOrEmpty(CloudService) ?
+                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
+                    CloudService;
             }
         }
     }

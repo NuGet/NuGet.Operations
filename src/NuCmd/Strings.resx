@@ -263,4 +263,34 @@ Details:
   <data name="Scheduler_RefreshJobCommand_UpdatingUrl" xml:space="preserve">
     <value>Updating target url for job '{0}' from '{1}' to '{2}'</value>
   </data>
+  <data name="EnvCommand_Data_Cert" xml:space="preserve">
+    <value>Azure Certificate: {0}</value>
+  </data>
+  <data name="EnvCommand_Data_Datacenter" xml:space="preserve">
+    <value> {0} - {1}</value>
+  </data>
+  <data name="EnvCommand_Data_Datacenters" xml:space="preserve">
+    <value>Datacenters:</value>
+  </data>
+  <data name="EnvCommand_Data_Datacenter_Resource" xml:space="preserve">
+    <value>  {0} resource '{1}': {2}</value>
+  </data>
+  <data name="EnvCommand_Data_Datacenter_Service" xml:space="preserve">
+    <value>  {0} service: {1}</value>
+  </data>
+  <data name="EnvCommand_Data_Env" xml:space="preserve">
+    <value>Environment: {0}</value>
+  </data>
+  <data name="EnvCommand_Data_Sub" xml:space="preserve">
+    <value>Azure Subscription: {0} ({1})</value>
+  </data>
+  <data name="EnvCommand_NoEnv" xml:space="preserve">
+    <value>No current environment.</value>
+  </data>
+  <data name="EnvCommand_NoSession" xml:space="preserve">
+    <value>No current operations session.</value>
+  </data>
+  <data name="Program_ErrorLoadingSession" xml:space="preserve">
+    <value>Error loading session: {0}</value>
+  </data>
 </root>

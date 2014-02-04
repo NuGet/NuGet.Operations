@@ -38,19 +38,6 @@ namespace NuCmd.Commands.Scheduler
 
         protected override async Task OnExecute()
         {
-            CloudService = String.IsNullOrEmpty(CloudService) ?
-                String.Format("nuget-{0}-0-scheduler", TargetEnvironment.Name) :
-                CloudService;
-            Collection = String.IsNullOrEmpty(Collection) ?
-                String.Format("nuget-{0}-0-scheduler-0", TargetEnvironment.Name) :
-                Collection;
-
-            // Locate the work service 
-            if (ServiceUri == null)
-            {
-                ServiceUri = TargetEnvironment.GetServiceUri("work");
-            }
-
             if (ServiceUri == null)
             {
                 await Console.WriteErrorLine(Strings.ParameterRequired, "SerivceUri");
@@ -88,6 +75,22 @@ namespace NuCmd.Commands.Scheduler
                         }
                     }
                 }
+            }
+        }
+
+        protected override async Task LoadDefaultsFromContext()
+        {
+            await base.LoadDefaultsFromContext();
+
+            if (Session != null && Session.CurrentEnvironment != null)
+            {
+                CloudService = String.IsNullOrEmpty(CloudService) ?
+                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
+                    CloudService;
+                Collection = String.IsNullOrEmpty(Collection) ?
+                    String.Format("nuget-{0}-0-scheduler-0", Session.CurrentEnvironment.Name) :
+                    Collection;
+                ServiceUri = ServiceUri ?? Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: "work");
             }
         }
     }

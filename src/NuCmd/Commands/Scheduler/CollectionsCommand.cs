@@ -24,10 +24,6 @@ namespace NuCmd.Commands.Scheduler
 
         protected override Task OnExecute()
         {
-            CloudService = String.IsNullOrEmpty(CloudService) ?
-                String.Format("nuget-{0}-0-scheduler", TargetEnvironment.Name) :
-                CloudService;
-
             if (String.IsNullOrEmpty(Name))
             {
                 return GetAllCollections();
@@ -35,6 +31,18 @@ namespace NuCmd.Commands.Scheduler
             else
             {
                 return GetSingleCollection();
+            }
+        }
+
+        protected override async Task LoadDefaultsFromContext()
+        {
+            await base.LoadDefaultsFromContext();
+
+            if (Session != null && Session.CurrentEnvironment != null)
+            {
+                CloudService = String.IsNullOrEmpty(CloudService) ?
+                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
+                    CloudService;
             }
         }
 

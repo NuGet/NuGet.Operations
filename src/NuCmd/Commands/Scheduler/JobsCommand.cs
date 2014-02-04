@@ -30,13 +30,6 @@ namespace NuCmd.Commands.Scheduler
 
         protected override async Task OnExecute()
         {
-            CloudService = String.IsNullOrEmpty(CloudService) ?
-                String.Format("nuget-{0}-0-scheduler", TargetEnvironment.Name) :
-                CloudService;
-            Collection = String.IsNullOrEmpty(Collection) ?
-                String.Format("nuget-{0}-0-scheduler-0", TargetEnvironment.Name) :
-                Collection;
-
             using (var client = CloudContext.Clients.CreateSchedulerClient(Credentials, CloudService, Collection))
             {
                 await Console.WriteInfoLine(Strings.Scheduler_JobsCommand_ListingJobs, CloudService, Collection);
@@ -55,6 +48,21 @@ namespace NuCmd.Commands.Scheduler
                     var job = await client.Jobs.GetAsync(Id, CancellationToken.None);
                     await Console.WriteObject(job.Job);
                 }
+            }
+        }
+
+        protected override async Task LoadDefaultsFromContext()
+        {
+            await base.LoadDefaultsFromContext();
+
+            if (Session != null && Session.CurrentEnvironment != null)
+            {
+                CloudService = String.IsNullOrEmpty(CloudService) ?
+                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
+                    CloudService;
+                Collection = String.IsNullOrEmpty(Collection) ?
+                    String.Format("nuget-{0}-0-scheduler-0", Session.CurrentEnvironment.Name) :
+                    Collection;
             }
         }
     }

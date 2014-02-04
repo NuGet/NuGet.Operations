@@ -12,19 +12,19 @@ namespace NuCmd.Commands.Scheduler
     {
         protected SubscriptionCloudCredentials Credentials { get; set; }
 
-        protected override async Task<bool> LoadContext(IConsole console, CommandDefinition definition, CommandDirectory directory)
+        protected override Task LoadDefaultsFromContext()
         {
-            await base.LoadContext(console, definition, directory);
-
-            if (TargetEnvironment == null || TargetEnvironment.SubscriptionCertificate == null || String.IsNullOrEmpty(TargetEnvironment.SubscriptionId))
+            if (Session == null || 
+                Session.CurrentEnvironment == null || 
+                Session.CurrentEnvironment.Subscription == null ||
+                Session.CurrentEnvironment.Subscription.Certificate == null)
             {
-                await Console.WriteErrorLine(Strings.Command_RequiresManagementCert);
-                return false;
+                throw new InvalidOperationException(Strings.Command_RequiresManagementCert);
             }
             Credentials = new CertificateCloudCredentials(
-                TargetEnvironment.SubscriptionId,
-                TargetEnvironment.SubscriptionCertificate);
-            return true;
+                Session.CurrentEnvironment.Subscription.Id,
+                Session.CurrentEnvironment.Subscription.Certificate);
+            return Task.FromResult(true);
         }
     }
 }
