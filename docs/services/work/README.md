@@ -45,7 +45,8 @@ An invocation can be in one of the following States:
 * **Suspended** - The invocation is waiting for an external service and has suspended itself until that service responds
 
 Below is a diagram of the states and the transitions between states:
-![Invocation States](images/InvocationsStates.png)
+
+![Invocation States](images/InvocationStates.png)
 
 ### Dequeuing
 An invocation in the **Queued** or **Suspended** state may be eligible for dequeuing by a Worker. The NextVisibleAt date/time field indicates when the message may be dequeued. Dequeuing the message simply updates the DequeueCount for the invocation and sets the NextVisibleAt time to a later point (generally 5 minutes from the dequeue time). If the Worker crashes, or otherwise fails to extend the NextVisibleAt time or complete the job, the invocation will become eligible for dequeuing again.
