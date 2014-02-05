@@ -12,6 +12,18 @@ namespace NuGet.Services.Configuration
         public Dictionary<KnownSqlServer, SqlConnectionStringBuilder> Connections { get; private set; }
         public Dictionary<KnownSqlServer, SqlConnectionStringBuilder> AdminConnections { get; private set; }
 
+        /// <summary>
+        /// This represents the export service endpoint used to export a database into a bacpac file
+        /// NOTE that this endpoint is different for different datacenters
+        /// </summary>
+        public string ExportEndPoint { get; private set; }
+
+        /// <summary>
+        /// This represents the import service endpoint used to import a database from a bacpac file
+        /// NOTE that this endpoint is different for different datacenters
+        /// </summary>
+        public string ImportEndPoint { get; private set; }
+
         public SqlConnectionStringBuilder Primary { get { return GetConnectionString(KnownSqlServer.Primary); } }
         public SqlConnectionStringBuilder Legacy { get { return GetConnectionString(KnownSqlServer.Legacy); } }
         public SqlConnectionStringBuilder Warehouse { get { return GetConnectionString(KnownSqlServer.Warehouse); } }
@@ -35,6 +47,8 @@ namespace NuGet.Services.Configuration
         {
             Connections = GetConnections(hub, prefix, String.Empty);
             AdminConnections = GetConnections(hub, prefix, ".Admin");
+            ExportEndPoint = hub.GetSetting(prefix + "ExportEndpoint");
+            ImportEndPoint = hub.GetSetting(prefix + "ImportEndpoint");
         }
 
         private static Dictionary<KnownSqlServer, SqlConnectionStringBuilder> GetConnections(ConfigurationHub hub, string prefix, string suffix)
