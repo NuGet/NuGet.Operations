@@ -3,9 +3,7 @@
     <Role name="NuGet.Services.Work">
         <Instances count="1" />
         <ConfigurationSettings>
-            <Setting name="Host.Datacenter" value="0" />
-            <Setting name="Host.Environment" value="local" />
-            <Setting name="Host.Name" value="work" />
+            <Setting name="Host.Name" value="nuget-local-0-work" />
             <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
             <Setting name="Storage.Primary" value="UseDevelopmentStorage=true" />
             <Setting name="Storage.Legacy" value="UseDevelopmentStorage=true" />
@@ -15,10 +13,6 @@
             <Setting name="Sql.Primary" value="Data Source=(LocalDB)\v11.0;Initial Catalog=nuget-local-0;Integrated Security=SSPI" />
             <Setting name="Sql.Legacy" value="Data Source=(LocalDB)\v11.0;Initial Catalog=NuGetGallery;Integrated Security=SSPI" />
             <Setting name="Sql.Warehouse" value="Data Source=(LocalDB)\v11.0;Initial Catalog=NuGetWarehouse;Integrated Security=SSPI" />
-            <!-- Admin SQL Connections if the service has access to them -->
-            <Setting name="Sql.Primary.Admin" value="Data Source=(LocalDB)\v11.0;Initial Catalog=nuget-local-0;Integrated Security=SSPI" />
-            <Setting name="Sql.Legacy.Admin" value="Data Source=(LocalDB)\v11.0;Initial Catalog=NuGetGallery;Integrated Security=SSPI" />
-            <Setting name="Sql.Warehouse.Admin" value="Data Source=(LocalDB)\v11.0;Initial Catalog=NuGetWarehouse;Integrated Security=SSPI" />
             
             <Setting name="Work.PollInterval" value="00:00:15" />
             <Setting name="Work.WorkersPerCore" value="2" />

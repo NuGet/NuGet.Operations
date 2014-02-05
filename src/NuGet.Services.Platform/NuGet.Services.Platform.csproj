@@ -140,6 +140,21 @@
     <Compile Include="$(CommonSourceDirectory)\HashCodeCombiner.cs">
       <Link>Common\HashCodeCombiner.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceDirectory)\Guard.cs">
+      <Link>Common\Guard.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceDirectory)\GuardStrings.Designer.cs">
+      <Link>Common\GuardStrings.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GuardStrings.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="$(CommonSourceDirectory)\GuardStrings.resx">
+      <Link>Common\GuardStrings.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GuardStrings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>NuGet.Services</CustomToolNamespace>
+    </EmbeddedResource>
     <Compile Include="Configuration\HttpConfiguration.cs" />
     <Compile Include="Http\Authentication\AdminKeyAuthenticationMiddleware.cs" />
     <Compile Include="Http\Authentication\AdminKeyAuthenticationOptions.cs" />
@@ -150,9 +165,11 @@
     <Compile Include="Http\Models\ApiDescription.cs" />
     <Compile Include="Http\TransferBlobResult.cs" />
     <Compile Include="Roles.cs" />
+    <Compile Include="ServiceModel\EnvironmentName.cs" />
     <Compile Include="ServiceModel\LocalServiceHost.cs" />
     <Compile Include="ServiceModel\ServiceAttribute.cs" />
     <Compile Include="ServiceModel\ServiceDefinition.cs" />
+    <Compile Include="ServiceModel\ServiceHostInstanceName.cs" />
     <Compile Include="Storage\AssemblyInformationPropertySerializer.cs" />
     <Compile Include="Storage\DefaultTablePropertySerializer.cs" />
     <Compile Include="Storage\TablePropertySerializer.cs" />
@@ -169,7 +186,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Http\Controllers\RootController.cs" />
     <Compile Include="Http\Filters\LocationHeaderFilter.cs" />
-    <Compile Include="Http\Models\HostInformationModel.cs" />
     <Compile Include="Http\Models\HostRootModel.cs" />
     <Compile Include="Http\Models\ServiceInstanceModel.cs" />
     <Compile Include="Http\NuGetApiController.cs" />

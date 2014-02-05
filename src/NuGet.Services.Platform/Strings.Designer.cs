@@ -70,20 +70,20 @@ namespace NuGet.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected a name in the format: &apos;&lt;index&gt;-&lt;id&gt;&apos;.
-        /// </summary>
-        internal static string Datacenter_InvalidName {
-            get {
-                return ResourceManager.GetString("Datacenter_InvalidName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Expected a name in the format: &quot;&lt;environment&gt;_DC&lt;datacenter id&gt;&quot;.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid Datacenter Name. Expected a name in the format: &quot;&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;&quot;.
         /// </summary>
         internal static string DatacenterName_InvalidName {
             get {
                 return ResourceManager.GetString("DatacenterName_InvalidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid Environment Name. Expected a name in the format: &quot;&lt;product&gt;-&lt;environment&gt;&quot;.
+        /// </summary>
+        internal static string EnvironmentName_InvalidName {
+            get {
+                return ResourceManager.GetString("EnvironmentName_InvalidName", resourceCulture);
             }
         }
         
@@ -223,7 +223,16 @@ namespace NuGet.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected a name in the format: &quot;&lt;environment&gt;_DC&lt;datacenter id&gt;_&lt;name&gt;&quot;.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid Service Host Instance Name. Expected a name in the format: &quot;&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;-&lt;host name&gt;_IN&lt;instance id&gt;&quot;.
+        /// </summary>
+        internal static string ServiceHostInstanceName_InvalidName {
+            get {
+                return ResourceManager.GetString("ServiceHostInstanceName_InvalidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid Service Host Name. Expected a name in the format: &quot;&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;-&lt;host name&gt;&quot;.
         /// </summary>
         internal static string ServiceHostName_InvalidName {
             get {
@@ -232,11 +241,11 @@ namespace NuGet.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected a name in the format: &quot;&lt;environment&gt;_DC&lt;datacenter id&gt;_&lt;service host name&gt;_&lt;service name&gt;_IN&lt;service instance index&gt;&quot;.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid Service Name. Expected a name in the format: &quot;&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;-&lt;host name&gt;_IN&lt;instance id&gt;-&lt;service name&gt;&quot;.
         /// </summary>
-        internal static string ServiceInstanceName_InvalidName {
+        internal static string ServiceName_InvalidName {
             get {
-                return ResourceManager.GetString("ServiceInstanceName_InvalidName", resourceCulture);
+                return ResourceManager.GetString("ServiceName_InvalidName", resourceCulture);
             }
         }
     }

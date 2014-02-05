@@ -90,7 +90,7 @@ namespace NuGet.Services.Http.Middleware
             if (context.Authentication.User != null && context.Authentication.User.IsInRole(Roles.Admin))
             {
                 api.Services.Add("_info", MakeAbsolute("_info", context));
-                api.Host = Host.Description.ServiceHostName.ToString();
+                api.Host = Host.Description.InstanceName.ToString();
             }
 
             return WriteJson(context, api);
@@ -119,7 +119,7 @@ namespace NuGet.Services.Http.Middleware
                 var proc = Process.GetCurrentProcess();
                 var infoObject = new
                 {
-                    Host = Host.Description.ServiceHostName.ToString(),
+                    Host = Host.Description.InstanceName.ToString(),
                     Machine = Host.Description.MachineName,
                     Services = Host.Services.ToDictionary(
                         pair => pair.Key,
@@ -152,7 +152,7 @@ namespace NuGet.Services.Http.Middleware
                 string serviceName = match.Groups["service"].Value;
                 var service = Host.GetInstance(serviceName);
                 var infoObject = new {
-                    Name = service.Name.ToString(),
+                    Name = service.ServiceName.ToString(),
                     service.LastHeartbeat,
                     Status = await service.GetCurrentStatus()
                 };

@@ -17,13 +17,12 @@ namespace NuGet.Services.Work.Api.Controllers
         public IHttpActionResult GetRoot()
         {
             // Get the API Explorer service
-            var explorer = Configuration.Services.GetApiExplorer();
             return Content(
                 HttpStatusCode.OK,
                 new
                 {
-                    Name = Service.Name.ToString(),
-                    Service = Service.Name.Service,
+                    Name = Service.ServiceName.ToString(),
+                    Service = Service.ServiceName.Name,
                     Resources = new
                     {
                         Invocation = new

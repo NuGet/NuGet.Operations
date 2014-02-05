@@ -26,12 +26,17 @@ namespace NuGet.Services.Work
         public static async Task<WorkService> Create(IDictionary<string, string> configuration)
         {
             var host = new LocalServiceHost(
-                new ServiceHostName(
-                    new DatacenterName("local", 0),
-                    "work",
+                new ServiceHostInstanceName(
+                    new ServiceHostName(
+                        new DatacenterName(
+                            new EnvironmentName(
+                                "nuget",
+                                "local"),
+                            0),
+                        "work"),
                     0),
                 configuration);
-            var name = new ServiceName(host.Description.ServiceHostName, ServiceDefinition.FromType<WorkService>().Name);
+            var name = new ServiceName(host.Description.InstanceName, ServiceDefinition.FromType<WorkService>().Name);
             host.LocalServices.Add(ServiceDefinition.FromType<LocalWorkService>());
             host.Initialize();
             if (!await host.Start())

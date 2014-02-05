@@ -17,7 +17,7 @@ namespace NuGet.Services.Http.Models
         {
             Self = baseUrl;
             Services = httpServices.ToDictionary(
-                service => service.Name.Service.ToLowerInvariant(),
+                service => service.ServiceName.Name.ToLowerInvariant(),
                 service => new Uri(baseUrl, service.BasePath.ToUriComponent()),
                 StringComparer.OrdinalIgnoreCase);
         }

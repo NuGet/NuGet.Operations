@@ -117,67 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AdminKeyAuthenticationHandler_CannotAuthenticateOverHttp" xml:space="preserve">
-    <value>This request cannot be performed over an insecure connection. Retry your request using HTTPS.</value>
+  <data name="IntegerMustBeNonNegative" xml:space="preserve">
+    <value>Parameter must be non-negative.</value>
   </data>
-  <data name="DatacenterName_InvalidName" xml:space="preserve">
-    <value>'{0}' is not a valid Datacenter Name. Expected a name in the format: "&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;"</value>
-  </data>
-  <data name="EnvironmentName_InvalidName" xml:space="preserve">
-    <value>'{0}' is not a valid Environment Name. Expected a name in the format: "&lt;product&gt;-&lt;environment&gt;"</value>
-  </data>
-  <data name="MaxSizeStream_PositionIsPastMaximumAllowedLength" xml:space="preserve">
-    <value>Operation would cause current position to move beyond the maximum allowed read length of {1}</value>
-  </data>
-  <data name="NuGetServiceInformationMiddleware_Body" xml:space="preserve">
-    <value>Sorry, I don't know how to make coffee. I can make a nice Earl Grey though!</value>
-  </data>
-  <data name="NuGetServiceInformationMiddleware_ReasonPhrase" xml:space="preserve">
-    <value>I'm a teapot</value>
-  </data>
-  <data name="NuGetService_HostNotSet" xml:space="preserve">
-    <value>Host must be set using SetHost before invoking this method.</value>
-  </data>
-  <data name="SafeZipPackage_EntryDecompressedSizeIncorrect" xml:space="preserve">
-    <value>The zip entry's claimed decompressed size is incorrect.</value>
-  </data>
-  <data name="SafeZipPackage_EntryLengthInvalid" xml:space="preserve">
-    <value>The zip entry size is invalid.</value>
-  </data>
-  <data name="SafeZipPackage_EntryTooLong" xml:space="preserve">
-    <value>The zip entry is larger than the allowed size.</value>
-  </data>
-  <data name="SafeZipPackage_MissingManifest" xml:space="preserve">
-    <value>The package does not contain a manifest.</value>
-  </data>
-  <data name="ServiceConfiguration_UnknownSqlServer" xml:space="preserve">
-    <value>Unknown Sql Server: {0}</value>
-  </data>
-  <data name="ServiceConfiguration_UnknownStorageAccount" xml:space="preserve">
-    <value>Unknown Storage Account: {0}</value>
-  </data>
-  <data name="ServiceDefinition_TypeMustBeClass" xml:space="preserve">
-    <value>The service type must be a class</value>
-  </data>
-  <data name="ServiceDefinition_TypeMustBeNonAbstract" xml:space="preserve">
-    <value>The service type must be non-abstract</value>
-  </data>
-  <data name="ServiceDefinition_TypeMustInheritFromNuGetService" xml:space="preserve">
-    <value>The service type must inherit from NuGetService</value>
-  </data>
-  <data name="ServiceHostInstanceName_InvalidName" xml:space="preserve">
-    <value>'{0}' is not a valid Service Host Instance Name. Expected a name in the format: "&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;-&lt;host name&gt;_IN&lt;instance id&gt;"</value>
-  </data>
-  <data name="ServiceHostName_InvalidName" xml:space="preserve">
-    <value>'{0}' is not a valid Service Host Name. Expected a name in the format: "&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;-&lt;host name&gt;"</value>
-  </data>
-  <data name="ServiceHost_DoesNotSupportEndpoints" xml:space="preserve">
-    <value>This host does not support IP endpoints</value>
-  </data>
-  <data name="ServiceHost_NotAValidServiceType" xml:space="preserve">
-    <value>'{0}' is not a valid NuGetService, it must inherit from NuGet.Services.NuGetService</value>
-  </data>
-  <data name="ServiceName_InvalidName" xml:space="preserve">
-    <value>'{0}' is not a valid Service Name. Expected a name in the format: "&lt;product&gt;-&lt;environment&gt;-&lt;datacenter id&gt;-&lt;host name&gt;_IN&lt;instance id&gt;-&lt;service name&gt;"</value>
+  <data name="StringNotNullOrEmpty" xml:space="preserve">
+    <value>Parameter cannot be null or an empty string.</value>
   </data>
 </root>

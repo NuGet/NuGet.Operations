@@ -37,23 +37,8 @@ namespace NuGet.Services.Azure
 
             _worker = worker;
 
-            var hostName = GetConfigurationSetting("Host.Name");
-
-            // Try to parse out the instance index from the role instance ID
-            var match = RoleIdMatch.Match(RoleEnvironment.CurrentRoleInstance.Id);
-            int instanceId;
-            if (!match.Success || !Int32.TryParse(match.Groups["id"].Value, out instanceId))
-            {
-                instanceId = 0;
-            }
-
             _description = new ServiceHostDescription(
-                new ServiceHostName(
-                    new DatacenterName(
-                        GetConfigurationSetting("Host.Environment"),
-                        Int32.Parse(GetConfigurationSetting("Host.Datacenter"))),
-                    hostName,
-                    instanceId),
+                GetHostName(),
                 RoleEnvironment.CurrentRoleInstance.Id);
         }
 
@@ -128,9 +113,26 @@ namespace NuGet.Services.Azure
         protected override void InitializeCloudLogging()
         {
             _platformEventStream.LogToWindowsAzureTable(
-                instanceName: Description.ServiceHostName.ToString() + "/" + Description.MachineName,
+                instanceName: Description.InstanceName.ToString() + "/" + Description.MachineName,
                 connectionString: Storage.Primary.ConnectionString,
                 tableAddress: Storage.Primary.Tables.GetTableFullName("PlatformTrace"));
+        }
+
+        private ServiceHostInstanceName GetHostName()
+        {
+            var hostName = GetConfigurationSetting("Host.Name");
+            ServiceHostName name = ServiceHostName.Parse(hostName);
+
+            // Try to parse out the instance index from the role instance ID
+            var match = RoleIdMatch.Match(RoleEnvironment.CurrentRoleInstance.Id);
+            int instanceId;
+            if (!match.Success || !Int32.TryParse(match.Groups["id"].Value, out instanceId))
+            {
+                instanceId = 0;
+            }
+
+            // Create the instance name
+            return new ServiceHostInstanceName(name, instanceId);
         }
     }
 }

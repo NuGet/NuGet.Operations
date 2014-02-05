@@ -113,7 +113,7 @@ namespace NuGet.Services.Work
                 // Register components
                 builder.RegisterModule(
                     new JobComponentsModule(
-                        Name.ToString() + "#" + id.ToString(),
+                        ServiceName.ToString() + "#" + id.ToString(),
                         Queue));
 
                 // Register the worker
@@ -158,7 +158,7 @@ namespace NuGet.Services.Work
                         typeof(StorageHub),
                         typeof(ConfigurationHub))
                     .WithParameter(
-                        new NamedParameter("instanceName", Name.ToString() + "#api"));
+                        new NamedParameter("instanceName", ServiceName.ToString() + "#api"));
             }
             else
             {
@@ -180,7 +180,7 @@ namespace NuGet.Services.Work
         public override async Task<object> GetCurrentStatus()
         {
             return (await Task.WhenAll(Workers.Select(async w => Tuple.Create(w.Id, await w.GetCurrentStatus())))).ToDictionary(
-                t => Name.ToString() + "#" + t.Item1.ToString(),
+                t => ServiceName.ToString() + "#" + t.Item1.ToString(),
                 t => t.Item2);
         }
 

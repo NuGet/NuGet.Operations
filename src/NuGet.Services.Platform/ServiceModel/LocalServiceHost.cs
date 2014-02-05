@@ -19,8 +19,8 @@ namespace NuGet.Services.ServiceModel
 
         public IObservable<EventEntry> EventSource { get; private set; }
 
-        public LocalServiceHost(ServiceHostName name) : this(name, new Dictionary<string, string>()) { }
-        public LocalServiceHost(ServiceHostName name, IDictionary<string, string> configuration)
+        public LocalServiceHost(ServiceHostInstanceName name) : this(name, new Dictionary<string, string>()) { }
+        public LocalServiceHost(ServiceHostInstanceName name, IDictionary<string, string> configuration)
         {
             _description = new ServiceHostDescription(name, Environment.MachineName);
             LocalServices = new List<ServiceDefinition>();

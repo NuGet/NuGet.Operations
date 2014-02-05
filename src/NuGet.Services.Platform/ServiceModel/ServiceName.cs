@@ -9,88 +9,93 @@ using System.Threading.Tasks;
 
 namespace NuGet.Services.ServiceModel
 {
-    public class ServiceName : IEquatable<ServiceName>
+    public struct ServiceName : IEquatable<ServiceName>
     {
-        private const string InstanceNameDataName = "_NuGet_ServiceInstanceName";
+        private static readonly Regex Parser = new Regex(@"^-(?<service>[^\-]+)(?<rest>.+)?$", RegexOptions.IgnoreCase);
 
-        private static readonly Regex ParseRegex = new Regex("^(?<env>.*)-(?<dc>.*)-(?<host>.*)_IN(?<instance>.*)-(?<service>.*)$", RegexOptions.IgnoreCase);
-        private static readonly string ToStringFormat = "{0}-{1}";
-        
-        public ServiceHostName Host { get; private set; }
-        public string Service { get; private set; }
+        public static readonly ServiceName Empty = new ServiceName();
 
-        public ServiceName(ServiceHostName host, string service)
+        public ServiceHostInstanceName Instance { get; private set; }
+        public string Name { get; private set; }
+
+        public ServiceName(ServiceHostInstanceName instance, string name) : this()
         {
-            Host = host;
-            Service = service;
-        }
-
-        public static bool TryParse(string name, out ServiceName parsed)
-        {
-            parsed = null;
-
-            var match = ParseRegex.Match(name);
-            if (!match.Success)
-            {
-                return false;
-            }
-            int dc;
-            if (!Int32.TryParse(match.Groups["dc"].Value, out dc))
-            {
-                return false;
-            }
-            int instanceId;
-            if (!Int32.TryParse(match.Groups["instance"].Value, out instanceId))
-            {
-                return false;
-            }
-            parsed = new ServiceName(
-                new ServiceHostName(
-                    new DatacenterName(
-                        match.Groups["env"].Value,
-                        dc),
-                    match.Groups["host"].Value,
-                    instanceId),
-                match.Groups["service"].Value);
-            return true;
-        }
-
-        public static ServiceName Parse(string name)
-        {
-            ServiceName parsed;
-            if (!TryParse(name, out parsed))
-            {
-                throw new FormatException(Strings.ServiceInstanceName_InvalidName);
-            }
-            return parsed;
-        }
-
-        public override string ToString()
-        {
-            return String.Format(CultureInfo.InvariantCulture,
-                ToStringFormat,
-                Host,
-                Service);
+            Instance = instance;
+            Name = name.ToLowerInvariant();
         }
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as ServiceName);
-        }
-
-        public bool Equals(ServiceName other)
-        {
-            return other != null &&
-                Equals(Host, other.Host) &&
-                String.Equals(Service, other.Service, StringComparison.OrdinalIgnoreCase);
+            return obj is ServiceName && Equals((ServiceName)obj);
         }
 
         public override int GetHashCode()
         {
             return HashCodeCombiner.Start()
-                .Add(Host)
-                .Add(Service)
+                .Add(Instance)
+                .Add(Name)
                 .CombinedHash;
+        }
+
+        public bool Equals(ServiceName other)
+        {
+            return Equals(Instance, other.Instance) &&
+                String.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override string ToString()
+        {
+            return Instance.ToString() + "-" + Name;
+        }
+
+        public static ServiceName Parse(string input)
+        {
+            ServiceName result;
+            if (!TryParse(input, out result))
+            {
+                throw new FormatException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.ServiceName_InvalidName,
+                    input));
+            }
+            return result;
+        }
+
+        public static bool TryParse(string input, out ServiceName result)
+        {
+            string _;
+            return TryParseCore(input, out result, out _);
+        }
+
+        internal static bool TryParseCore(string input, out ServiceName result, out string remainder)
+        {
+            result = ServiceName.Empty;
+            remainder = null;
+
+            // Parse the environment name portion
+            ServiceHostInstanceName shiName;
+            string sPart;
+            if (!ServiceHostInstanceName.TryParseCore(input, out shiName, out sPart) || String.IsNullOrEmpty(sPart))
+            {
+                return false;
+            }
+
+            var match = Parser.Match(sPart);
+            if (!match.Success)
+            {
+                return false;
+            }
+            else
+            {
+                result = new ServiceName(
+                    shiName,
+                    match.Groups["service"].Value);
+                if (match.Groups["rest"].Success)
+                {
+                    remainder = match.Groups["rest"].Value;
+                }
+                return true;
+            }
         }
     }
 }

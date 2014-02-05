@@ -26,7 +26,7 @@ namespace NuGet.Services.ServiceModel
         private long _lastHeartbeatTicks = 0;
         
         public ServiceHost Host { get; private set; }
-        public ServiceName Name { get; private set; }
+        public ServiceName ServiceName { get; private set; }
 
         public StorageHub Storage { get; set; }
         public ConfigurationHub Configuration { get; set; }
@@ -39,12 +39,12 @@ namespace NuGet.Services.ServiceModel
 
         public string TempDirectory { get; protected set; }
 
-        protected NuGetService(ServiceName name, ServiceHost host)
+        protected NuGetService(ServiceName serviceName, ServiceHost host)
         {
             Host = host;
-            Name = name;
+            ServiceName = serviceName;
 
-            TempDirectory = Path.Combine(Path.GetTempPath(), "NuGetServices", name.Service);
+            TempDirectory = Path.Combine(Path.GetTempPath(), "NuGetServices", serviceName.Name);
         }
 
         public virtual async Task<bool> Start(ILifetimeScope scope)

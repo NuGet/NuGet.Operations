@@ -27,7 +27,7 @@ namespace NuGet.Services.Azure
             {
                 _runTask = _host.Run();
                 _runTask.Wait();
-                ServicePlatformEventSource.Log.HostShutdownComplete(_host.Description.ServiceHostName.ToString());
+                ServicePlatformEventSource.Log.HostShutdownComplete(_host.Description.InstanceName.ToString());
             }
             catch (Exception ex)
             {

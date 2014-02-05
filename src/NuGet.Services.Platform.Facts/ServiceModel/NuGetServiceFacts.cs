@@ -13,22 +13,26 @@ namespace NuGet.Services.ServiceModel
 {
     public class NuGetServiceFacts
     {
+        private static readonly ServiceName TestName = new ServiceName(
+                    new ServiceHostInstanceName(
+                        new ServiceHostName(
+                            new DatacenterName(
+                                new EnvironmentName(
+                                    "nuget",
+                                    "local"),
+                                0),
+                            "testhost"),
+                        0),
+                    "test");
+
         public class TheStartMethod
         {
             public async Task ItInjectsPropertiesWithPublicSetters()
             {
                 // Arrange
                 var host = new TestServiceHost();
-                var name = new ServiceName(
-                    new ServiceHostName(
-                        new DatacenterName(
-                            "local",
-                            0),
-                        "testhost",
-                        0),
-                    "test");
                 var container = CreateTestContainer();
-                var service = new TestServiceWithComponents(name, host);
+                var service = new TestServiceWithComponents(TestName, host);
 
                 // Act
                 await service.Start(container);
@@ -42,16 +46,8 @@ namespace NuGet.Services.ServiceModel
             {
                 // Arrange
                 var host = new TestServiceHost();
-                var name = new ServiceName(
-                    new ServiceHostName(
-                        new DatacenterName(
-                            "local",
-                            0),
-                        "testhost",
-                        0),
-                    "test");
                 var container = CreateTestContainer();
-                var service = new TestService(name, host);
+                var service = new TestService(TestName, host);
 
                 // Act
                 await service.Start(container);
@@ -64,16 +60,8 @@ namespace NuGet.Services.ServiceModel
             {
                 // Arrange
                 var host = new TestServiceHost();
-                var name = new ServiceName(
-                    new ServiceHostName(
-                        new DatacenterName(
-                            "local",
-                            0),
-                        "testhost",
-                        0),
-                    "test");
                 var container = CreateTestContainer();
-                var service = new TestService(name, host);
+                var service = new TestService(TestName, host);
                 await service.Start(container);
 
                 // Act
@@ -90,16 +78,8 @@ namespace NuGet.Services.ServiceModel
             {
                 // Arrange
                 var host = new TestServiceHost();
-                var name = new ServiceName(
-                    new ServiceHostName(
-                        new DatacenterName(
-                            "local",
-                            0),
-                        "testhost",
-                        0),
-                    "test");
                 var container = CreateTestContainer();
-                var service = new TestService(name, host);
+                var service = new TestService(TestName, host);
                 await service.Start(container);
 
                 // Act

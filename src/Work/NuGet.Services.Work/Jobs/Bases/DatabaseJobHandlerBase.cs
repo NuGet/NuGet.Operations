@@ -37,13 +37,13 @@ namespace NuGet.Services.Work.Jobs
             Config = config;
         }
 
-        protected virtual SqlConnectionStringBuilder GetConnectionString(bool admin)
+        protected virtual SqlConnectionStringBuilder GetConnectionString()
         {
             var connection = TargetDatabaseConnection;
             if (connection == null)
             {
                 connection = Config.Sql
-                    .GetConnectionString(TargetServer, admin);
+                    .GetConnectionString(TargetServer);
                 if (!String.IsNullOrEmpty(TargetDatabaseName))
                 {
                     connection = connection.ChangeDatabase(TargetDatabaseName);

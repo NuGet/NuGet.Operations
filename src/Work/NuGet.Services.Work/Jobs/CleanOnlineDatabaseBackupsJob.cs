@@ -40,7 +40,7 @@ namespace NuGet.Services.Work.Jobs
             BackupPrefix = String.IsNullOrEmpty(BackupPrefix) ? CreateOnlineDatabaseBackupJob.DefaultBackupPrefix : BackupPrefix;
 
             // Resolve the connection if not specified explicitly
-            var cstr = GetConnectionString(admin: true);
+            var cstr = GetConnectionString();
             Log.PreparingToClean(cstr.DataSource);
 
             // Connect to the master database

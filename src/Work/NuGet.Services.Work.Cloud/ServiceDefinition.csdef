@@ -9,10 +9,7 @@
             <Import moduleName="RemoteForwarder" />
         </Imports>
         <ConfigurationSettings>
-            <Setting name="Host.Datacenter" />
-            <!-- The index of the datacenter, because we can't easily get that from Azure :( -->
-            <Setting name="Host.Environment" />
-            <!-- The name of the environment (i.e. int, prod, etc.) -->
+            <!-- The full name of the service host (i.e. nuget-int-0-work, nuget-prod-1-search, etc.) -->
             <Setting name="Host.Name" />
             <!-- The name of the service host -->
             <Setting name="Storage.Primary" />
@@ -23,10 +20,6 @@
             <Setting name="Sql.Primary" />
             <Setting name="Sql.Legacy" />
             <Setting name="Sql.Warehouse" />
-            <!-- Admin SQL Connections if the service has access to them -->
-            <Setting name="Sql.Primary.Admin" />
-            <Setting name="Sql.Legacy.Admin" />
-            <Setting name="Sql.Warehouse.Admin" />
             
             <Setting name="Work.PollInterval" />
             <Setting name="Work.WorkersPerCore" />

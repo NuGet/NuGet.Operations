@@ -67,7 +67,7 @@ namespace NuGet.Services.ServiceModel
 
             Instances = instances.Where(s => s != null).ToList().AsReadOnly();
             InstancesByType = new ReadOnlyDictionary<Type, NuGetService>(Instances.ToDictionary(s => s.GetType()));
-            InstancesByName = new ReadOnlyDictionary<string, NuGetService>(Instances.ToDictionary(s => s.Name.Service, StringComparer.OrdinalIgnoreCase));
+            InstancesByName = new ReadOnlyDictionary<string, NuGetService>(Instances.ToDictionary(s => s.ServiceName.Name, StringComparer.OrdinalIgnoreCase));
 
             return instances.All(s => s != null);
         }
@@ -89,7 +89,7 @@ namespace NuGet.Services.ServiceModel
         /// </summary>
         public void Shutdown()
         {
-            ServicePlatformEventSource.Log.HostShutdownRequested(Description.ServiceHostName.ToString());
+            ServicePlatformEventSource.Log.HostShutdownRequested(Description.InstanceName.ToString());
             _shutdownTokenSource.Cancel();
         }
 
@@ -129,7 +129,7 @@ namespace NuGet.Services.ServiceModel
             // This way, if the below code fails, we can see some kind of log as to why.
             InitializeLocalLogging();
 
-            ServicePlatformEventSource.Log.HostStarting(Description.ServiceHostName.ToString());
+            ServicePlatformEventSource.Log.HostStarting(Description.InstanceName.ToString());
             try
             {
                 // Load the services
@@ -151,10 +151,10 @@ namespace NuGet.Services.ServiceModel
             }
             catch (Exception ex)
             {
-                ServicePlatformEventSource.Log.HostStartupFailed(Description.ServiceHostName.ToString(), ex);
+                ServicePlatformEventSource.Log.HostStartupFailed(Description.InstanceName.ToString(), ex);
                 throw; // Don't stop the exception, we have to abort the startup process
             }
-            ServicePlatformEventSource.Log.HostStarted(Description.ServiceHostName.ToString());
+            ServicePlatformEventSource.Log.HostStarted(Description.InstanceName.ToString());
         }
 
         private void StartHttp(IEnumerable<NuGetHttpService> httpServices)
@@ -177,21 +177,21 @@ namespace NuGet.Services.ServiceModel
             }
             if (options.Urls.Count == 0)
             {
-                ServicePlatformEventSource.Log.MissingHttpEndpoints(Description.ServiceHostName);
+                ServicePlatformEventSource.Log.MissingHttpEndpoints(Description.InstanceName);
             }
             else
             {
-                ServicePlatformEventSource.Log.StartingHttpServices(Description.ServiceHostName, httpEndpoint, httpsEndpoint);
+                ServicePlatformEventSource.Log.StartingHttpServices(Description.InstanceName, httpEndpoint, httpsEndpoint);
                 try
                 {
                     _httpServerLifetime = WebApp.Start(options, app => ConfigureHttp(httpServices, app));
                 }
                 catch (Exception ex)
                 {
-                    ServicePlatformEventSource.Log.ErrorStartingHttpServices(Description.ServiceHostName, ex);
+                    ServicePlatformEventSource.Log.ErrorStartingHttpServices(Description.InstanceName, ex);
                     throw;
                 }
-                ServicePlatformEventSource.Log.StartedHttpServices(Description.ServiceHostName);
+                ServicePlatformEventSource.Log.StartedHttpServices(Description.InstanceName);
             }
         }
 
@@ -271,23 +271,23 @@ namespace NuGet.Services.ServiceModel
 
         private async Task RunService(NuGetService service)
         {
-            ServicePlatformEventSource.Log.ServiceRunning(service.Name);
+            ServicePlatformEventSource.Log.ServiceRunning(service.ServiceName);
             try
             {
                 await service.Run();
             }
             catch (Exception ex)
             {
-                ServicePlatformEventSource.Log.ServiceException(service.Name, ex);
+                ServicePlatformEventSource.Log.ServiceException(service.ServiceName, ex);
                 throw;
             }
-            ServicePlatformEventSource.Log.ServiceStoppedRunning(service.Name);
+            ServicePlatformEventSource.Log.ServiceStoppedRunning(service.ServiceName);
         }
 
         internal async Task<NuGetService> StartService(ServiceDefinition service)
         {
             // Create a full service name
-            var name = new ServiceName(Description.ServiceHostName, service.Name);
+            var name = new ServiceName(Description.InstanceName, service.Name);
 
             // Initialize the serice, create the necessary IoC components and construct the instance.
             ServicePlatformEventSource.Log.ServiceInitializing(name);
@@ -304,10 +304,8 @@ namespace NuGet.Services.ServiceModel
                 scope = _container.BeginLifetimeScope(builder =>
                 {
                     builder.RegisterInstance(instance)
-                     .As<NuGetService>()
-                     .As(service.Type);
-                    builder.RegisterInstance(name)
-                        .As<ServiceName>();
+                         .As<NuGetService>()
+                         .As(service.Type);
 
                     // Add the container itself to the container
                     builder.Register(c => scope)

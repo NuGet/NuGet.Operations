@@ -8,79 +8,27 @@ using System.Threading.Tasks;
 
 namespace NuGet.Services.ServiceModel
 {
-    public class ServiceHostName : IEquatable<ServiceHostName>
+    public struct ServiceHostName : IEquatable<ServiceHostName>
     {
-        private static readonly Regex ParseRegex = new Regex("^(?<env>.*)-(?<dc>.*)-(?<host>.*)_IN(?<instance>.*)$", RegexOptions.IgnoreCase);
-        private static readonly string ToStringFormat = "{0}-{1}_IN{2}";
-        
+        private static readonly Regex Parser = new Regex(@"^-(?<host>[^\-]+)(?<rest>.+)?$", RegexOptions.IgnoreCase);
+
+        public static readonly ServiceHostName Empty = new ServiceHostName();
+
         public DatacenterName Datacenter { get; private set; }
         public string Name { get; private set; }
-        public int InstanceId { get; private set; }
 
-        public ServiceHostName(DatacenterName datacenter, string name, int instanceId)
+        public ServiceHostName(DatacenterName datacenter, string name)
+            : this()
         {
+            Guard.NotNullOrEmpty(name, "name");
+
             Datacenter = datacenter;
-            Name = name;
-            InstanceId = instanceId;
-        }
-
-        public static bool TryParse(string name, out ServiceHostName parsed)
-        {
-            parsed = null;
-
-            var match = ParseRegex.Match(name);
-            if (!match.Success)
-            {
-                return false;
-            }
-            int dc;
-            if (!Int32.TryParse(match.Groups["dc"].Value, out dc))
-            {
-                return false;
-            }
-            int instanceId;
-            if (!Int32.TryParse(match.Groups["instance"].Value, out instanceId))
-            {
-                return false;
-            }
-            parsed = new ServiceHostName(
-                new DatacenterName(
-                    match.Groups["env"].Value,
-                    dc),
-                match.Groups["host"].Value,
-                instanceId);
-            return true;
-        }
-
-        public static ServiceHostName Parse(string name)
-        {
-            ServiceHostName parsed;
-            if (!TryParse(name, out parsed))
-            {
-                throw new FormatException(Strings.ServiceHostName_InvalidName);
-            }
-            return parsed;
-        }
-
-        public override string ToString()
-        {
-            return String.Format(CultureInfo.InvariantCulture,
-                ToStringFormat,
-                Datacenter,
-                Name,
-                InstanceId);
+            Name = name.ToLowerInvariant();
         }
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as ServiceHostName);
-        }
-
-        public bool Equals(ServiceHostName other)
-        {
-            return other != null &&
-                Equals(Datacenter, other.Datacenter) &&
-                String.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+            return obj is ServiceHostName && Equals((ServiceHostName)obj);
         }
 
         public override int GetHashCode()
@@ -89,6 +37,67 @@ namespace NuGet.Services.ServiceModel
                 .Add(Datacenter)
                 .Add(Name)
                 .CombinedHash;
+        }
+
+        public bool Equals(ServiceHostName other)
+        {
+            return Equals(Datacenter, other.Datacenter) &&
+                String.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override string ToString()
+        {
+            return Datacenter.ToString() + "-" + Name.ToLowerInvariant();
+        }
+
+        public static ServiceHostName Parse(string input)
+        {
+            ServiceHostName result;
+            if (!TryParse(input, out result))
+            {
+                throw new FormatException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.ServiceHostName_InvalidName,
+                    input));
+            }
+            return result;
+        }
+
+        public static bool TryParse(string input, out ServiceHostName result)
+        {
+            string _;
+            return TryParseCore(input, out result, out _);
+        }
+
+        internal static bool TryParseCore(string input, out ServiceHostName result, out string remainder)
+        {
+            result = ServiceHostName.Empty;
+            remainder = null;
+
+            // Parse the environment name portion
+            DatacenterName dcName;
+            string shPart;
+            if (!DatacenterName.TryParseCore(input, out dcName, out shPart) || String.IsNullOrEmpty(shPart))
+            {
+                return false;
+            }
+
+            var match = Parser.Match(shPart);
+            if (!match.Success)
+            {
+                return false;
+            }
+            else
+            {
+                result = new ServiceHostName(
+                    dcName,
+                    match.Groups["host"].Value);
+                if (match.Groups["rest"].Success)
+                {
+                    remainder = match.Groups["rest"].Value;
+                }
+                return true;
+            }
         }
     }
 }

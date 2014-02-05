@@ -27,11 +27,14 @@ namespace NuGet.Services.TestInfrastructure
             get
             {
                 return new ServiceHostDescription(
-                    new ServiceHostName(
-                        new DatacenterName(
-                            "local",
-                            42),
-                        "testhost",
+                    new ServiceHostInstanceName(
+                        new ServiceHostName(
+                            new DatacenterName(
+                                new EnvironmentName(
+                                    "nuget",
+                                    "local"),
+                                42),
+                            "testhost"),
                         0),
                     "testmachine");
             }

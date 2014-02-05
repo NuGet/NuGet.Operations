@@ -42,7 +42,7 @@ namespace NuGet.Services.Work.Jobs
             BackupPrefix = String.IsNullOrEmpty(BackupPrefix) ? DefaultBackupPrefix : BackupPrefix;
 
             // Resolve the connection if not specified explicitly
-            var cstr = GetConnectionString(admin: true);
+            var cstr = GetConnectionString();
             Log.PreparingToBackup(
                 cstr.DataSource,
                 cstr.InitialCatalog);
@@ -112,7 +112,7 @@ namespace NuGet.Services.Work.Jobs
 
         protected internal override async Task<JobContinuation> Resume()
         {
-            var cstr = GetConnectionString(admin: true);
+            var cstr = GetConnectionString();
             using (var connection = await cstr.ConnectToMaster())
             {
                 var db = await GetDatabase(connection, BackupName);

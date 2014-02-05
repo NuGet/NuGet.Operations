@@ -18,8 +18,8 @@ namespace NuGet.Services.Http.Models
         public ServiceInstanceModel() { }
         public ServiceInstanceModel(NuGetService service, object description, object status) : this()
         {
-            Name = service.Name.ToString();
-            Service = service.Name.Service;
+            Name = service.ServiceName.ToString();
+            Service = service.ServiceName.Name;
             LastHeartbeat = service.LastHeartbeat;
             Description = description;
             Status = status;
