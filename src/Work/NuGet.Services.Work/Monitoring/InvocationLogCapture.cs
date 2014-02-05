@@ -19,7 +19,7 @@ namespace NuGet.Services.Work.Monitoring
     {
         private ObservableEventListener _listener;
         private IObservable<EventEntry> _eventStream;
-
+        
         public InvocationState Invocation { get; private set; }
         
         public InvocationLogCapture(InvocationState invocation)
@@ -68,7 +68,8 @@ namespace NuGet.Services.Work.Monitoring
 
         private readonly string _tempDirectory;
         private string _tempFile;
-        
+        private string _blobName;
+
         public StorageHub Storage { get; private set; }
 
         public BlobInvocationLogCapture(InvocationState invocation, StorageHub storage)
@@ -77,6 +78,7 @@ namespace NuGet.Services.Work.Monitoring
             Storage = storage;
 
             _tempDirectory = Path.Combine(Path.GetTempPath(), "InvocationLogs");
+            _blobName = invocation.Id.ToString("N") + ".json";
         }
 
         public override async Task Start()
@@ -89,7 +91,9 @@ namespace NuGet.Services.Work.Monitoring
                 Directory.CreateDirectory(_tempDirectory);
             }
 
-            _tempFile = Path.Combine(_tempDirectory, Invocation.Id.ToString("N") + ".json");
+            // Generate an entirely unique file name
+            string fileName = Invocation.Id.ToString("N") + "_" + Guid.NewGuid().ToString("N") + ".json";
+            _tempFile = Path.Combine(_tempDirectory, fileName);
             if (File.Exists(_tempFile))
             {
                 File.Delete(_tempFile);
@@ -98,7 +102,7 @@ namespace NuGet.Services.Work.Monitoring
             // Fetch the current logs if this is a continuation, we'll append to them during the invocation
             if (Invocation.IsContinuation)
             {
-                await Storage.Primary.Blobs.DownloadBlob(WorkService.InvocationLogsContainerBaseName, "invocations/" + Path.GetFileName(_tempFile), _tempFile);
+                await Storage.Primary.Blobs.DownloadBlob(WorkService.InvocationLogsContainerBaseName, "invocations/" + _blobName, _tempFile);
             }
             
             // Capture the events into a JSON file and a plain text file
@@ -111,7 +115,7 @@ namespace NuGet.Services.Work.Monitoring
             _eventSubscription.Dispose();
 
             // Upload the file to blob storage
-            var logBlob = await Storage.Primary.Blobs.UploadBlob("application/json", _tempFile, WorkService.InvocationLogsContainerBaseName, "invocations/" + Path.GetFileName(_tempFile));
+            var logBlob = await Storage.Primary.Blobs.UploadBlob("application/json", _tempFile, WorkService.InvocationLogsContainerBaseName, "invocations/" + _blobName);
 
             // Delete the temp files
             File.Delete(_tempFile);
