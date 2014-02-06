@@ -182,12 +182,12 @@ namespace NuGet.Services.Work.Jobs
             using (var connection = await cstr.ConnectToMaster())
             {
                 // Get databases
-                var databases = await GetDatabases(connection);
+                var databases = await GetDatabases(connection, DatabaseState.ONLINE);
 
                 // Gather backups with matching prefix and order descending
                 var ordered = from db in databases
                                 let backupMeta = db.GetBackupMetadata()
-                                where db.state == DatabaseState.ONLINE && backupMeta != null &&
+                                where backupMeta != null &&
                                     String.Equals(
                                         BackupPrefix,
                                         backupMeta.Prefix,
