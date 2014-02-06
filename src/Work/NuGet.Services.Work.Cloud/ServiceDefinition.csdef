@@ -29,7 +29,7 @@
             <Setting name="Http.AdminKey" />
             
             <Setting name="LicenseReport.Service" />
-            <Setting name="LicenseReport.User" />
+            <Setting name="LicenseReport.Username" />
             <Setting name="LicenseReport.Password" />
         </ConfigurationSettings>
         <Certificates>

@@ -80,6 +80,8 @@ namespace NuGet.Services.Operations.Model
                 }
             }
 
+            LoadConfig(env.Config, e.Element("config"));
+
             env.Datacenters.AddRange(e.Elements("datacenter").Select(el => LoadDatacenter(el)));
             return env;
         }
@@ -104,6 +106,9 @@ namespace NuGet.Services.Operations.Model
             {
                 dc.Services.AddRange(svcElem.Elements().Select(el => LoadService(el)));
             }
+
+            LoadConfig(dc.Config, e.Element("config"));
+
             return dc;
         }
 
@@ -126,6 +131,22 @@ namespace NuGet.Services.Operations.Model
                 Value = e.Value,
                 Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s))
             };
+        }
+
+        private static void LoadConfig(IDictionary<string, string> dictionary, XElement configElement)
+        {
+            if (configElement != null)
+            {
+                foreach (var setting in configElement.Elements("setting"))
+                {
+                    var attr = setting.Attribute("name");
+                    if (attr == null)
+                    {
+                        throw new InvalidDataException(Strings.XmlServiceModelDeserializer_SettingMissingName);
+                    }
+                    dictionary[attr.Value] = setting.Value;
+                }
+            }
         }
     }
 }

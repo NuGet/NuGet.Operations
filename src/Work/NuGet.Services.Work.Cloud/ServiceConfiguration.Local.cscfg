@@ -22,7 +22,7 @@
             <Setting name="Http.AdminKey" value="password" />
             
             <Setting name="LicenseReport.Service" value="" />
-            <Setting name="LicenseReport.User" value="" />
+            <Setting name="LicenseReport.Username" value="" />
             <Setting name="LicenseReport.Password" value="" />
             
             <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="" />

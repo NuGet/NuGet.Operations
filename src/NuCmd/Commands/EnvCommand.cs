@@ -4,44 +4,39 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PowerArgs;
 
 namespace NuCmd.Commands
 {
     [Description("Displays information about the current environment")]
     public class EnvCommand : Command
     {
+        [ArgDescription("The environment to display information for (defaults to the current environment)")]
+        public string Environment { get; set; }
+     
         protected override async Task OnExecute()
         {
-            if (Session == null)
+            var environment = GetEnvironment(Environment);
+
+            await Console.WriteInfoLine(Strings.EnvCommand_Data_Env, environment.Name);
+            await Console.WriteInfoLine(Strings.EnvCommand_Data_Sub, 
+                environment.Subscription == null ? String.Empty : environment.Subscription.Name,
+                environment.Subscription == null ? String.Empty : environment.Subscription.Id);
+            await Console.WriteInfoLine(Strings.EnvCommand_Data_Cert,
+                environment.Subscription == null ? String.Empty : (
+                    environment.Subscription.Certificate == null ? String.Empty : environment.Subscription.Certificate.Thumbprint));
+            await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenters);
+            foreach (var dc in environment.Datacenters)
             {
-                await Console.WriteInfoLine(Strings.EnvCommand_NoSession);
-            }
-            else if (Session.CurrentEnvironment == null)
-            {
-                await Console.WriteInfoLine(Strings.EnvCommand_NoEnv);
-            }
-            else
-            {
-                await Console.WriteInfoLine(Strings.EnvCommand_Data_Env, Session.CurrentEnvironment.Name);
-                await Console.WriteInfoLine(Strings.EnvCommand_Data_Sub, 
-                    Session.CurrentEnvironment.Subscription == null ? String.Empty : Session.CurrentEnvironment.Subscription.Name,
-                    Session.CurrentEnvironment.Subscription == null ? String.Empty : Session.CurrentEnvironment.Subscription.Id);
-                await Console.WriteInfoLine(Strings.EnvCommand_Data_Cert,
-                    Session.CurrentEnvironment.Subscription == null ? String.Empty : (
-                        Session.CurrentEnvironment.Subscription.Certificate == null ? String.Empty : Session.CurrentEnvironment.Subscription.Certificate.Thumbprint));
-                await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenters);
-                foreach (var dc in Session.CurrentEnvironment.Datacenters)
+                await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenter, dc.Id, dc.Region);
+                foreach (var service in dc.Services)
                 {
-                    await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenter, dc.Id, dc.Region);
-                    foreach (var service in dc.Services)
-                    {
-                        await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenter_Service, service.Name, service.Uri == null ? String.Empty : service.Uri.AbsoluteUri);
-                    }
-                    await Console.WriteInfoLine();
-                    foreach (var resource in dc.Resources)
-                    {
-                        await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenter_Resource, resource.Type, resource.Name, resource.Value);
-                    }
+                    await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenter_Service, service.Name, service.Uri == null ? String.Empty : service.Uri.AbsoluteUri);
+                }
+                await Console.WriteInfoLine();
+                foreach (var resource in dc.Resources)
+                {
+                    await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenter_Resource, resource.Type, resource.Name, resource.Value);
                 }
             }
         }

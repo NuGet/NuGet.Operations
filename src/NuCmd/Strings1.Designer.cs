@@ -61,11 +61,47 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No current environment. This command requires an environment..
+        /// </summary>
+        internal static string Command_NoEnv {
+            get {
+                return ResourceManager.GetString("Command_NoEnv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No current operations session. This command requires an operations session..
+        /// </summary>
+        internal static string Command_NoSession {
+            get {
+                return ResourceManager.GetString("Command_NoSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This command must be run from the NuGet Ops console with a current environment that has a Management Certificate.
         /// </summary>
         internal static string Command_RequiresManagementCert {
             get {
                 return ResourceManager.GetString("Command_RequiresManagementCert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Environment &apos;{0}&apos; has no datacenter &apos;{1}&apos;..
+        /// </summary>
+        internal static string Command_UnknownDc {
+            get {
+                return ResourceManager.GetString("Command_UnknownDc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Environment &apos;{0}&apos;..
+        /// </summary>
+        internal static string Command_UnknownEnv {
+            get {
+                return ResourceManager.GetString("Command_UnknownEnv", resourceCulture);
             }
         }
         
@@ -86,6 +122,24 @@ namespace NuCmd {
         internal static string Commands_UsingServiceUri {
             get {
                 return ResourceManager.GetString("Commands_UsingServiceUri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration for {0}:.
+        /// </summary>
+        internal static string Config_ShowCommand_Header {
+            get {
+                return ResourceManager.GetString("Config_ShowCommand_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  {0} = {1}.
+        /// </summary>
+        internal static string Config_ShowCommand_Row {
+            get {
+                return ResourceManager.GetString("Config_ShowCommand_Row", resourceCulture);
             }
         }
         
@@ -158,24 +212,6 @@ namespace NuCmd {
         internal static string EnvCommand_Data_Sub {
             get {
                 return ResourceManager.GetString("EnvCommand_Data_Sub", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No current environment..
-        /// </summary>
-        internal static string EnvCommand_NoEnv {
-            get {
-                return ResourceManager.GetString("EnvCommand_NoEnv", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No current operations session..
-        /// </summary>
-        internal static string EnvCommand_NoSession {
-            get {
-                return ResourceManager.GetString("EnvCommand_NoSession", resourceCulture);
             }
         }
         

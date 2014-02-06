@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using NuGet.Services.Client;
 using NuGet.Services.Operations;
+using NuGet.Services.Operations.Model;
 using PowerArgs;
 
 namespace NuCmd.Commands
@@ -64,6 +66,54 @@ namespace NuCmd.Commands
                 response.ReasonPhrase,
                 await response.HttpResponse.Content.ReadAsStringAsync());
             return false;
+        }
+
+        protected virtual void EnsureSession()
+        {
+            if (Session == null)
+            {
+                throw new InvalidOperationException(Strings.Command_NoSession);
+            }
+        }
+
+        protected virtual DeploymentEnvironment GetEnvironment(string provided)
+        {
+            EnsureSession();
+            DeploymentEnvironment env;
+            if (String.IsNullOrEmpty(provided))
+            {
+                env = Session.CurrentEnvironment;
+            }
+            else
+            {
+                env = Session.Model.Environments.FirstOrDefault(e => String.Equals(e.Name, provided, StringComparison.OrdinalIgnoreCase));
+                if (env == null)
+                {
+                    throw new InvalidOperationException(String.Format(
+                        CultureInfo.CurrentCulture,
+                        Strings.Command_UnknownEnv,
+                        provided));
+                }
+            }
+            if (env == null)
+            {
+                throw new InvalidOperationException(Strings.Command_NoEnv);
+            }
+            return env;
+        }
+
+        protected virtual Datacenter GetDatacenter(DeploymentEnvironment environment, int datacenter)
+        {
+            var dc = environment.Datacenters.FirstOrDefault(d => d.Id == datacenter);
+            if (dc == null)
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_UnknownDc,
+                    environment.Name,
+                    datacenter));
+            }
+            return dc;
         }
     }
 }

@@ -257,7 +257,7 @@ namespace NuGet.Services.Work.Jobs
             if (licenseConfig != null)
             {
                 LicenseReportService = LicenseReportService ?? licenseConfig.Service;
-                LicenseReportUser = LicenseReportUser ?? licenseConfig.User;
+                LicenseReportUser = LicenseReportUser ?? licenseConfig.Username;
                 LicenseReportPassword = LicenseReportPassword ?? licenseConfig.Password;
             }
 

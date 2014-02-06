@@ -104,5 +104,14 @@ namespace NuGet.Services.Operations {
                 return ResourceManager.GetString("OperationsSession_UnknownEnvironment", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Config setting is missing required attribute &apos;name&apos;..
+        /// </summary>
+        internal static string XmlServiceModelDeserializer_SettingMissingName {
+            get {
+                return ResourceManager.GetString("XmlServiceModelDeserializer_SettingMissingName", resourceCulture);
+            }
+        }
     }
 }

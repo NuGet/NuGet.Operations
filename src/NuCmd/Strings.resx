@@ -284,13 +284,25 @@ Details:
   <data name="EnvCommand_Data_Sub" xml:space="preserve">
     <value>Azure Subscription: {0} ({1})</value>
   </data>
-  <data name="EnvCommand_NoEnv" xml:space="preserve">
-    <value>No current environment.</value>
+  <data name="Command_NoEnv" xml:space="preserve">
+    <value>No current environment. This command requires an environment.</value>
   </data>
-  <data name="EnvCommand_NoSession" xml:space="preserve">
-    <value>No current operations session.</value>
+  <data name="Command_NoSession" xml:space="preserve">
+    <value>No current operations session. This command requires an operations session.</value>
   </data>
   <data name="Program_ErrorLoadingSession" xml:space="preserve">
     <value>Error loading session: {0}</value>
+  </data>
+  <data name="Command_UnknownDc" xml:space="preserve">
+    <value>Environment '{0}' has no datacenter '{1}'.</value>
+  </data>
+  <data name="Command_UnknownEnv" xml:space="preserve">
+    <value>Unknown Environment '{0}'.</value>
+  </data>
+  <data name="Config_ShowCommand_Header" xml:space="preserve">
+    <value>Configuration for {0}:</value>
+  </data>
+  <data name="Config_ShowCommand_Row" xml:space="preserve">
+    <value> {0} = {1}</value>
   </data>
 </root>

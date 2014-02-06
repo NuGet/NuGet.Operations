@@ -11,6 +11,7 @@ namespace NuGet.Services.Operations.Model
         public string Region { get; set; }
         public string AffinityGroup { get; set; }
 
+        public IDictionary<string, string> Config { get; private set; }
         public IList<Resource> Resources { get; private set; }
         public IList<Service> Services { get; private set; }
 
@@ -18,6 +19,7 @@ namespace NuGet.Services.Operations.Model
         {
             Resources = new List<Resource>();
             Services = new List<Service>();
+            Config = new Dictionary<string, string>();
         }
 
         public Uri GetServiceUri(string service)
@@ -38,6 +40,16 @@ namespace NuGet.Services.Operations.Model
         public Resource GetResource(string resource)
         {
             return Resources.FirstOrDefault(r => String.Equals(r.Name, resource, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IDictionary<string, string> MergeConfig(DeploymentEnvironment env)
+        {
+            var dict = new Dictionary<string, string>(env.Config);
+            foreach (var setting in Config)
+            {
+                dict[setting.Key] = setting.Value;
+            }
+            return dict;
         }
     }
 }

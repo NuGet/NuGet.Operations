@@ -132,4 +132,7 @@
   <data name="OperationsSession_UnknownEnvironment" xml:space="preserve">
     <value>Unknown environment: '{0}'.</value>
   </data>
+  <data name="XmlServiceModelDeserializer_SettingMissingName" xml:space="preserve">
+    <value>Config setting is missing required attribute 'name'.</value>
+  </data>
 </root>

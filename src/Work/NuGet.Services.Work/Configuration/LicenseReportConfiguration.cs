@@ -12,7 +12,7 @@ namespace NuGet.Services.Work.Configuration
         [Description("The url to the license report service")]
         public Uri Service { get; set; }
         [Description("The username for the license report service")]
-        public string User { get; set; }
+        public string Username { get; set; }
         [Description("The password for the license report service")]
         public string Password { get; set; }
     }

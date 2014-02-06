@@ -12,6 +12,7 @@ namespace NuGet.Services.Operations.Model
         public AzureSubscription Subscription { get; set; }
         public Version Version { get; set; }
         
+        public IDictionary<string, string> Config { get; private set; }
         public IList<Datacenter> Datacenters { get; private set; }
 
         public Datacenter this[int id]
@@ -25,6 +26,7 @@ namespace NuGet.Services.Operations.Model
         public DeploymentEnvironment()
         {
             Datacenters = new List<Datacenter>();
+            Config = new Dictionary<string, string>();
         }
 
         public Uri GetServiceUri(int datacenter, string service)

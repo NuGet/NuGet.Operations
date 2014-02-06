@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="CommandDefinition.cs" />
     <Compile Include="CommandDirectory.cs" />
+    <Compile Include="Commands\Config\ShowCommand.cs" />
     <Compile Include="Commands\EnvCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
