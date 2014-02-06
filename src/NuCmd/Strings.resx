@@ -308,6 +308,27 @@ Details:
   <data name="Config_ShowCommand_Row" xml:space="preserve">
     <value> {0} = {1}</value>
   </data>
+  <data name="DatacenterCommandBase_NoDC" xml:space="preserve">
+    <value>A datacenter must be specified using the -dc argument</value>
+  </data>
+  <data name="Db_CreateUserCommand_Connected" xml:space="preserve">
+    <value>Connected to '{1}' database on '{0}'</value>
+  </data>
+  <data name="Db_CreateUserCommand_EnterAdminPassword" xml:space="preserve">
+    <value>Enter the password for the '{0}' account:</value>
+  </data>
+  <data name="Db_CreateUserCommand_NoDatabaseInDatacenter" xml:space="preserve">
+    <value>Datacenter {0} does not have a {1} resource named '{2}'.</value>
+  </data>
+  <data name="Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField" xml:space="preserve">
+    <value>The {0} resource '{1}' has an unexpected Connection String field: '{2}'</value>
+  </data>
+  <data name="Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField" xml:space="preserve">
+    <value>The {0} resource '{1}' is missing a required Connection String field: '{2}'</value>
+  </data>
+  <data name="Db_CreateUserCommand_UsingConnectionString" xml:space="preserve">
+    <value>Using provided connection string instead of using a known database in the environment.</value>
+  </data>
   <data name="EnvCommand_Data_PackageSource" xml:space="preserve">
     <value> {0} package source '{1}': {2}</value>
   </data>

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,8 @@ namespace NuCmd
         Task WriteObjects(IEnumerable<object> objs, IConsoleFormatter formatter);
         Task WriteTable(ConsoleTable table);
         Task WriteTable<T>(IEnumerable<T> objs, Func<T, object> selector);
+
+        SecureString PromptForPassword(string message);
     }
 
     public static class ConsoleExtensions

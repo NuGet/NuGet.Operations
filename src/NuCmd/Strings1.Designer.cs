@@ -162,6 +162,69 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A datacenter must be specified using the -dc argument.
+        /// </summary>
+        internal static string DatacenterCommandBase_NoDC {
+            get {
+                return ResourceManager.GetString("DatacenterCommandBase_NoDC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected to &apos;{1}&apos; database on &apos;{0}&apos;.
+        /// </summary>
+        internal static string Db_CreateUserCommand_Connected {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the password for the &apos;{0}&apos; account:.
+        /// </summary>
+        internal static string Db_CreateUserCommand_EnterAdminPassword {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_EnterAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datacenter {0} does not have a {1} resource named &apos;{2}&apos;..
+        /// </summary>
+        internal static string Db_CreateUserCommand_NoDatabaseInDatacenter {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_NoDatabaseInDatacenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} resource &apos;{1}&apos; has an unexpected Connection String field: &apos;{2}&apos;.
+        /// </summary>
+        internal static string Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} resource &apos;{1}&apos; is missing a required Connection String field: &apos;{2}&apos;.
+        /// </summary>
+        internal static string Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using provided connection string instead of using a known database in the environment..
+        /// </summary>
+        internal static string Db_CreateUserCommand_UsingConnectionString {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_UsingConnectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Azure Certificate: {0}.
         /// </summary>
         internal static string EnvCommand_Data_Cert {

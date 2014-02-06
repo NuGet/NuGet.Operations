@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,6 +62,35 @@ namespace NuCmd
         {
             var table = ConsoleTable.For(objs, selector);
             return WriteTable(table);
+        }
+
+        public SecureString PromptForPassword(string prompt)
+        {
+            Console.Write(prompt);
+            Console.Write(" ");
+            ConsoleKeyInfo key;
+            SecureString password = new SecureString();
+            do {
+                key = Console.ReadKey(intercept: true);
+
+                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    // Remove the last character
+                    password.RemoveAt(password.Length - 1);
+                    Console.CursorLeft -= 1;
+                    Console.Write(" ");
+                    Console.CursorLeft -= 1;
+                }
+                else if(key.KeyChar > '\0' && key.KeyChar != '\r' && key.KeyChar != '\n' && key.KeyChar != '\t') {
+                    // Append the character to the password
+                    password.AppendChar(key.KeyChar);
+                    Console.Write("*");
+                }
+                // Exit on Enter
+            } while(key.Key != ConsoleKey.Enter);
+            Console.WriteLine();
+            password.MakeReadOnly();
+            return password;
         }
 
         internal class ConsoleWriter : TextWriter

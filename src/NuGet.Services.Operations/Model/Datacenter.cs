@@ -51,5 +51,12 @@ namespace NuGet.Services.Operations.Model
             }
             return dict;
         }
+
+        public Resource FindResource(string type, string name)
+        {
+            return Resources.FirstOrDefault(r =>
+                String.Equals(type, r.Type, StringComparison.OrdinalIgnoreCase) &&
+                String.Equals(name, r.Name, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
