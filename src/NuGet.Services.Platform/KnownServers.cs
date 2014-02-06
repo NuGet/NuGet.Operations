@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NuGet.Services
 {
-    public enum KnownSqlServer
+    public enum KnownSqlConnection
     {
         /// <summary>
         /// The primary SQL Server for APIv3 Data

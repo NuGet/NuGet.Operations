@@ -24,6 +24,11 @@ namespace NuGet.Services.Operations.Model
 
         public void ResolveCertificate(X509Store store)
         {
+            if (Certificate != null)
+            {
+                return;
+            }
+
             string certName = "Azure-" + Name.Replace(" ", "");
 
             store.Open(OpenFlags.ReadOnly);

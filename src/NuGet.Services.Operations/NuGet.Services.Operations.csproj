@@ -44,7 +44,9 @@
     <Compile Include="Model\AzureSubscription.cs" />
     <Compile Include="Model\Datacenter.cs" />
     <Compile Include="Model\EnvironmentComponentBase.cs" />
+    <Compile Include="Model\PackageSource.cs" />
     <Compile Include="Model\Resource.cs" />
+    <Compile Include="Model\SecretStore.cs" />
     <Compile Include="Model\Service.cs" />
     <Compile Include="Model\AppModel.cs" />
     <Compile Include="Model\DeploymentEnvironment.cs" />

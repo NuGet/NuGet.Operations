@@ -299,10 +299,19 @@ Details:
   <data name="Command_UnknownEnv" xml:space="preserve">
     <value>Unknown Environment '{0}'.</value>
   </data>
+  <data name="Config_GenerateCommand_NoCert" xml:space="preserve">
+    <value>You must have a management certificate for '{0}' installed on this machine to use this command.</value>
+  </data>
   <data name="Config_ShowCommand_Header" xml:space="preserve">
     <value>Configuration for {0}:</value>
   </data>
   <data name="Config_ShowCommand_Row" xml:space="preserve">
     <value> {0} = {1}</value>
+  </data>
+  <data name="EnvCommand_Data_PackageSource" xml:space="preserve">
+    <value> {0} package source '{1}': {2}</value>
+  </data>
+  <data name="EnvCommand_Data_SecretStore" xml:space="preserve">
+    <value> {0} secret store '{1}': {2}</value>
   </data>
 </root>

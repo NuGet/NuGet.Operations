@@ -5,8 +5,8 @@ using System.Text;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class Resource : EnvironmentComponentBase
+    public class PackageSource : EnvironmentComponentBase
     {
-        public Resource() : base() { }
+        public PackageSource() : base() { }
     }
 }

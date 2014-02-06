@@ -24,8 +24,8 @@ namespace NuGet.Services.Configuration
             var actual = hub.GetSection<SqlConfiguration>();
 
             // Assert
-            Assert.Equal("primary", actual.GetConnectionString(KnownSqlServer.Primary).DataSource);
-            Assert.Equal("warehouse", actual.GetConnectionString(KnownSqlServer.Warehouse).DataSource);
+            Assert.Equal("primary", actual.GetConnectionString(KnownSqlConnection.Primary).DataSource);
+            Assert.Equal("warehouse", actual.GetConnectionString(KnownSqlConnection.Warehouse).DataSource);
         }
 
         [Fact]
@@ -40,8 +40,8 @@ namespace NuGet.Services.Configuration
             var actual = hub.GetSection<SqlConfiguration>();
 
             // Assert
-            Assert.Equal("primary", actual.GetConnectionString(KnownSqlServer.Primary).DataSource);
-            Assert.Null(actual.GetConnectionString(KnownSqlServer.Warehouse));
+            Assert.Equal("primary", actual.GetConnectionString(KnownSqlConnection.Primary).DataSource);
+            Assert.Null(actual.GetConnectionString(KnownSqlConnection.Warehouse));
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace NuGet.Services.Configuration
             var actual = hub.GetSection<SqlConfiguration>();
 
             // Assert
-            Assert.Null(actual.GetConnectionString(KnownSqlServer.Primary));
-            Assert.Null(actual.GetConnectionString(KnownSqlServer.Warehouse));
+            Assert.Null(actual.GetConnectionString(KnownSqlConnection.Primary));
+            Assert.Null(actual.GetConnectionString(KnownSqlConnection.Warehouse));
         }
     }
 }

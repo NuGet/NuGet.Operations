@@ -29,7 +29,7 @@ namespace NuGet.Services.Work.Jobs
         protected internal override async Task Execute()
         {
             // Load default data if not provided
-            PackageDatabase = PackageDatabase ?? Config.Sql.GetConnectionString(KnownSqlServer.Legacy);
+            PackageDatabase = PackageDatabase ?? Config.Sql.GetConnectionString(KnownSqlConnection.Legacy);
 
             using (var connection = await PackageDatabase.ConnectTo())
             {

@@ -83,6 +83,19 @@ namespace NuGet.Services.Operations.Model
             LoadConfig(env.Config, e.Element("config"));
 
             env.Datacenters.AddRange(e.Elements("datacenter").Select(el => LoadDatacenter(el)));
+
+            var srcElem = e.Element("packageSources");
+            if (srcElem != null)
+            {
+                env.PackageSources.AddRange(srcElem.Elements().Select(el => LoadComponent<PackageSource>(el)));
+            }
+
+            var secElem = e.Element("secretStores");
+            if (secElem != null)
+            {
+                env.SecretStores.AddRange(secElem.Elements().Select(el => LoadComponent<SecretStore>(el)));
+            }
+
             return env;
         }
 
@@ -98,7 +111,7 @@ namespace NuGet.Services.Operations.Model
             var resElem = e.Element("resources");
             if (resElem != null)
             {
-                dc.Resources.AddRange(resElem.Elements().Select(el => LoadResource(el)));
+                dc.Resources.AddRange(resElem.Elements().Select(el => LoadComponent<Resource>(el)));
             }
 
             var svcElem = e.Element("services");
@@ -112,25 +125,31 @@ namespace NuGet.Services.Operations.Model
             return dc;
         }
 
-        private static Resource LoadResource(XElement e)
-        {
-            return new Resource()
-            {
-                Name = e.AttributeValueOrDefault("name"),
-                Type = e.Name.LocalName,
-                Value = e.Value
-            };
-        }
-
         private static Service LoadService(XElement e)
         {
-            return new Service()
+            return LoadComponent(e, new Service()
             {
-                Name = e.AttributeValueOrDefault("name"),
-                Type = e.Name.LocalName,
-                Value = e.Value,
                 Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s))
-            };
+            });
+        }
+
+        private static T LoadComponent<T>(XElement e) where T : EnvironmentComponentBase, new()
+        {
+            return LoadComponent(e, new T());
+        }
+
+        private static T LoadComponent<T>(XElement e, T instance) where T : EnvironmentComponentBase
+        {
+            instance.Name = e.AttributeValueOrDefault("name");
+            instance.Type = e.Name.LocalName;
+            instance.Value = e.Value;
+
+            foreach (var attr in e.Attributes())
+            {
+                instance.Attributes[attr.Name.LocalName] = attr.Value;
+            }
+
+            return instance;
         }
 
         private static void LoadConfig(IDictionary<string, string> dictionary, XElement configElement)

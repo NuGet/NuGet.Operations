@@ -17,7 +17,7 @@ namespace NuGet.Services.Work.Jobs
         /// <summary>
         /// The target server, in the form of a known SQL Server (primary, warehouse, etc.)
         /// </summary>
-        public KnownSqlServer TargetServer { get; set; }
+        public KnownSqlConnection TargetServer { get; set; }
 
         /// <summary>
         /// The name of the database to back up

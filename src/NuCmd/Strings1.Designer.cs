@@ -126,6 +126,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must have a management certificate for &apos;{0}&apos; installed on this machine to use this command..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoCert {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoCert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuration for {0}:.
         /// </summary>
         internal static string Config_ShowCommand_Header {
@@ -203,6 +212,24 @@ namespace NuCmd {
         internal static string EnvCommand_Data_Env {
             get {
                 return ResourceManager.GetString("EnvCommand_Data_Env", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  {0} package source &apos;{1}&apos;: {2}.
+        /// </summary>
+        internal static string EnvCommand_Data_PackageSource {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_PackageSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  {0} secret store &apos;{1}&apos;: {2}.
+        /// </summary>
+        internal static string EnvCommand_Data_SecretStore {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_SecretStore", resourceCulture);
             }
         }
         

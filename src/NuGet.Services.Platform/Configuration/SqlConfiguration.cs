@@ -9,13 +9,13 @@ namespace NuGet.Services.Configuration
 {
     public class SqlConfiguration : ICustomConfigurationSection
     {
-        public Dictionary<KnownSqlServer, SqlConnectionStringBuilder> Connections { get; private set; }
+        public Dictionary<KnownSqlConnection, SqlConnectionStringBuilder> Connections { get; private set; }
         
-        public SqlConnectionStringBuilder Primary { get { return GetConnectionString(KnownSqlServer.Primary); } }
-        public SqlConnectionStringBuilder Legacy { get { return GetConnectionString(KnownSqlServer.Legacy); } }
-        public SqlConnectionStringBuilder Warehouse { get { return GetConnectionString(KnownSqlServer.Warehouse); } }
+        public SqlConnectionStringBuilder Primary { get { return GetConnectionString(KnownSqlConnection.Primary); } }
+        public SqlConnectionStringBuilder Legacy { get { return GetConnectionString(KnownSqlConnection.Legacy); } }
+        public SqlConnectionStringBuilder Warehouse { get { return GetConnectionString(KnownSqlConnection.Warehouse); } }
 
-        public SqlConnectionStringBuilder GetConnectionString(KnownSqlServer account)
+        public SqlConnectionStringBuilder GetConnectionString(KnownSqlConnection account)
         {
             SqlConnectionStringBuilder connectionString;
             if (Connections.TryGetValue(account, out connectionString))
@@ -27,9 +27,9 @@ namespace NuGet.Services.Configuration
 
         public void Resolve(string prefix, ConfigurationHub hub)
         {
-            Connections = Enum.GetValues(typeof(KnownSqlServer))
-                .OfType<KnownSqlServer>()
-                .Select(a => new KeyValuePair<KnownSqlServer, string>(a, hub.GetSetting(prefix + a.ToString())))
+            Connections = Enum.GetValues(typeof(KnownSqlConnection))
+                .OfType<KnownSqlConnection>()
+                .Select(a => new KeyValuePair<KnownSqlConnection, string>(a, hub.GetSetting(prefix + a.ToString())))
                 .Where(p => !String.IsNullOrEmpty(p.Value))
                 .ToDictionary(p => p.Key, p => new SqlConnectionStringBuilder(p.Value));
         }

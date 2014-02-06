@@ -11,7 +11,9 @@ namespace NuGet.Services.Operations.Model
         public string Name { get; set; }
         public AzureSubscription Subscription { get; set; }
         public Version Version { get; set; }
-        
+
+        public IList<PackageSource> PackageSources { get; private set; }
+        public IList<SecretStore> SecretStores { get; private set; }
         public IDictionary<string, string> Config { get; private set; }
         public IList<Datacenter> Datacenters { get; private set; }
 
@@ -26,6 +28,8 @@ namespace NuGet.Services.Operations.Model
         public DeploymentEnvironment()
         {
             Datacenters = new List<Datacenter>();
+            PackageSources = new List<PackageSource>();
+            SecretStores = new List<SecretStore>();
             Config = new Dictionary<string, string>();
         }
 

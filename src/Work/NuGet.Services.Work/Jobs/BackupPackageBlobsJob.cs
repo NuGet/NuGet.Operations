@@ -66,7 +66,7 @@ namespace NuGet.Services.Work.Jobs
             var now = DateTimeOffset.UtcNow;
 
             // Load default data if not provided
-            PackageDatabase = PackageDatabase ?? Config.Sql.GetConnectionString(KnownSqlServer.Legacy);
+            PackageDatabase = PackageDatabase ?? Config.Sql.GetConnectionString(KnownSqlConnection.Legacy);
             Source = Source ?? Config.Storage.Legacy;
             Destination = Destination ?? Config.Storage.Backup;
             SourceContainer = Source.CreateCloudBlobClient().GetContainerReference(

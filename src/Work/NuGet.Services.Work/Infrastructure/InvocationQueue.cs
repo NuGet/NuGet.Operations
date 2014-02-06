@@ -35,7 +35,7 @@ namespace NuGet.Services.Work
         protected InvocationQueue() { }
 
         public InvocationQueue(Clock clock, string instanceName, StorageHub storage, ConfigurationHub config)
-            : this(clock, instanceName, storage, config.Sql.GetConnectionString(KnownSqlServer.Primary)) { }
+            : this(clock, instanceName, storage, config.Sql.GetConnectionString(KnownSqlConnection.Primary)) { }
 
         public InvocationQueue(Clock clock, string instanceName, StorageHub storage, SqlConnectionStringBuilder connectionString)
             : this()
