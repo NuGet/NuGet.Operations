@@ -171,6 +171,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Making {0} a server-level admin on {1}..
+        /// </summary>
+        internal static string Db_CreateUserCommand_AdminingUser {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_AdminingUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected to &apos;{1}&apos; database on &apos;{0}&apos;.
         /// </summary>
         internal static string Db_CreateUserCommand_Connected {
@@ -180,11 +189,59 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The connection string has been placed in the clipboard. PLEASE PASTE IT IMMEDIATELY AS IT WILL NOT BE RECOVERABLE ONCE OVERWRITTEN!.
+        /// </summary>
+        internal static string Db_CreateUserCommand_CopiedToClipboard {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_CopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Login: {0}
+        ///With Password: {1}
+        ///For use by the {2} service
+        ///Connection String: {3}.
+        /// </summary>
+        internal static string Db_CreateUserCommand_CreatedUser {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_CreatedUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating login {0} on {1}..
+        /// </summary>
+        internal static string Db_CreateUserCommand_CreatingLogin {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_CreatingLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating user {0} on {1} database..
+        /// </summary>
+        internal static string Db_CreateUserCommand_CreatingUser {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_CreatingUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter the password for the &apos;{0}&apos; account:.
         /// </summary>
         internal static string Db_CreateUserCommand_EnterAdminPassword {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_EnterAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Granting {0} access to the {1} schema on {2} database..
+        /// </summary>
+        internal static string Db_CreateUserCommand_GrantingUser {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_GrantingUser", resourceCulture);
             }
         }
         
@@ -221,6 +278,15 @@ namespace NuCmd {
         internal static string Db_CreateUserCommand_UsingConnectionString {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_UsingConnectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would create user on server {0} for database {1}, designed for use by the {2} service..
+        /// </summary>
+        internal static string Db_CreateUserCommand_WouldCreateUser {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_WouldCreateUser", resourceCulture);
             }
         }
         

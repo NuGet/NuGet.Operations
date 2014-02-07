@@ -311,11 +311,32 @@ Details:
   <data name="DatacenterCommandBase_NoDC" xml:space="preserve">
     <value>A datacenter must be specified using the -dc argument</value>
   </data>
+  <data name="Db_CreateUserCommand_AdminingUser" xml:space="preserve">
+    <value>Making {0} a server-level admin on {1}.</value>
+  </data>
   <data name="Db_CreateUserCommand_Connected" xml:space="preserve">
     <value>Connected to '{1}' database on '{0}'</value>
   </data>
+  <data name="Db_CreateUserCommand_CopiedToClipboard" xml:space="preserve">
+    <value>The connection string has been placed in the clipboard. PLEASE PASTE IT IMMEDIATELY AS IT WILL NOT BE RECOVERABLE ONCE OVERWRITTEN!</value>
+  </data>
+  <data name="Db_CreateUserCommand_CreatedUser" xml:space="preserve">
+    <value>Created Login: {0}
+With Password: {1}
+For use by the {2} service
+Connection String: {3}</value>
+  </data>
+  <data name="Db_CreateUserCommand_CreatingLogin" xml:space="preserve">
+    <value>Creating login {0} on {1}.</value>
+  </data>
+  <data name="Db_CreateUserCommand_CreatingUser" xml:space="preserve">
+    <value>Creating user {0} on {1} database.</value>
+  </data>
   <data name="Db_CreateUserCommand_EnterAdminPassword" xml:space="preserve">
     <value>Enter the password for the '{0}' account:</value>
+  </data>
+  <data name="Db_CreateUserCommand_GrantingUser" xml:space="preserve">
+    <value>Granting {0} access to the {1} schema on {2} database.</value>
   </data>
   <data name="Db_CreateUserCommand_NoDatabaseInDatacenter" xml:space="preserve">
     <value>Datacenter {0} does not have a {1} resource named '{2}'.</value>
@@ -328,6 +349,9 @@ Details:
   </data>
   <data name="Db_CreateUserCommand_UsingConnectionString" xml:space="preserve">
     <value>Using provided connection string instead of using a known database in the environment.</value>
+  </data>
+  <data name="Db_CreateUserCommand_WouldCreateUser" xml:space="preserve">
+    <value>Would create user on server {0} for database {1}, designed for use by the {2} service.</value>
   </data>
   <data name="EnvCommand_Data_PackageSource" xml:space="preserve">
     <value> {0} package source '{1}': {2}</value>
