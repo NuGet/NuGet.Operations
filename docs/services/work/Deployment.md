@@ -65,3 +65,6 @@ nucmd db createuser -dc 0 -sv work -sa -s work -db primary -Clip
 ```
 
 5. Paste the new SQL connection string in as the new value for the "Sql.Primary" CSCFG setting
+
+### 3. Deploy the package
+Upload the CSPKG and CSCFG file using to the destination service using the Azure portal. For the work service, there is no use in deploying to Staging and VIP swapping, the package should be deployed directly to production. Since the front-end HTTP API is not something that users will access, a VIP swap introduces both an unnecessary step and a possibility for work being done by both the Production and Staging Work Services, which is not a terrible thing, but is an unnecessary complexity.
