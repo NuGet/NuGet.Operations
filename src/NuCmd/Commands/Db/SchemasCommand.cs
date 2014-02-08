@@ -47,7 +47,7 @@ namespace NuCmd.Commands.Db
                     FROM sys.schemas s
                     LEFT OUTER JOIN sys.database_permissions p ON p.class_desc = 'SCHEMA' AND p.major_id = s.schema_id
                     LEFT OUTER JOIN sys.database_principals u ON u.principal_id = p.grantee_principal_id
-                    WHERE u.[type] = 'S'
+                    WHERE u.[type] = 'S' OR u.[type] IS NULL
                 ")).ToList();
             }
 
@@ -60,7 +60,7 @@ namespace NuCmd.Commands.Db
                 Status = p.state_desc,
                 Type = p.permission_name
             })
-            .Where(a => a.Status == "GRANT" && a.Type == "CONTROL")
+            .Where(a => (a.Status == "GRANT" && a.Type == "CONTROL") || (a.Status == null && a.Type == null))
             .GroupBy(a => a.Schema)
             .Select(g => new {
                 Schema = g.Key,

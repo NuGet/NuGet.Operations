@@ -27,7 +27,6 @@ namespace NuCmd
             _directory.LoadCommands(typeof(Program).Assembly);
         }
 
-        [STAThread]
         static void Main(string[] args)
         {
 #if DEBUG

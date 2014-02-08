@@ -10,7 +10,7 @@ if($moderr) {
 }
 
 function prompt() {
-    Write-Host -NoNewLine -ForegroundColor Yellow "<NuGet Ops> "
+    Write-Host -NoNewLine -ForegroundColor Yellow "<NuOps> "
     Write-Host -NoNewLine -ForegroundColor Green (Get-Location)
     if($poshGit) {
         Write-VcsStatus

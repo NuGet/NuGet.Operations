@@ -12,6 +12,7 @@ using PowerArgs;
 using Dapper;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Threading;
 
 namespace NuCmd.Commands.Db
 {
@@ -55,7 +56,7 @@ namespace NuCmd.Commands.Db
             string loginPassword =
                 Convert.ToBase64String(
                     Encoding.UTF8.GetBytes(
-                        Guid.NewGuid().ToString("N")));
+                        Guid.NewGuid().ToString("N"))).Replace("=", "");
 
             // Connect to master
             if (!WhatIf)
@@ -69,7 +70,7 @@ namespace NuCmd.Commands.Db
                         masterConnStr.DataSource,
                         masterConnStr.InitialCatalog));
 
-                    // Create the login
+                    // Create the login.\
                     // Can't use SQL Parameters here unfortunately. But the risk is low:
                     //  1. This is an admin/operations tool, only our administrators will use it
                     //  2. We use a Regex to restrict the Service name and then we derive the login name from that using only safe characters
@@ -143,8 +144,15 @@ namespace NuCmd.Commands.Db
 
                 if (Clip)
                 {
-                    Clipboard.SetText(loginConnStr.ConnectionString);
-                    await Console.WriteInfoLine("");
+                    // Need to be in an STAThread to use the clipboard.
+                    var t = new Thread(() =>
+                    {
+                        Clipboard.SetText(loginConnStr.ConnectionString);
+                    });
+                    t.SetApartmentState(ApartmentState.STA);
+                    t.Start();
+                    t.Join();
+                    await Console.WriteInfoLine(Strings.Db_CreateUserCommand_CopiedToClipboard);
                 }
                 else
                 {
