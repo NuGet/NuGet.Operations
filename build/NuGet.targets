@@ -8,10 +8,14 @@
 	      <Output TaskParameter="CommitId" PropertyName="CommitId" />
 	      <Output TaskParameter="RepositoryUrl" PropertyName="RepositoryUrl" />
 	    </GetGitMetadata>
+	    <Message Text="Extracted Git Metadata" />
+	    <Message Text=" Branch = $(Branch)" />
+	    <Message Text=" CommitId = $(CommitId)" />
+	    <Message Text=" RepositoryUrl = $(RepositoryUrl)" />
 	</Target>
 
 	<Target Name="CreateVersionInfoFile" DependsOnTargets="GetGitMetadata" BeforeTargets="CoreCompile">
-		<WriteVersionInfo Version="$(Version)" Branch="$(Branch)" CommitId="$(CommitId)" RepositoryUrl="$(RepositoryUrl)" BuildDateUtc="$(BuildDateUtc)" InformationalVersion="$(SemanticVersion)" BuiltBy="$(BuildUser)" BuiltOn="$(BuildMachine)">
+		<WriteVersionInfo Version="$(SimpleVersion)" Branch="$(Branch)" CommitId="$(CommitId)" RepositoryUrl="$(RepositoryUrl)" BuildDateUtc="$(BuildDateUtc)" InformationalVersion="$(SemanticVersion)" BuiltBy="$(BuildUser)" BuiltOn="$(BuildMachine)">
 			<Output TaskParameter="OutputFilename" PropertyName="VersionInfoFilePath" />
 		</WriteVersionInfo>
 		<ItemGroup>

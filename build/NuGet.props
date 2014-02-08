@@ -2,24 +2,20 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Platform>Any CPU</Platform> <!-- All NuGet Services are pure MSIL -->
-    <MajorVersion>3</MajorVersion>
-    <MinorVersion>0</MinorVersion>
     <TargetProfile>Local</TargetProfile> <!-- Used by ccproj (Azure Cloud Projects) -->
     <Branch Condition="'$(Branch)' == ''">nobranch</Branch>
     <Commit Condition="'$(Commit)' == ''">HEAD</Commit>
     <BuildDateUtc>$([System.DateTime]::UtcNow)</BuildDateUtc>
+    <BranchLevel Condition="'$(BranchLevel)' == ''">9</BranchLevel>
     <VersionStartYear>2013</VersionStartYear>
     <BuildYear>$([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), $(VersionStartYear)))</BuildYear>
 
-    <Build Condition="'$(Build)' == ''">$(BuildYear)$([System.DateTime]::UtcNow.ToString("MMdd"))</Build>
-    <Revision Condition="'$(Revision)' == ''">$([System.DateTime]::UtcNow.ToString("HHmm"))</Revision>
     <BuildUser Condition="'$(BuildUser)' == ''">$([System.Environment]::UserName)</BuildUser>
     <BuildMachine Condition="'$(BuildMachine)' == ''">$([System.Environment]::MachineName)</BuildMachine>
 
-    <SimpleVersion Condition="'$(SimpleVersion)' == ''">$(MajorVersion).$(MinorVersion).$(Build)</SimpleVersion>
-    <SemanticVersion Condition="'$(FullVersion)' == ''">$(SimpleVersion)-$(Branch).$(Commit).$(Revision)</SemanticVersion>
-    <Version>$(SimpleVersion).$(Revision)</Version>
-
+    <SimpleVersion Condition="'$(SimpleVersion)' == ''">3.0.0</SimpleVersion>
+    <SemanticVersion Condition="'$(SemanticVersion)' == ''">$(SimpleVersion)-z-$(Branch)-$(Commit)</SemanticVersion>
+    
     <!-- Directories -->
     <RootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'NuGetApi.sln'))</RootDirectory>
     <BuildToolsDirectory>$(RootDirectory)\build</BuildToolsDirectory>
