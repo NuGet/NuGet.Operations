@@ -35,8 +35,10 @@
   </PropertyGroup>
   <!-- Items for the project -->
   <ItemGroup>
+    <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
     <ServiceDefinition Include="ServiceDefinition.csdef" />
     <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
+    <Content Include="NuGet.Services.Work.Cloud.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NuGet.Services.WorkContent" />

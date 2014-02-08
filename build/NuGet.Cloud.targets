@@ -16,4 +16,13 @@
 	      </WorkerFiles>
 	    </ItemGroup>
 	</Target>
+	<PropertyGroup>
+		<PublishDependsOn>
+			$(PublishDependsOn);
+			OctopusPackage
+		</PublishDependsOn>
+	</PropertyGroup>
+	<Target Name="OctopusPackage">
+		<Message Text="OCTOPACK THE @(PublishServicePackage)" Importance="high" />
+	</Target>
 </Project>

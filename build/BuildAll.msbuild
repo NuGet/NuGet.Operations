@@ -42,7 +42,7 @@
   
     <Target Name="CoreBuild">
         <MSBuild Projects="$(TargetSolution)" Targets="Build" Properties="VisualStudioVersion=12.0;Configuration=$(Configuration);CodeAnalysis=true;Platform=$(Platform);RunFacts=true;TargetProfile=Local" BuildInParallel="true" ToolsVersion="12.0"  />
-        <MSBuild Projects="@(RoleProject)" Targets="Publish" Properties="VisualStudioVersion=12.0;Configuration=$(Configuration);Platform=AnyCPU;TargetProfile=Local" BuildInParallel="false" ToolsVersion="12.0" />
+        <MSBuild Projects="@(RoleProject)" Targets="Publish" Properties="VisualStudioVersion=12.0;Configuration=$(Configuration);Platform=AnyCPU;TargetProfile=Cloud" BuildInParallel="false" ToolsVersion="12.0" />
     </Target>
 
     <Target Name="Build" DependsOnTargets="Clean;RestorePackages;CoreBuild" />
