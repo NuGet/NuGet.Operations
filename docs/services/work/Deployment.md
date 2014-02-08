@@ -28,7 +28,7 @@ You should see a list of available commands and command groups. If you see an er
 2. Run the following command to check what needs to be deployed from this package
 
 ```posh
-nucmd db checkdac -db primary -dc 0 -p C:\path\to\app.dacpac
+nucmd db checkdac -db primary -dc 0 -p "C:\path\to\app.dacpac"
 ```
 
 (Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
@@ -40,7 +40,7 @@ You should see either "Nothing to be deployed. The database is up-to-date!" or a
 4. If step 3 indicated there were operations to be performed, deploy the DAC using the following command. This command will abort if data loss would occur so it should be safe.
 
 ```posh
-nucmd db deploy -db primary -dc 0 -p C:\path\to\app.dacpac
+nucmd db deploy -db primary -dc 0 -p "C:\path\to\app.dacpac"
 ```
 
 (Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
