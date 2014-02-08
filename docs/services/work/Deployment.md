@@ -8,14 +8,14 @@ The primary deployment vessel for the Work Service is an [Azure Service Host](..
 ### 0. Start the NuGet Ops Console
 In root of a clone of the NuGetApi repository, invoke ".\ops" to enter the Ops Console. If you have not yet configured Ops, see [Configuring NuOps](../../ops/README.md). Enter the target environment by running the following command
 
-	> env _target_
+	env <em>target</em>
 
 ### 1. Deploy the latest version of the database.
 1. Download the DACPAC file for the Work service from the latest build (NuGet.Services.Work.Database.dacpac)
 
 2. Run the following command to check what needs to be deployed from this package
 
-	> .\nucmd db checkdac -db primary -dc 0 -p _C:\path\to\app.dacpac_
+	.\nucmd db checkdac -db primary -dc 0 -p <em>C:\path\to\app.dacpac</em>
 
 (Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
 
@@ -25,7 +25,7 @@ You should see either "Nothing to be deployed. The database is up-to-date!" or a
 
 4. If step 3 indicated there were operations to be performed, deploy the DAC using the following command. This command will abort if data loss would occur so it should be safe.
 
-	> .\nucmd db deploy -db primary -dc 0 -p _C:\path\to\app.dacpac_
+	> .\nucmd db deploy -db primary -dc 0 -p <em>C:\path\to\app.dacpac</em>
 
 (Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
 
