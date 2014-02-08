@@ -102,6 +102,8 @@ function env {
 }
 Export-ModuleMember -Function env
 
+$env:PATH = "$env:PATH;$RepoRoot\src\NuCmd\bin\Debug"
+
 Write-Host -BackgroundColor Blue -ForegroundColor White @"
  _____     _____     _      _____ _____ _____ 
 |   | |_ _|   __|___| |    |     |     |   __|
