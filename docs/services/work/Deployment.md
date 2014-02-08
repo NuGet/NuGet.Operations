@@ -1,0 +1,47 @@
+# Deploying the Work Service
+**NOTE**: These notes are _primarily_ written to be relevant to the Microsoft-operated NuGet Services (NuGet.org)
+
+The primary deployment vessel for the Work Service is an [Azure Service Host](../../deployment/AzureHosting.md). The "NuGet.Services.Work.Cloud" project is an Azure Cloud Service project that is configured to create an Azure Worker Role that hosts the Work Service. During the integration build on [build.nuget.org](http://build.nuget.org), this project is used to produce a CSPKG file with the same name (NuGet.Services.Work.Cloud.cspkg).
+
+## Deployment Process
+
+### 0. Start the NuGet Ops Console
+In root of a clone of the NuGetApi repository, invoke ".\ops" to enter the Ops Console. If you have not yet configured Ops, see [Configuring NuOps](../../ops/README.md). Enter the target environment by running the following command
+
+	> env _target_
+
+### 1. Deploy the latest version of the database.
+1. Download the DACPAC file for the Work service from the latest build (NuGet.Services.Work.Database.dacpac)
+
+2. Run the following command to check what needs to be deployed from this package
+
+	> .\nucmd db checkdac -db primary -dc 0 -p _C:\path\to\app.dacpac_
+
+(Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
+
+3. Check the output
+
+You should see either "Nothing to be deployed. The database is up-to-date!" or a list of operations to be performed. If this is the first ever deployment of this service, you will see quite a few operations, but there's no need to worry too much about what they are since there's no existing data to be overwritten. If this is a later deployment, verify that the new items in the list of operations match up with your expectations (based on bugs and change notes).
+
+4. If step 3 indicated there were operations to be performed, deploy the DAC using the following command. This command will abort if data loss would occur so it should be safe.
+
+	> .\nucmd db deploy -db primary -dc 0 -p _C:\path\to\app.dacpac_
+
+(Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
+
+### 2. Regenerate Credentials and update configuration
+1. Open the existing CSCFG file for the target service. If one does not exist, see the [Provisioning Guide](Provisioning.md) for help creating one.
+
+2. Regenerate the Primary Storage key using the following command in NuOps. After running the command, the new string will be in the clipboard **and the storage account key will have already been changed in Azure.**
+
+	> New-StorageConnectionString -Service work -Datacenter 0 -Clip
+
+NOTE: If this is the first deployment, you will be prompted to enter the name of the target storage account.
+
+3. Paste the new storage connection string in as the new value for "Storage.Primary" AND "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" CSCFG settings
+
+4. Generate a new SQL User for the service by running the following command in NuOps (while in the root of the NuGetApi repository)
+
+	> .\nucmd db createuser -dc 0 -sv work -sa -s work -db primary -Clip
+
+5. Paste the new SQL connection string in as the new value for the "Sql.Primary" CSCFG setting

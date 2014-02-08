@@ -45,5 +45,18 @@ namespace NuGet.Services.Operations.Model
             }
             return dc.GetServiceUri(service);
         }
+
+        public Service GetService(int datacenter, string name)
+        {
+            Datacenter dc = this[datacenter];
+            if (dc == null)
+            {
+                throw new KeyNotFoundException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.DeploymentEnvironment_UnknownDatacenter,
+                    datacenter));
+            }
+            return dc.GetService(name);
+        }
     }
 }

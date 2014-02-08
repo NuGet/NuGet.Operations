@@ -11,25 +11,26 @@ using NuGet.Services.Operations.Model;
 using PowerArgs;
 using Dapper;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace NuCmd.Commands.Db
 {
-    public class CreateUserCommand : DatacenterCommandBase
+    [Description("Creates a new SQL user for use by the specified service and with access to the specified schemas")]
+    public class CreateUserCommand : DatabaseCommandBase
     {
-        [ArgRequired]
-        [ArgShortcut("db")]
-        [ArgDescription("The type of the SQL Database to create the user on")]
-        public KnownSqlConnection Database { get; set; }
-
-        [ArgRequired]
-        [ArgShortcut("au")]
-        [ArgDescription("The Admin User Name for the database")]
-        public string AdminUser { get; set; }
-
-        [ArgShortcut("s")]
+        [ArgShortcut("sv")]
         [ArgRegex("[0-9a-zA-Z]+")]
         [ArgDescription("The name of the service the user is for (i.e. 'work', 'search', etc.)")]
         public string Service { get; set; }
+
+        [ArgShortcut("d")]
+        [ArgRegex("[0-9a-zA-Z]+")]
+        [ArgDescription("A distinguisher to use to distinguish this user name from the default name.")]
+        public string Distinguisher { get; set; }
+
+        [ArgShortcut("s")]
+        [ArgDescription("Comma-separated list of DB schemas to grant access for. See 'nucmd db schemas' for a list.")]
+        public string[] Schemas { get; set; }
 
         [ArgShortcut("sa")]
         [ArgDescription("If set, the user will be an administrator on the database server")]
@@ -41,67 +42,14 @@ namespace NuCmd.Commands.Db
 
         protected override async Task OnExecute()
         {
-            // Prep the connection string
-            EnsureSession();
-            var dc = GetDatacenter();
-                
-            // Find the server
-            var server = dc.FindResource(ResourceTypes.SqlDb, Database.ToString());
-            if(server == null) {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture, 
-                    Strings.Db_CreateUserCommand_NoDatabaseInDatacenter,
-                    Datacenter.Value,
-                    ResourceTypes.SqlDb,
-                    Database.ToString()));
-            }
-            var connStr = new SqlConnectionStringBuilder(server.Value);
-            if (String.IsNullOrEmpty(connStr.InitialCatalog))
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "InitialCatalog"));
-            }
-            if (String.IsNullOrEmpty(connStr.DataSource))
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "DataSource"));
-            }
-            if(!String.IsNullOrEmpty(connStr.UserID)) {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "User ID"));
-            }
-            if(!String.IsNullOrEmpty(connStr.Password)) {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "Password"));
-            }
-
-            // Prompt the user for the admin password and put it in a SecureString
-            var password = Console.PromptForPassword(String.Format(
-                CultureInfo.CurrentCulture, 
-                Strings.Db_CreateUserCommand_EnterAdminPassword,
-                AdminUser));
-
-            // Create a SQL Credential
-            var cred = new SqlCredential(AdminUser, password);
-
+            var connInfo = GetSqlConnectionInfo();
+            
             // Generate the login name
             string loginName = Service.ToLowerInvariant() + "_" + DateTime.UtcNow.ToString("yyyyMMMdd");
+            if (!String.IsNullOrEmpty(Distinguisher))
+            {
+                loginName += "_" + Distinguisher;
+            }
 
             // Generate a password
             string loginPassword =
@@ -112,11 +60,9 @@ namespace NuCmd.Commands.Db
             // Connect to master
             if (!WhatIf)
             {
-                var masterConnStr = new SqlConnectionStringBuilder(connStr.ConnectionString);
-                masterConnStr.InitialCatalog = "master";
-                using (var connection = new SqlConnection(masterConnStr.ConnectionString, cred))
+                using (var connection = await connInfo.Connect("master"))
                 {
-                    await connection.OpenAsync();
+                    var masterConnStr = new SqlConnectionStringBuilder(connection.ConnectionString);
                     await Console.WriteInfoLine(String.Format(
                         CultureInfo.CurrentCulture,
                         Strings.Db_CreateUserCommand_Connected,
@@ -132,7 +78,7 @@ namespace NuCmd.Commands.Db
                         CultureInfo.CurrentCulture,
                         Strings.Db_CreateUserCommand_CreatingLogin,
                         loginName,
-                        connStr.DataSource));
+                        masterConnStr.DataSource));
                     await connection.QueryAsync<int>("CREATE LOGIN [" + loginName + "] WITH password='" + loginPassword + "'");
 
                     if (ServerAdmin)
@@ -158,35 +104,38 @@ namespace NuCmd.Commands.Db
                 }
 
                 // Connect to the database itself
-                using (var connection = new SqlConnection(connStr.ConnectionString, cred))
+                using (var connection = await connInfo.Connect())
                 {
-                    await connection.OpenAsync();
                     await Console.WriteInfoLine(String.Format(
                         CultureInfo.CurrentCulture,
                         Strings.Db_CreateUserCommand_Connected,
-                        connStr.DataSource,
-                        connStr.InitialCatalog));
+                        connInfo.ConnectionString.DataSource,
+                        connInfo.ConnectionString.InitialCatalog));
 
                     // Create the user and grant permissions
                     await Console.WriteInfoLine(String.Format(
                         CultureInfo.CurrentCulture,
                         Strings.Db_CreateUserCommand_CreatingUser,
                         loginName,
-                        connStr.InitialCatalog));
+                        connInfo.ConnectionString.InitialCatalog));
                     await connection.QueryAsync<int>(
                         "CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
-                    await Console.WriteInfoLine(String.Format(
-                        CultureInfo.CurrentCulture,
-                        Strings.Db_CreateUserCommand_GrantingUser,
-                        loginName,
-                        Service,
-                        connStr.InitialCatalog));
-                    await connection.QueryAsync<int>(
-                        "GRANT CONTROL ON SCHEMA :: " + Service + " TO " + loginName);
+
+                    foreach (var schema in Schemas)
+                    {
+                        await Console.WriteInfoLine(String.Format(
+                            CultureInfo.CurrentCulture,
+                            Strings.Db_CreateUserCommand_GrantingUser,
+                            loginName,
+                            schema,
+                            connInfo.ConnectionString.InitialCatalog));
+                        await connection.QueryAsync<int>(
+                            "GRANT CONTROL ON SCHEMA :: " + schema + " TO " + loginName);
+                    }
                 }
 
                 // Generate the connection string
-                var loginConnStr = new SqlConnectionStringBuilder(connStr.ConnectionString)
+                var loginConnStr = new SqlConnectionStringBuilder(connInfo.ConnectionString.ConnectionString)
                 {
                     UserID = loginName,
                     Password = loginPassword
@@ -213,8 +162,8 @@ namespace NuCmd.Commands.Db
                 await Console.WriteInfoLine(String.Format(
                     CultureInfo.CurrentCulture,
                     Strings.Db_CreateUserCommand_WouldCreateUser,
-                    connStr.DataSource,
-                    connStr.InitialCatalog,
+                    connInfo.ConnectionString.DataSource,
+                    connInfo.ConnectionString.InitialCatalog,
                     Service));
             }
         }

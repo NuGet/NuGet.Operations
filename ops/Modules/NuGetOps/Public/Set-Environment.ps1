@@ -12,4 +12,6 @@ function Set-Environment {
     }
     $NuOps.SetCurrentEnvironment($Name)
     $env:NUOPS_CURRENT_ENVIRONMENT = $Name
+
+    Select-AzureSubscription $NuOps.CurrentEnvironment.Subscription.Name
 }

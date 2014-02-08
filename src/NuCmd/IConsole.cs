@@ -158,5 +158,10 @@ namespace NuCmd
         {
             return self.Http.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
         }
+
+        public static Task WriteTable<T>(this IConsole self, IEnumerable<T> objs)
+        {
+            return self.WriteTable(objs, t => t);
+        }
     }
 }

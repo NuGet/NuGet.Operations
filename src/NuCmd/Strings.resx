@@ -311,6 +311,21 @@ Details:
   <data name="DatacenterCommandBase_NoDC" xml:space="preserve">
     <value>A datacenter must be specified using the -dc argument</value>
   </data>
+  <data name="Db_CheckDacCommand_DeploymentAlerts" xml:space="preserve">
+    <value>There are deployment alerts and I haven't written code to parse that yet :). Contact 'anurse' ;)</value>
+  </data>
+  <data name="Db_CheckDacCommand_DeploymentOperations" xml:space="preserve">
+    <value>Operations that will be performed to deploy this DAC:</value>
+  </data>
+  <data name="Db_CheckDacCommand_GettingDeploymentReport" xml:space="preserve">
+    <value>Getting deployment report to deploy Data-Tier Application {0} to database {1} on {2}.</value>
+  </data>
+  <data name="Db_CheckDacCommand_NothingToDeploy" xml:space="preserve">
+    <value>Nothing to be deployed. The database is up-to-date!</value>
+  </data>
+  <data name="Db_CheckDacCommand_ReportMissingRequiredElement" xml:space="preserve">
+    <value>Deployment report is missing required element: '{0}'.</value>
+  </data>
   <data name="Db_CreateUserCommand_AdminingUser" xml:space="preserve">
     <value>Making {0} a server-level admin on {1}.</value>
   </data>
@@ -352,6 +367,30 @@ Connection String: {3}</value>
   </data>
   <data name="Db_CreateUserCommand_WouldCreateUser" xml:space="preserve">
     <value>Would create user on server {0} for database {1}, designed for use by the {2} service.</value>
+  </data>
+  <data name="Db_DeleteDacCommand_Deleting" xml:space="preserve">
+    <value>Deleting Data-Tier Application {0} on {1}.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_DroppingLogin" xml:space="preserve">
+    <value>Dropping login {0} on {1}.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_DroppingUser" xml:space="preserve">
+    <value>Dropping user {0} on {1}.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_NoLogin" xml:space="preserve">
+    <value>Login {0} does not exist in {1}.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_NoUser" xml:space="preserve">
+    <value>User {0} does not exist in {1}.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_UnableToCheckUser" xml:space="preserve">
+    <value>Unable to check for a user {0} in {1}. The login no longer exists in the 'master' database!</value>
+  </data>
+  <data name="Db_DeployCommand_Deployed" xml:space="preserve">
+    <value>Finished Deployment of DAC.</value>
+  </data>
+  <data name="Db_DeployCommand_Deploying" xml:space="preserve">
+    <value>Deploying DAC {0} to database {1} on {2}.</value>
   </data>
   <data name="EnvCommand_Data_PackageSource" xml:space="preserve">
     <value> {0} package source '{1}': {2}</value>

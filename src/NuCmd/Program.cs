@@ -27,6 +27,7 @@ namespace NuCmd
             _directory.LoadCommands(typeof(Program).Assembly);
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
 #if DEBUG
@@ -99,7 +100,6 @@ namespace NuCmd
             commandName = commandName ?? String.Empty;
 
             CommandDefinition command;
-            Type commandType;
             if (!groupMembers.TryGetValue(commandName, out command))
             {
                 if (String.IsNullOrEmpty(groupOrRootCommand))
@@ -169,7 +169,7 @@ namespace NuCmd
                 }
                 if (thrown != null)
                 {
-                    await _console.WriteErrorLine(thrown.Message);
+                    await _console.WriteErrorLine(thrown.ToString());
                 }
             }
         }

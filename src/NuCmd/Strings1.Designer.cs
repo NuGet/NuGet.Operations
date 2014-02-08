@@ -171,6 +171,51 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are deployment alerts and I haven&apos;t written code to parse that yet :). Contact &apos;anurse&apos; ;).
+        /// </summary>
+        internal static string Db_CheckDacCommand_DeploymentAlerts {
+            get {
+                return ResourceManager.GetString("Db_CheckDacCommand_DeploymentAlerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operations that will be performed to deploy this DAC:.
+        /// </summary>
+        internal static string Db_CheckDacCommand_DeploymentOperations {
+            get {
+                return ResourceManager.GetString("Db_CheckDacCommand_DeploymentOperations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting deployment report to deploy Data-Tier Application {0} to database {1} on {2}..
+        /// </summary>
+        internal static string Db_CheckDacCommand_GettingDeploymentReport {
+            get {
+                return ResourceManager.GetString("Db_CheckDacCommand_GettingDeploymentReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing to be deployed. The database is up-to-date!.
+        /// </summary>
+        internal static string Db_CheckDacCommand_NothingToDeploy {
+            get {
+                return ResourceManager.GetString("Db_CheckDacCommand_NothingToDeploy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deployment report is missing required element: &apos;{0}&apos;..
+        /// </summary>
+        internal static string Db_CheckDacCommand_ReportMissingRequiredElement {
+            get {
+                return ResourceManager.GetString("Db_CheckDacCommand_ReportMissingRequiredElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Making {0} a server-level admin on {1}..
         /// </summary>
         internal static string Db_CreateUserCommand_AdminingUser {
@@ -287,6 +332,78 @@ namespace NuCmd {
         internal static string Db_CreateUserCommand_WouldCreateUser {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_WouldCreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting Data-Tier Application {0} on {1}..
+        /// </summary>
+        internal static string Db_DeleteDacCommand_Deleting {
+            get {
+                return ResourceManager.GetString("Db_DeleteDacCommand_Deleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dropping login {0} on {1}..
+        /// </summary>
+        internal static string Db_DeleteUserCommand_DroppingLogin {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_DroppingLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dropping user {0} on {1}..
+        /// </summary>
+        internal static string Db_DeleteUserCommand_DroppingUser {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_DroppingUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login {0} does not exist in {1}..
+        /// </summary>
+        internal static string Db_DeleteUserCommand_NoLogin {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_NoLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User {0} does not exist in {1}..
+        /// </summary>
+        internal static string Db_DeleteUserCommand_NoUser {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_NoUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to check for a user {0} in {1}. The login no longer exists in the &apos;master&apos; database!.
+        /// </summary>
+        internal static string Db_DeleteUserCommand_UnableToCheckUser {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_UnableToCheckUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished Deployment of DAC..
+        /// </summary>
+        internal static string Db_DeployCommand_Deployed {
+            get {
+                return ResourceManager.GetString("Db_DeployCommand_Deployed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying DAC {0} to database {1} on {2}..
+        /// </summary>
+        internal static string Db_DeployCommand_Deploying {
+            get {
+                return ResourceManager.GetString("Db_DeployCommand_Deploying", resourceCulture);
             }
         }
         
