@@ -86,6 +86,7 @@
   <ItemGroup>
     <None Include="LocalDb.publish.xml" />
     <None Include="int.publish.xml" />
+    <None Include="NuGet.Services.Work.Database.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
 </Project>
