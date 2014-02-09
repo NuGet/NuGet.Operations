@@ -12,6 +12,5 @@
     <files>
         <file src="Deploy.ps1" />
         <file src="bin\$configuration$\NuGet.Services.Work.Database.dacpac" />
-        <file src="..\..\..\ext\SqlServer\*" />
     </files>
 </package>
