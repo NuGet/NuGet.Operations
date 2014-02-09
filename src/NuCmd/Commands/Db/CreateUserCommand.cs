@@ -131,7 +131,7 @@ namespace NuCmd.Commands.Db
                             schema,
                             connInfo.ConnectionString.InitialCatalog));
                         await connection.QueryAsync<int>(
-                            "GRANT CONTROL ON SCHEMA :: " + schema + " TO " + loginName);
+                            "GRANT CONTROL ON SCHEMA :: [" + schema + "] TO " + loginName);
                     }
                 }
 
