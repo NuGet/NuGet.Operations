@@ -392,6 +392,9 @@ Connection String: {3}</value>
   <data name="Db_DeployCommand_Deploying" xml:space="preserve">
     <value>Deploying DAC {0} to database {1} on {2}.</value>
   </data>
+  <data name="Db_UsersCommand_DisplayingPermissions" xml:space="preserve">
+    <value>Permissions in the {0} database:</value>
+  </data>
   <data name="EnvCommand_Data_PackageSource" xml:space="preserve">
     <value> {0} package source '{1}': {2}</value>
   </data>

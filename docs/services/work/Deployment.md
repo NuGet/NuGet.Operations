@@ -5,14 +5,19 @@ The primary deployment vessel for the Work Service is an [Azure Service Host](..
 
 ## Deployment Process
 
-### 0. Start the NuGet Ops Console
-In root of a clone of the NuGetApi repository, invoke ".\ops" to enter the Ops Console. If you have not yet configured Ops, see [Configuring NuOps](../../ops/README.md). Enter the target environment by running the following command
+### Part 0. Prepare for Deployment
+First, download the following artifacts from the build you plan to deploy:
+
+	Services/Work/NuGet.Services.Work.Cloud.cspkg
+	Services/Work/NuGet.Services.Work.Database.dacpac
+
+Then, enter the ops console: In a console window at the root of a clone of the NuGetApi repository, build the solution by running `.\build`, then run `.\ops` to enter the Ops Console. If you have not yet configured Ops, see [Configuring NuOps](../../ops/README.md). Enter the target environment by running the following command
 
 ```posh
 env target
 ```
 
-(Where _target_ is the environment you are deploying to)
+(Where _target_ is the environment you are deploying to, use `env` with no arguments to see a list)
 
 Verify that 'nucmd' is working by running the following command
 
@@ -22,18 +27,16 @@ nucmd
 
 You should see a list of available commands and command groups. If you see an error indicating 'nucmd' could not be found, ensure you have built the repository using `.\build`
 
-### 1. Deploy the latest version of the database.
-1. Download the DACPAC file for the Work service from the latest build (NuGet.Services.Work.Database.dacpac)
-
-2. Run the following command to check what needs to be deployed from this package
+### Part 1. Deploy the latest version of the database.
+1. Run the following command to check what needs to be deployed from this package
 
 ```posh
 nucmd db checkdac -db primary -dc 0 -p "C:\path\to\app.dacpac"
 ```
 
-(Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
+(Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded in part 0)
 
-3. Check the output
+2. Check the output
 
 You should see either "Nothing to be deployed. The database is up-to-date!" or a list of operations to be performed. If this is the first ever deployment of this service, you will see quite a few operations, but there's no need to worry too much about what they are since there's no existing data to be overwritten. If this is a later deployment, verify that the new items in the list of operations match up with your expectations (based on bugs and change notes).
 
@@ -45,7 +48,7 @@ nucmd db deploy -db primary -dc 0 -p "C:\path\to\app.dacpac"
 
 (Where _C:\path\to\app.dacpac_ is the path to the DACPAC file you downloaded)
 
-### 2. Regenerate Credentials and update configuration
+### Part 2. Regenerate Credentials and update configuration
 1. Open the existing CSCFG file for the target service. If one does not exist, see the [Provisioning Guide](Provisioning.md) for help creating one.
 
 2. Regenerate the Primary Storage key using the following command in NuOps. After running the command, the new string will be in the clipboard **and the storage account key will have already been changed in Azure.**
@@ -56,7 +59,7 @@ New-StorageConnectionString -Service work -Datacenter 0 -Clip
 
 NOTE: If this is the first deployment, you will be prompted to enter the name of the target storage account.
 
-3. Paste the new storage connection string in as the new value for "Storage.Primary" AND "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" CSCFG settings
+3. Paste the new storage connection string in as the new value for `Storage.Primary` **AND** `Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString` CSCFG settings
 
 4. Generate a new SQL User for the service by running the following command in NuOps (while in the root of the NuGetApi repository)
 
@@ -66,5 +69,13 @@ nucmd db createuser -dc 0 -sv work -sa -s work -db primary -Clip
 
 5. Paste the new SQL connection string in as the new value for the "Sql.Primary" CSCFG setting
 
-### 3. Deploy the package
+6. Generate a new Admin Key using the Get-RandomPassword function (which is included in NuOps)
+
+```posh
+Get-RandomPassword | clip
+```
+
+Now paste that password in to the `Http.AdminKey` setting in the CSCFG
+
+### Part 3. Deploy the package
 Upload the CSPKG and CSCFG file using to the destination service using the Azure portal. For the work service, there is no use in deploying to Staging and VIP swapping, the package should be deployed directly to production. Since the front-end HTTP API is not something that users will access, a VIP swap introduces both an unnecessary step and a possibility for work being done by both the Production and Staging Work Services, which is not a terrible thing, but is an unnecessary complexity.

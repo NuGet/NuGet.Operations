@@ -408,6 +408,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Permissions in the {0} database:.
+        /// </summary>
+        internal static string Db_UsersCommand_DisplayingPermissions {
+            get {
+                return ResourceManager.GetString("Db_UsersCommand_DisplayingPermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Azure Certificate: {0}.
         /// </summary>
         internal static string EnvCommand_Data_Cert {

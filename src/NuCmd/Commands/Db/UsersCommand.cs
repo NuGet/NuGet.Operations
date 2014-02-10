@@ -52,6 +52,11 @@ namespace NuCmd.Commands.Db
                 ")).ToList().ToLookup(p => p.sid_string);
             }
 
+            await Console.WriteInfoLine(String.Format(
+                CultureInfo.CurrentCulture,
+                Strings.Db_UsersCommand_DisplayingPermissions,
+                connInfo.ConnectionString.InitialCatalog));
+
             // Join in memory!
             var items = logins.SelectMany(l =>
             {
@@ -66,7 +71,9 @@ namespace NuCmd.Commands.Db
                 Login = t.Item1.name,
                 User = t.Item2.name,
                 ObjectType = t.Item2.class_desc,
-                ObjectName = t.Item2.object_name,
+                ObjectName = String.Equals(t.Item2.class_desc, "DATABASE", StringComparison.OrdinalIgnoreCase) ?
+                    connInfo.ConnectionString.InitialCatalog :
+                    t.Item2.object_name,
                 Permission = t.Item2.permission_name,
                 Status = t.Item2.state_desc,
                 LoginCreated = t.Item1.create_date,
