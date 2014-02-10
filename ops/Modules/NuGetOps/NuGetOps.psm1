@@ -3,8 +3,8 @@ Export-ModuleMember -Variable RepoRoot
 
 # Extract Ops NuGetOpsVersion
 $NuGetProps = [xml](cat (Join-Path $RepoRoot "build\NuGet.props"))
-$NuGetOpsVersion = New-Object System.Version "$($NuGetProps.Project.PropertyGroup.MajorVersion).$($NuGetProps.Project.PropertyGroup.MinorVersion)"
-Export-ModuleMember -Variable NuGetOpsVersion
+$NuOpsVersion = New-Object System.Version $NuGetProps.Project.PropertyGroup.SimpleVersion."#text"
+Export-ModuleMember -Variable NuOpsVersion
 
 # Find the Azure SDK
 $SDKParent = "$env:ProgramFiles\Microsoft SDKs\Windows Azure\.NET SDK"

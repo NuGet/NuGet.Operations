@@ -10,7 +10,12 @@ if($moderr) {
 }
 
 function prompt() {
-    Write-Host -NoNewLine -ForegroundColor Yellow "<NuOps> "
+    $title = "<NuOps>"
+    if($NuOpsVersion) {
+        $title = "<NuOps $($NuOpsVersion.ToString())>"
+    }
+
+    Write-Host -NoNewLine -ForegroundColor Yellow "$title "
     Write-Host -NoNewLine -ForegroundColor Green (Get-Location)
     if($poshGit) {
         Write-VcsStatus
