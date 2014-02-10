@@ -1,12 +1,6 @@
 Write-Host "NuOps Installer"
 Write-Host "This installer will ask you a few small questions, then set up the NuOps environment on your machine"
 
-function Prompt($msg, $default) {
-    do {
-        $val = Read-Host "$msg [$default]"
-    } while([String]::IsNullOrEmpty($val))
-}
-
 function Confirm() {
     param($Message, [bool]$Default = $true)
 
@@ -33,11 +27,21 @@ function Confirm() {
 
 if([String]::IsNullOrWhitespace($env:NUOPS_APP_MODEL) -or (!(Test-Path $env:NUOPS_APP_MODEL))) {
     $DefaultInternalRepository = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) "Deployment"
+    $appModel = Join-Path $DefaultInternalRepository "AppModel.xml"
 
     Write-Host "In order to use NuOps, you must clone your application's deployment configuration repository."
-    $location = Prompt "Where have you cloned this Repository?" $DefaultInternalRepository
+    if($appModel -and (Test-Path $appModel)) {
+        Write-Host "It looks like you've cloned the deployment configuration repository to $DefaultInternalRepository."
+        if(!(Confirm "Is this correct?")) {
+            $appModel = $null
+        }
+    }
+    
+    if(!$appModel) {
+        $location = Read-Host "Where have you cloned this Repository?"
+        $appModel = Join-Path $location "AppModel.xml"
+    }
 
-    $appModel = Join-Path $location "AppModel.xml"
     if(!(Test-Path $appModel)) {
         throw "Could not find AppModel.xml file in this repository! Make sure you've cloned the config repository first!"
     }
