@@ -11,8 +11,8 @@ namespace NuGet.Services
         public static readonly string LegacyPackages = "packages";
         public static readonly string LegacyStats = "stats";
 
-        public static readonly string Backups = "ng-backups";
         public static readonly string BacpacFiles = "bacpac-files";
+        public static readonly string Backups = "package-backups";
     }
 
     public static class MimeTypes
