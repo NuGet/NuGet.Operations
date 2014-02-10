@@ -115,6 +115,8 @@
     <Reference Include="System.Reactive.Linq">
       <HintPath>..\..\..\packages\Rx-Linq.2.1.30214.0\lib\Net45\System.Reactive.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
@@ -122,6 +124,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Tpl.Dataflow.4.5.14\lib\portable-net45+win8\System.Threading.Tasks.Dataflow.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.1.0-rc1\lib\net45\System.Web.Http.dll</HintPath>
@@ -155,6 +158,7 @@
     <Compile Include="Helpers\EventSourceInstanceManager.cs" />
     <Compile Include="Helpers\StorageHelpers.cs" />
     <Compile Include="Helpers\ResourceHelpers.cs" />
+    <Compile Include="Infrastructure\ImportExportHelper.cs" />
     <Compile Include="Infrastructure\InvalidJobRequestException.cs" />
     <Compile Include="Infrastructure\InvocationState.cs" />
     <Compile Include="Infrastructure\InvocationQueue.cs" />
@@ -172,7 +176,9 @@
     <Compile Include="Jobs\CleanOnlineDatabaseBackupsJob.cs" />
     <Compile Include="Jobs\Bases\DatabaseJobHandlerBase.cs" />
     <Compile Include="Jobs\CreateWarehouseReportsJob.cs" />
+    <Compile Include="Jobs\ExportDatabaseJob.cs" />
     <Compile Include="Jobs\HandlePackageEditsJob.cs" />
+    <Compile Include="Jobs\ImportDatabaseJob.cs" />
     <Compile Include="Jobs\Models\PackageEdit.cs" />
     <Compile Include="Jobs\Models\PackageRef.cs" />
     <Compile Include="Jobs\PurgeCompletedInvocationsJob.cs" />
@@ -186,6 +192,7 @@
     <Compile Include="Jobs\TestPingJob.cs" />
     <Compile Include="Jobs\UpdateLicenseReportsJob.cs" />
     <Compile Include="LocalWorkService.cs" />
+    <Compile Include="ServiceReferences\DACWebServiceReference.cs" />
     <Compile Include="Worker.cs" />
     <Compile Include="WorkServiceStatus.cs" />
     <Compile Include="Helpers\SqlConnectionStringBuilderExtensions.cs" />
