@@ -69,13 +69,20 @@ nucmd db createuser -dc 0 -sv work -sa -s work -db primary -Clip
 
 5. Paste the new SQL connection string in as the new value for the "Sql.Primary" CSCFG setting
 
-6. Generate a new Admin Key using the Get-RandomPassword function (which is included in NuOps)
+### Part 3. Deploy the package
+First, generate a deployment name:
 
 ```posh
-Get-RandomPassword | clip
+Get-DeploymentName | clip
 ```
 
-Now paste that password in to the `Http.AdminKey` setting in the CSCFG
-
-### Part 3. Deploy the package
 Upload the CSPKG and CSCFG file using to the destination service using the Azure portal. For the work service, there is no use in deploying to Staging and VIP swapping, the package should be deployed directly to production. Since the front-end HTTP API is not something that users will access, a VIP swap introduces both an unnecessary step and a possibility for work being done by both the Production and Staging Work Services, which is not a terrible thing, but is an unnecessary complexity.
+
+### Part 4. Verify the deployment
+Verify that the package was deployed successfully by testing it out using nucmd. To test the service, grab the admin key by copying the value of the "Http.AdminKey" CSCFG setting and pasting it in to a powershell variable:
+
+```posh
+$pass = "<<Paste here>>"
+```
+
+Then, use the following command to test the service

@@ -18,7 +18,7 @@ namespace NuGet.Services.Configuration
         public SqlConnectionStringBuilder GetConnectionString(KnownSqlConnection account)
         {
             SqlConnectionStringBuilder connectionString;
-            if (Connections.TryGetValue(account, out connectionString))
+            if (!Connections.TryGetValue(account, out connectionString))
             {
                 return null;
             }

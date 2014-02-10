@@ -16,7 +16,7 @@ The Work Service requires the following SQL Databases be provided:
 3. Warehouse - A SQL Database containing an APIv2 Warehouse. The name of this is not defined and depends on your target environment.
 
 ## Cloud Services/Machines
-The Work Service runs on a standard Windows Machine. In Azure, this is provided through an Azure Cloud Service. The cloud service should be named "&lt;app&gt;-&lt;environment&gt;-&lt;dc#&gt;-&lt;hostname&gt;" (when the Work service is hosted on a dedicated machine, we recommend using the hostname "work"). For example, "nuget-dev-0-work".
+The Work Service runs on a standard Windows Machine. In Azure, this is provided through an Azure Cloud Service. The cloud service should be named "&lt;app&gt;-&lt;environment&gt;-&lt;dc#&gt;-&lt;hostname&gt;" (when the Work service is hosted on a dedicated machine, we recommend using the hostname "work"). For example, "nuget-dev-0-work".	
 
 ## Certificates
 TODO
