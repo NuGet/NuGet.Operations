@@ -79,10 +79,20 @@ Get-DeploymentName | clip
 Upload the CSPKG and CSCFG file using to the destination service using the Azure portal. For the work service, there is no use in deploying to Staging and VIP swapping, the package should be deployed directly to production. Since the front-end HTTP API is not something that users will access, a VIP swap introduces both an unnecessary step and a possibility for work being done by both the Production and Staging Work Services, which is not a terrible thing, but is an unnecessary complexity.
 
 ### Part 4. Verify the deployment
-Verify that the package was deployed successfully by testing it out using nucmd. To test the service, grab the admin key by copying the value of the "Http.AdminKey" CSCFG setting and pasting it in to a powershell variable:
+Verify that the package was deployed successfully by testing it out using nucmd. To test the service, grab the admin key using the Get-AdminKey script.
 
 ```posh
-$pass = "<<Paste here>>"
+$pass = Get-AdminKey -Service Work -Datacenter 0
 ```
 
 Then, use the following command to test the service
+
+```posh
+nucmd work jobs -pass $pass
+```
+
+The service should respond with a list of available jobs. That should be everything! If you want to verify that the invocation infrastructure is all working, you can invoke the TestPing job:
+
+```posh
+nucmd work invoke -j TestPing -pass $pass
+```
