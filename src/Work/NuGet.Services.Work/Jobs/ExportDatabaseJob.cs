@@ -20,7 +20,7 @@ using Microsoft.WindowsAzure.Storage;
 namespace NuGet.Services.Work.Jobs
 {
     [Description("Exports database from primary datacenter to a bacpac file in secondary datacenter")]
-    public class ExportDatabaseJob : DatabaseJobHandlerBase<SyncDatacenterEventSource>
+    public class ExportDatabaseJob : DatabaseJobHandlerBase<ExportDatabaseEventSource>
     {
         public static readonly string BackupPrefix = "Backup";
         public string DestinationStorageAccountName { get; set; }
@@ -42,7 +42,7 @@ namespace NuGet.Services.Work.Jobs
                 endPointUri = NuGet.Services.Constants.NorthCentralUSEndpoint;
             }
 
-            Log.Information(String.Format("ExportEndpoint is {0}", endPointUri));
+            Log.ExportEndpoint(endPointUri);
 
             var cstr = TargetDatabaseConnection ?? Config.Sql.GetConnectionString(KnownSqlServer.Legacy, admin: true);
             if (cstr == null || cstr.InitialCatalog == null || cstr.Password == null || cstr.DataSource == null || cstr.UserID == null)
@@ -76,7 +76,9 @@ namespace NuGet.Services.Work.Jobs
                 throw new InvalidOperationException(String.Format("No database with prefix '{0}' was found to export", BackupPrefix));
             }
 
-            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
+            Log.PreparingToExport(TargetDatabaseName, cstr.DataSource);
+
+            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper()
             {
                 EndPointUri = endPointUri,
                 DatabaseName = TargetDatabaseName,
@@ -98,7 +100,7 @@ namespace NuGet.Services.Work.Jobs
                 var blob = await cloudBlobClient.GetBlobReferenceFromServerAsync(new Uri(bacpacFile));
                 if (blob != null)
                 {
-                    Log.Information("Bacpac file already exists. Skipping...");
+                    Log.BacpacFileAlreadyExists(bacpacFile);
                     return Complete();
                 }
             }
@@ -107,12 +109,13 @@ namespace NuGet.Services.Work.Jobs
                 // Bacpac file does not exist already. Continue
             }
 
-            var requestGUID = helper.DoExport(bacpacFile, whatIf: WhatIf, async: true);
+            Log.StartingExport(TargetDatabaseName, cstr.DataSource, bacpacFile);
 
+            var requestGUID = helper.DoExport(Log, bacpacFile, whatIf: WhatIf);
 
             if (requestGUID != null)
             {
-                Log.Information(String.Format("\n\n Successful Request and Response. Request GUID is : {0}", requestGUID));
+                Log.ExportStarted(requestGUID);
 
                 var parameters = new Dictionary<string, string>();
                 parameters["RequestGUID"] = requestGUID;
@@ -129,15 +132,13 @@ namespace NuGet.Services.Work.Jobs
 
         protected internal override Task<JobContinuation> Resume()
         {
-            Log.Information("Resuming ExportDatabase Job...");
-
             if (RequestGUID == null || TargetDatabaseConnection == null || EndPointUri == null)
             {
                 throw new ArgumentNullException("Job could not resume properly due to incorrect parameters");
             }
 
             var endPointUri = EndPointUri;
-            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
+            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper()
             {
                 EndPointUri = endPointUri,
                 ServerName = TargetDatabaseConnection.DataSource,
@@ -150,19 +151,18 @@ namespace NuGet.Services.Work.Jobs
 
             if (statusInfo.Status == "Failed")
             {
-                var errorMessage = String.Format("After Resuming, Database export failed: {0}", statusInfo.ErrorMessage);
-                Log.Information(errorMessage);
-                throw new Exception(errorMessage);
+                Log.ExportFailed(statusInfo.ErrorMessage);
+                throw new Exception(statusInfo.ErrorMessage);
             }
 
             if (statusInfo.Status == "Completed")
             {
                 var exportedBlobPath = statusInfo.BlobUri;
-                Log.Information(String.Format("After Resuming, Export Completed - Database has been exported to: {0}", exportedBlobPath));
+                Log.ExportCompleted(exportedBlobPath);
                 return Task.FromResult(Complete());
             }
 
-            Log.Information(String.Format("Still exporting the database. Status : {0}", statusInfo.Status));
+            Log.Exporting(statusInfo.Status);
 
             var parameters = new Dictionary<string, string>();
             parameters["RequestGUID"] = RequestGUID;
@@ -207,32 +207,95 @@ namespace NuGet.Services.Work.Jobs
         }
     }
 
-    public class SyncDatacenterEventSource : EventSource
+    [EventSource(Name="Outercurve-NuGet-Jobs-ExportDatabase")]
+    public class ExportDatabaseEventSource : EventSource
     {
-        public static readonly SyncDatacenterEventSource Log = new SyncDatacenterEventSource();
+        public static readonly ExportDatabaseEventSource Log = new ExportDatabaseEventSource();
+
+        private ExportDatabaseEventSource() { }
 
         [Event(
             eventId: 1,
             Level = EventLevel.Informational,
-            Message = "Preparing to export source database {0} on server {1} from primary datacenter {2}")]
-        public void PreparingToExport(string datacenter, string server, string database) { WriteEvent(1, database, server, datacenter); }
+            Message= "Export endpoint is {0}")]
+        public void ExportEndpoint(string endPointUri) { WriteEvent(1, endPointUri); }
 
         [Event(
             eventId: 2,
-            Level = EventLevel.Warning,
-            Message = "Source database {0} not found!")]
-        public void SourceDatabaseNotFound(string source) { WriteEvent(2, source); }
+            Level = EventLevel.Informational,
+            Message = "Preparing to export source database {0} on server {1}")]
+        public void PreparingToExport(string database, string server) { WriteEvent(2, database, server); }
 
         [Event(
             eventId: 3,
-            Level = EventLevel.Informational,
-            Message = "{0}")]
-        public void Information(string message) { WriteEvent(3, message); }
+            Level = EventLevel.Warning,
+            Message = "Bacpac file {0} already exists!")]
+        public void BacpacFileAlreadyExists(string bacpacFile) { WriteEvent(3, bacpacFile); }
 
         [Event(
             eventId: 4,
+            Level = EventLevel.Informational,
+            Message = "Starting Export of database {0} on server {1} to bacpac file {2}")]
+        public void StartingExport(string database, string server, string bacpacFile) { WriteEvent(4, database, server, bacpacFile); }
+
+        [Event(
+            eventId: 5,
+            Level = EventLevel.Informational,
+            Message = "Export has started successfully. Request GUID: {0}")]
+        public void ExportStarted(string requestGUID) { WriteEvent(5, requestGUID); }
+
+        [Event(
+            eventId: 6,
             Level = EventLevel.Error,
-            Message = "{0}")]
-        public void Error(string message) { WriteEvent(4, message); }
+            Message ="Export operation failed. Error Message: {0}")]
+        public void ExportFailed(string message) { WriteEvent(6, message); }
+
+        [Event(
+            eventId: 7,
+            Level = EventLevel.Informational,
+            Message = "Export has completed successfully. Database has been exported to {0}")]
+        public void ExportCompleted(string exportedBlobPath) { WriteEvent(7, exportedBlobPath); }
+
+        [Event(
+            eventId: 8,
+            Level = EventLevel.Informational,
+            Message = "Export is still in progress. Status : {0}")]
+        public void Exporting(string statusMessage) { WriteEvent(8, statusMessage); }
+
+        [Event(
+            eventId: 9,
+            Level = EventLevel.Informational,
+            Message = "HTTP Posting to requestURI : {0}")]
+        public void RequestUri(string requestUri) { WriteEvent(9, requestUri); }
+
+        [Event(
+            eventId: 10,
+            Level = EventLevel.Informational,
+            Message = "Would have sent : {0}")]
+        public void WouldHaveSent(string request) { WriteEvent(10, request); }
+
+        [Event(
+            eventId: 11,
+            Level = EventLevel.Informational,
+            Message = "Sending request : {0}")]
+        public void SendingRequest(string request) { WriteEvent(11, request); }
+
+        [Event(
+            eventId: 12,
+            Level = EventLevel.Informational,
+            Message = "Request failed. Exception message : {0}")]
+        public void RequestFailed(string exceptionMessage) { WriteEvent(12, exceptionMessage); }
+
+        [Event(
+            eventId: 13,
+            Level = EventLevel.Informational,
+            Message = "HttpWebResponse error code. Status : {0}")]
+        public void ErrorStatusCode(int statusCode) { WriteEvent(13, statusCode); }
+
+        [Event(
+            eventId: 14,
+            Level = EventLevel.Informational,
+            Message = "HttpWebResponse error description. Status : {0}")]
+        public void ErrorStatusDescription(string statusDescription) { WriteEvent(14, statusDescription); }
     }
 }

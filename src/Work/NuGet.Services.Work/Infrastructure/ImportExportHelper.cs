@@ -19,8 +19,6 @@ namespace WASDImportExport
 {
     class ImportExportHelper
     {
-        private SyncDatacenterEventSource _log;
-
         public string EndPointUri { get; set; }
         public string StorageKey { get; set; }
         public string ServerName { get; set; }
@@ -28,9 +26,8 @@ namespace WASDImportExport
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public ImportExportHelper(SyncDatacenterEventSource log)
+        public ImportExportHelper()
         {
-            _log = log;
             EndPointUri = "";
             ServerName = "";
             StorageKey = "";
@@ -40,12 +37,9 @@ namespace WASDImportExport
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public string DoExport(string blobUri, bool whatIf, bool async = true)
+        public string DoExport(ExportDatabaseEventSource log, string blobUri, bool whatIf)
         {
-            _log.Information("Starting SQL DAC Export Operation");
             string requestGuid = null;
-            bool exportComplete = false;
-            string exportedBlobPath = null;
 
             //Setup Web Request for Export Operation
             WebRequest webRequest = WebRequest.Create(this.EndPointUri + @"/Export");
@@ -71,11 +65,9 @@ namespace WASDImportExport
 
             //Perform Web Request
             DataContractSerializer dataContractSerializer = new DataContractSerializer(exportInputs.GetType());
-            _log.Information(String.Format("http POST {0}", webRequest.RequestUri.AbsoluteUri));
+            log.RequestUri(webRequest.RequestUri.AbsoluteUri);
             if (whatIf)
             {
-                _log.Information("Would have sent:");
-
                 using (var strm = new MemoryStream())
                 {
                     dataContractSerializer.WriteObject(strm, exportInputs);
@@ -83,14 +75,13 @@ namespace WASDImportExport
                     strm.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(strm))
                     {
-                        _log.Information(reader.ReadToEnd());
+                        log.WouldHaveSent(reader.ReadToEnd());
                     }
                 }
                 return null;
             }
             else
             {
-                _log.Information("Sending: ");
                 using (var strm = new MemoryStream())
                 {
                     dataContractSerializer.WriteObject(strm, exportInputs);
@@ -98,11 +89,10 @@ namespace WASDImportExport
                     strm.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(strm))
                     {
-                        _log.Information(reader.ReadToEnd());
+                        log.SendingRequest(reader.ReadToEnd());
                     }
                 }
 
-                _log.Information("Making Web Request For Export Operation...");
                 Stream webRequestStream = webRequest.GetRequestStream();
                 dataContractSerializer.WriteObject(webRequestStream, exportInputs);
                 webRequestStream.Close();
@@ -119,54 +109,24 @@ namespace WASDImportExport
                     xmlStreamReader = XmlReader.Create(webResponse.GetResponseStream());
                     xmlStreamReader.ReadToFollowing("guid");
                     requestGuid = xmlStreamReader.ReadElementContentAsString();
-                    _log.Information(String.Format("Export Request '{0}' submitted", requestGuid));
-
-                    //Get Export Operation Status
-                    string last = null;
-                    while (!async && !exportComplete)
-                    {
-                        List<StatusInfo> statusInfoList = CheckRequestStatus(requestGuid);
-                        var status = statusInfoList.FirstOrDefault().Status;
-                        if (!String.Equals(last, status, StringComparison.OrdinalIgnoreCase))
-                        {
-                            _log.Information(status);
-                        }
-                        last = status;
-
-                        if (statusInfoList.FirstOrDefault().Status == "Failed")
-                        {
-                            _log.Information(String.Format("Database export failed: {0}", statusInfoList.FirstOrDefault().ErrorMessage));
-                            exportComplete = true;
-                        }
-
-                        if (statusInfoList.FirstOrDefault().Status == "Completed")
-                        {
-                            exportedBlobPath = statusInfoList.FirstOrDefault().BlobUri;
-                            _log.Information(String.Format("Export Complete - Database exported to: {0}", exportedBlobPath));
-                            exportComplete = true;
-                        }
-                        Thread.Sleep(5 * 1000);
-                    }
                     return requestGuid;
                 }
                 catch (WebException responseException)
                 {
-                    _log.Error(String.Format("Request Falied:{0}", responseException.Message));
+                    log.RequestFailed(responseException.Message);
                     if (responseException.Response != null)
                     {
-                        _log.Error(String.Format("Status Code: {0}", ((HttpWebResponse)responseException.Response).StatusCode));
-                        _log.Error(String.Format("Status Description: {0}", ((HttpWebResponse)responseException.Response).StatusDescription));
+                        log.ErrorStatusCode((int)(((HttpWebResponse)responseException.Response).StatusCode));
+                        log.ErrorStatusDescription(((HttpWebResponse)responseException.Response).StatusDescription);
                     }
                     return null;
                 }
             }
         }
 
-        public string DoImport(string blobUri, bool whatIf, bool async = true, int databaseSizeInGB = 5)
+        public string DoImport(ImportDatabaseEventSource log, string blobUri, bool whatIf, int databaseSizeInGB = 5)
         {
-            _log.Information(String.Format("Starting Import Operation - {0}\n\r", DateTime.Now));
             string requestGuid = null;
-            bool importComplete = false;
 
             //Setup Web Request for Import Operation
             WebRequest webRequest = WebRequest.Create(this.EndPointUri + @"/Import");
@@ -193,14 +153,11 @@ namespace WASDImportExport
             };
 
             //Perform Web Request
-            _log.Information("Making Web Request for Import Operation...");
             Stream webRequestStream = webRequest.GetRequestStream();
             DataContractSerializer dataContractSerializer = new DataContractSerializer(importInputs.GetType());
 
             if (whatIf)
             {
-                _log.Information("Would have sent:");
-
                 using (var strm = new MemoryStream())
                 {
                     dataContractSerializer.WriteObject(strm, importInputs);
@@ -208,14 +165,13 @@ namespace WASDImportExport
                     strm.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(strm))
                     {
-                        _log.Information(reader.ReadToEnd());
+                        log.WouldHaveSent(reader.ReadToEnd());
                     }
                 }
                 return null;
             }
             else
             {
-                _log.Information("Sending: ");
                 using (var strm = new MemoryStream())
                 {
                     dataContractSerializer.WriteObject(strm, importInputs);
@@ -223,7 +179,7 @@ namespace WASDImportExport
                     strm.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(strm))
                     {
-                        _log.Information(reader.ReadToEnd());
+                        log.SendingRequest(reader.ReadToEnd());
                     }
                 }
 
@@ -231,7 +187,6 @@ namespace WASDImportExport
                 webRequestStream.Close();
 
                 //Get Response and Extract Request Identifier
-                _log.Information("Serializing response and extracting guid...");
                 WebResponse webResponse = null;
                 XmlReader xmlStreamReader = null;
 
@@ -243,35 +198,14 @@ namespace WASDImportExport
                     xmlStreamReader = XmlReader.Create(webResponse.GetResponseStream());
                     xmlStreamReader.ReadToFollowing("guid");
                     requestGuid = xmlStreamReader.ReadElementContentAsString();
-                    _log.Information(String.Format("Request Guid: {0}", requestGuid));
-
-                    //Get Status of Import Operation
-                    while (!async && !importComplete)
-                    {
-                        _log.Information("Checking status of Import...");
-                        List<StatusInfo> statusInfoList = CheckRequestStatus(requestGuid);
-                        _log.Information(statusInfoList.FirstOrDefault().Status);
-
-                        if (statusInfoList.FirstOrDefault().Status == "Failed")
-                        {
-                            _log.Information(String.Format("Database import failed: {0}", statusInfoList.FirstOrDefault().ErrorMessage));
-                            importComplete = true;
-                        }
-
-                        if (statusInfoList.FirstOrDefault().Status == "Completed")
-                        {
-                            _log.Information(String.Format("Import Complete - Database imported to: {0}\n\r", statusInfoList.FirstOrDefault().DatabaseName));
-                            importComplete = true;
-                        }
-                    }
                     return requestGuid;
                 }
                 catch (WebException responseException)
                 {
-                    _log.Error(String.Format("Request Falied: {0}", responseException.Message));
+                    log.RequestFailed(responseException.Message);
                     {
-                        _log.Error(String.Format("Status Code: {0}", ((HttpWebResponse)responseException.Response).StatusCode));
-                        _log.Error(String.Format("Status Description: {0}\n\r", ((HttpWebResponse)responseException.Response).StatusDescription));
+                        log.ErrorStatusCode((int)(((HttpWebResponse)responseException.Response).StatusCode));
+                        log.ErrorStatusDescription(((HttpWebResponse)responseException.Response).StatusDescription);
                     }
 
                     return null;

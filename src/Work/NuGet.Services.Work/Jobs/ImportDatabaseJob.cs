@@ -7,16 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NuGet.Services.Work.Jobs
 {
-    // NOTE: THIS JOB IS INCOMPLETE. THIS NEEDS TO BE UPDATED TO USE CLOUD CONFIGURATION SETTINGS
-    // AND, MOST IMPORTANTLY, THIS JOB NEEDS TO BE RUN ON DATACENTER 1 and NOT ON DATACENTER 0
     [Description("Imports a bacpac file into database")]
-    public class ImportDatabaseJob : DatabaseJobHandlerBase<SyncDatacenterEventSource>
+    public class ImportDatabaseJob : DatabaseJobHandlerBase<ImportDatabaseEventSource>
     {
         public static readonly string BackupPrefix = "Backup";
         public string SourceStorageAccountName { get; set; }
@@ -40,7 +39,7 @@ namespace NuGet.Services.Work.Jobs
                 endPointUri = NuGet.Services.Constants.EastUSEndpoint;
             }
 
-            Log.Information(String.Format("ImportEndpoint is {0}", endPointUri));
+            Log.ImportEndpoint(endPointUri);
 
             var cstr = TargetDatabaseConnection ?? Config.Sql.GetConnectionString(KnownSqlServer.Primary, admin: true);
             if (cstr == null || cstr.InitialCatalog == null || cstr.Password == null || cstr.DataSource == null || cstr.UserID == null)
@@ -83,11 +82,11 @@ namespace NuGet.Services.Work.Jobs
 
             if (await DoesDBExist(cstr, TargetDatabaseName))
             {
-                Log.Information(String.Format("Database {0} already exists.Skipping...", TargetDatabaseName));
+                Log.DatabaseAlreadyExists("Database {0} already exists.Skipping...", TargetDatabaseName);
                 return Complete();
             }
 
-            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
+            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper()
             {
                 EndPointUri = endPointUri,
                 DatabaseName = TargetDatabaseName,
@@ -99,11 +98,13 @@ namespace NuGet.Services.Work.Jobs
 
             var blobAbsoluteUri = String.Format(@"https://{0}.blob.core.windows.net/bacpac-files/{1}.bacpac", SourceStorageAccountName, BacpacFile);
 
-            var requestGUID = helper.DoImport(blobAbsoluteUri, whatIf: WhatIf, async: true);
+            Log.StartingImport(TargetDatabaseName, cstr.DataSource, BacpacFile);
+
+            var requestGUID = helper.DoImport(Log, blobAbsoluteUri, whatIf: WhatIf);
 
             if (requestGUID != null)
             {
-                Log.Information(String.Format("\n\n Successful Request and Response!! Request GUID is : {0}", requestGUID));
+                Log.ImportStarted(requestGUID);
 
                 var parameters = new Dictionary<string, string>();
                 parameters["RequestGUID"] = requestGUID;
@@ -120,15 +121,13 @@ namespace NuGet.Services.Work.Jobs
 
         protected internal override Task<JobContinuation> Resume()
         {
-            Log.Information("Resuming ImportDatabase Job...");
-
             if (RequestGUID == null || TargetDatabaseConnection == null || EndPointUri == null)
             {
                 throw new ArgumentNullException("Job could not resume properly due to incorrect parameters");
             }
 
             var endPointUri = EndPointUri;
-            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper(SyncDatacenterEventSource.Log)
+            WASDImportExport.ImportExportHelper helper = new WASDImportExport.ImportExportHelper()
             {
                 EndPointUri = endPointUri,
                 ServerName = TargetDatabaseConnection.DataSource,
@@ -141,18 +140,17 @@ namespace NuGet.Services.Work.Jobs
 
             if (statusInfo.Status == "Failed")
             {
-                var errorMessage = String.Format("After Resuming, Database import failed: {0}", statusInfo.ErrorMessage);
-                Log.Information(errorMessage);
-                throw new Exception(errorMessage);
+                Log.ImportFailed(statusInfo.ErrorMessage);
+                throw new Exception(statusInfo.ErrorMessage);
             }
 
             if (statusInfo.Status == "Completed")
             {
-                Log.Information(String.Format("After Resuming, Import Completed - Database has been imported to: {0}", statusInfo.DatabaseName));
+                Log.ImportCompleted(statusInfo.DatabaseName, helper.ServerName);
                 return Task.FromResult(Complete());
             }
 
-            Log.Information(String.Format("Still importing the database. Status : {0}", statusInfo.Status));
+            Log.Importing(statusInfo.Status);
 
             var parameters = new Dictionary<string, string>();
             parameters["RequestGUID"] = RequestGUID;
@@ -203,5 +201,97 @@ namespace NuGet.Services.Work.Jobs
                 return db != null;
             }
         }
+    }
+
+    [EventSource(Name = "Outercurve-NuGet-Jobs-ExportDatabase")]
+    public class ImportDatabaseEventSource : EventSource
+    {
+        public static readonly ImportDatabaseEventSource Log = new ImportDatabaseEventSource();
+
+        private ImportDatabaseEventSource() { }
+
+        [Event(
+            eventId: 1,
+            Level = EventLevel.Informational,
+            Message = "Import endpoint is {0}")]
+        public void ImportEndpoint(string endPointUri) { WriteEvent(1, endPointUri); }
+
+        [Event(
+            eventId: 2,
+            Level = EventLevel.Informational,
+            Message = "Preparing to import bacpac file {0}")]
+        public void PreparingToImport(string bacpacFile) { WriteEvent(2, bacpacFile); }
+
+        [Event(
+            eventId: 3,
+            Level = EventLevel.Warning,
+            Message = "Target database {0} already exists on {1}!")]
+        public void DatabaseAlreadyExists(string database, string server) { WriteEvent(3, database, server); }
+
+        [Event(
+            eventId: 4,
+            Level = EventLevel.Informational,
+            Message = "Starting Import of database {0} on server {1} from bacpac file {2}")]
+        public void StartingImport(string database, string server, string bacpacFile) { WriteEvent(4, database, server, bacpacFile); }
+
+        [Event(
+            eventId: 5,
+            Level = EventLevel.Informational,
+            Message = "Import has started successfully. Request GUID: {0}")]
+        public void ImportStarted(string requestGUID) { WriteEvent(5, requestGUID); }
+
+        [Event(
+            eventId: 6,
+            Level = EventLevel.Error,
+            Message = "Import operation failed. Error Message: {0}")]
+        public void ImportFailed(string message) { WriteEvent(6, message); }
+
+        [Event(
+            eventId: 7,
+            Level = EventLevel.Informational,
+            Message = "Import has completed successfully. Database has been imported to {0} on server {1}")]
+        public void ImportCompleted(string database, string server) { WriteEvent(7, database, server); }
+
+        [Event(
+            eventId: 8,
+            Level = EventLevel.Informational,
+            Message = "Import is still in progress. Status : {0}")]
+        public void Importing(string statusMessage) { WriteEvent(8, statusMessage); }
+
+        [Event(
+            eventId: 9,
+            Level = EventLevel.Informational,
+            Message = "HTTP Posting to requestURI : {0}")]
+        public void RequestUri(string requestUri) { WriteEvent(9, requestUri); }
+
+        [Event(
+            eventId: 10,
+            Level = EventLevel.Informational,
+            Message = "Would have sent : {0}")]
+        public void WouldHaveSent(string request) { WriteEvent(10, request); }
+
+        [Event(
+            eventId: 11,
+            Level = EventLevel.Informational,
+            Message = "Sending request : {0}")]
+        public void SendingRequest(string request) { WriteEvent(11, request); }
+
+        [Event(
+            eventId: 12,
+            Level = EventLevel.Informational,
+            Message = "Request failed. Exception message : {0}")]
+        public void RequestFailed(string exceptionMessage) { WriteEvent(12, exceptionMessage); }
+
+        [Event(
+            eventId: 13,
+            Level = EventLevel.Informational,
+            Message = "HttpWebResponse error code. Status : {0}")]
+        public void ErrorStatusCode(int statusCode) { WriteEvent(13, statusCode); }
+
+        [Event(
+            eventId: 14,
+            Level = EventLevel.Informational,
+            Message = "HttpWebResponse error description. Status : {0}")]
+        public void ErrorStatusDescription(string statusDescription) { WriteEvent(14, statusDescription); }
     }
 }
