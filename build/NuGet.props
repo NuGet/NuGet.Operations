@@ -6,7 +6,6 @@
     <Branch Condition="'$(Branch)' == ''">nobranch</Branch>
     <Commit Condition="'$(Commit)' == ''">HEAD</Commit>
     <BuildDateUtc>$([System.DateTime]::UtcNow)</BuildDateUtc>
-    <BranchLevel Condition="'$(BranchLevel)' == ''">9</BranchLevel>
     <VersionStartYear>2013</VersionStartYear>
     <BuildYear>$([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), $(VersionStartYear)))</BuildYear>
 
@@ -14,7 +13,7 @@
     <BuildMachine Condition="'$(BuildMachine)' == ''">$([System.Environment]::MachineName)</BuildMachine>
 
     <SimpleVersion Condition="'$(SimpleVersion)' == ''">3.0.0</SimpleVersion>
-    <SemanticVersion Condition="'$(SemanticVersion)' == ''">$(SimpleVersion)-z-$(Branch)-$(Commit)</SemanticVersion>
+    <SemanticVersion Condition="'$(SemanticVersion)' == ''">$(SimpleVersion)-local-$(Branch)-$(Commit)</SemanticVersion>
     
     <!-- Directories -->
     <RootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'NuGetApi.sln'))</RootDirectory>

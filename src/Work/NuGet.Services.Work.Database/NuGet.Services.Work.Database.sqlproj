@@ -27,7 +27,7 @@
     <DefaultSchema>work</DefaultSchema>
     <IncludeSchemaNameInFileName>True</IncludeSchemaNameInFileName>
     <DacVersion>3.0.0.0</DacVersion>
-    <DacVersion Condition="('$(SimpleVersion)' != '') And ('$(BranchLevel)' != '')">$(SimpleVersion).$(BranchLevel)</DacVersion>
+    <DacVersion Condition="'$(ReleaseVersion)' != ''">$(ReleaseVersion).0</DacVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
