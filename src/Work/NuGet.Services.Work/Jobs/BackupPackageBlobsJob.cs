@@ -169,6 +169,12 @@ namespace NuGet.Services.Work.Jobs
 
         private async Task<HashSet<string>> LoadBackupsList()
         {
+            if (!(await DestinationContainer.ExistsAsync()))
+            {
+                // No backups!
+                return new HashSet<string>();
+            }
+
             var results = new HashSet<string>();
             BlobContinuationToken token = new BlobContinuationToken();
             BlobResultSegment segment;
