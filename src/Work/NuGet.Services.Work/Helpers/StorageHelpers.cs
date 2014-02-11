@@ -39,10 +39,10 @@ namespace NuGet.Services.Work
         {
             return String.Format(
                 CultureInfo.InvariantCulture, 
-                PackageBackupBlobNameFormat, 
-                id, 
-                version, 
-                WebUtility.UrlEncode(hash)).ToLowerInvariant();
+                PackageBackupBlobNameFormat,
+                id.ToLowerInvariant(),
+                version.ToLowerInvariant(),
+                WebUtility.UrlEncode(hash));
         }
     }
 }
