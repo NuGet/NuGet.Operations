@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuCmd", "src\NuCmd\NuCmd.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Services.Operations", "src\NuGet.Services.Operations\NuGet.Services.Operations.csproj", "{FDFE3B54-1587-4AD2-BED6-7F2A38F906BA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Warehouse", "Warehouse", "{1A52CBEE-2B81-4E59-A51F-481DDE07FC15}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NuGet.Services.Warehouse.Database", "src\Warehouse\NuGet.Services.Warehouse.Database\NuGet.Services.Warehouse.Database.sqlproj", "{B96D3CE6-7017-4CA9-9925-27D91B7C607C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +161,16 @@ Global
 		{FDFE3B54-1587-4AD2-BED6-7F2A38F906BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FDFE3B54-1587-4AD2-BED6-7F2A38F906BA}.Release|x64.ActiveCfg = Release|Any CPU
 		{FDFE3B54-1587-4AD2-BED6-7F2A38F906BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Release|x64.ActiveCfg = Release|Any CPU
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,5 +181,6 @@ Global
 		{4405C24C-7F57-4826-831F-D5D7E139F02E} = {69E0B03C-B1FE-47E2-BFFD-5B9474BED386}
 		{1D0164B6-92D4-455A-AC68-C30B61733748} = {69E0B03C-B1FE-47E2-BFFD-5B9474BED386}
 		{19324B97-1C22-49E2-8C1A-E4EAB682A974} = {69E0B03C-B1FE-47E2-BFFD-5B9474BED386}
+		{B96D3CE6-7017-4CA9-9925-27D91B7C607C} = {1A52CBEE-2B81-4E59-A51F-481DDE07FC15}
 	EndGlobalSection
 EndGlobal

@@ -21,9 +21,6 @@ namespace NuGet.Services.Work.Jobs
     [Description("Creates copies of Package Blobs based on information in the NuGet API v2 Database.")]
     public class BackupPackageBlobsJob : JobHandler<BackupPackageBlobsEventSource>
     {
-        public static readonly string BackupStateBlobName = "__backupstate";
-
-
         // AzCopy uses this, so it seems good.
         private const int TaskPerCoreFactor = 8;
 
