@@ -69,6 +69,20 @@ nucmd db createuser -dc 0 -sv work -sa -s work -db primary -Clip
 
 5. Paste the new SQL connection string in as the new value for the "Sql.Primary" CSCFG setting
 
+6. Generate new SQL Users for the service to use when connecting to the legacy and warehouse databases
+
+```posh
+nucmd db createuser -dc 0 -sv work -sa -s dbo -db legacy -d Legacy -Clip
+```
+
+Paste the Connection String that was placed in your clipboard in as the value for the "Sql.Legacy" CSCFG setting
+
+```posh
+nucmd db createuser -dc 0 -sv work -sa -s dbo -db warehouse -d Warehouse -Clip
+```
+
+Paste the Connection String that was placed in your clipboard in as the value for the "Sql.Warehouse" CSCFG setting
+
 ### Part 3. Deploy the package
 First, generate a deployment name:
 
