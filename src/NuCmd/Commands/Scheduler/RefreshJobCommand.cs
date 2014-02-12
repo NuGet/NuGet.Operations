@@ -15,17 +15,8 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Refreshes the URL used by the job to ping the job service")]
-    public class RefreshJobCommand : SchedulerCommandBase
+    public class RefreshJobCommand : JobCollectionCommandBase
     {
-        [ArgShortcut("cs")]
-        [ArgDescription("Specifies the scheduler service for the collection. Defaults to the standard one for this environment (nuget-[environment]-0-scheduler)")]
-        public string CloudService { get; set; }
-
-        [ArgPosition(1)]
-        [ArgShortcut("c")]
-        [ArgDescription("The collection in which to put the job")]
-        public string Collection { get; set; }
-
         [ArgRequired]
         [ArgPosition(0)]
         [ArgShortcut("i")]
@@ -36,7 +27,7 @@ namespace NuCmd.Commands.Scheduler
         [ArgDescription("The URI to the root of the work service")]
         public Uri ServiceUri { get; set; }
 
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
             if (ServiceUri == null)
             {
@@ -44,7 +35,7 @@ namespace NuCmd.Commands.Scheduler
             }
             else
             {
-                using (var client = CloudContext.Clients.CreateSchedulerClient(Credentials, CloudService, Collection))
+                using (var client = CloudContext.Clients.CreateSchedulerClient(credentials, CloudService, Collection))
                 {
                     var job = await client.Jobs.GetAsync(InstanceName, CancellationToken.None);
                     if (job == null)
@@ -78,20 +69,13 @@ namespace NuCmd.Commands.Scheduler
             }
         }
 
-        protected override async Task LoadDefaultsFromContext()
+        protected override Task LoadDefaultsFromContext()
         {
-            await base.LoadDefaultsFromContext();
-
             if (Session != null && Session.CurrentEnvironment != null)
             {
-                CloudService = String.IsNullOrEmpty(CloudService) ?
-                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
-                    CloudService;
-                Collection = String.IsNullOrEmpty(Collection) ?
-                    String.Format("nuget-{0}-0-scheduler-0", Session.CurrentEnvironment.Name) :
-                    Collection;
                 ServiceUri = ServiceUri ?? Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: "work");
             }
+            return base.LoadDefaultsFromContext();
         }
     }
 }

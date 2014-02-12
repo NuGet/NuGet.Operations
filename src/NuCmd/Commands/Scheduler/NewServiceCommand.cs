@@ -13,7 +13,7 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Creates a scheduler service")]
-    public class NewServiceCommand : SchedulerCommandBase
+    public class NewServiceCommand : AzureCommandBase
     {
         [ArgRequired]
         [ArgShortcut("cs")]
@@ -25,7 +25,7 @@ namespace NuCmd.Commands.Scheduler
         [ArgDescription("A description of the service")]
         public string Description { get; set; }
 
-        [ArgShortcut("e")]
+        [ArgShortcut("em")]
         [ArgDescription("An email address for the owner of the service")]
         public string Email { get; set; }
 
@@ -37,9 +37,9 @@ namespace NuCmd.Commands.Scheduler
         [ArgDescription("A label for the service")]
         public string Label { get; set; }
 
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
-            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(Credentials))
+            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(credentials))
             {
                 await Console.WriteInfoLine(String.Format(
                     CultureInfo.CurrentCulture,

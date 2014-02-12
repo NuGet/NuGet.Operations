@@ -13,12 +13,8 @@ using DefaultValueAttribute = PowerArgs.DefaultValueAttribute;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Creates a scheduler job collection")]
-    public class NewColCommand : SchedulerCommandBase
+    public class NewColCommand : SchedulerServiceCommandBase
     {
-        [ArgShortcut("cs")]
-        [ArgDescription("Specifies the scheduler service for the collection. Defaults to the standard one for this environment (nuget-[environment]-0-scheduler)")]
-        public string CloudService { get; set; }
-
         [ArgRequired]
         [ArgPosition(0)]
         [ArgDescription("The name of the collection")]
@@ -47,12 +43,12 @@ namespace NuCmd.Commands.Scheduler
 
         [ArgShortcut("mri")]
         [ArgDescription("Maximum recurrence interval")]
-        public int? MaxRecurrenceInterval { get; set; }
+        public int? MinRecurrenceInterval { get; set; }
 
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
-            if((MaxRecurrenceFrequency.HasValue && !MaxRecurrenceInterval.HasValue) ||
-                (MaxRecurrenceInterval.HasValue && !MaxRecurrenceFrequency.HasValue)) {
+            if((MaxRecurrenceFrequency.HasValue && !MinRecurrenceInterval.HasValue) ||
+                (MinRecurrenceInterval.HasValue && !MaxRecurrenceFrequency.HasValue)) {
                 await Console.WriteErrorLine(Strings.Scheduler_ColNewCommand_MaxRecurrenceIncomplete);
             }
             else {
@@ -61,11 +57,11 @@ namespace NuCmd.Commands.Scheduler
                     maxRecurrence = new JobCollectionMaxRecurrence()
                     {
                         Frequency = MaxRecurrenceFrequency.Value,
-                        Interval = MaxRecurrenceInterval.Value
+                        Interval = MinRecurrenceInterval.Value
                     };
                 }
 
-                using (var client = CloudContext.Clients.CreateSchedulerManagementClient(Credentials))
+                using (var client = CloudContext.Clients.CreateSchedulerManagementClient(credentials))
                 {
                     await Console.WriteInfoLine(Strings.Scheduler_ColNewCommand_CreatingCollection, Name, CloudService);
                     if (!WhatIf)
@@ -91,18 +87,6 @@ namespace NuCmd.Commands.Scheduler
                     }
                     await Console.WriteInfoLine(Strings.Scheduler_ColNewCommand_CreatedCollection, Name, CloudService);
                 }
-            }
-        }
-
-        protected override async Task LoadDefaultsFromContext()
-        {
-            await base.LoadDefaultsFromContext();
-
-            if (Session != null && Session.CurrentEnvironment != null)
-            {
-                CloudService = String.IsNullOrEmpty(CloudService) ?
-                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
-                    CloudService;
             }
         }
     }

@@ -6,49 +6,34 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Management.Scheduler;
+using NuCmd.Commands.Azure;
 using PowerArgs;
 
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Lists the scheduler job collections available")]
-    public class CollectionsCommand : SchedulerCommandBase
+    public class CollectionsCommand : SchedulerServiceCommandBase
     {
-        [ArgShortcut("cs")]
-        [ArgDescription("Specifies the scheduler service for the collection. Defaults to the standard one for this environment (nuget-[environment]-0-scheduler)")]
-        public string CloudService { get; set; }
-
         [ArgShortcut("c")]
         [ArgPosition(0)]
         [ArgDescription("The name of a specific job collection to view information about")]
         public string Name { get; set; }
 
-        protected override Task OnExecute()
+        protected override Task OnExecute(SubscriptionCloudCredentials credentials)
         {
             if (String.IsNullOrEmpty(Name))
             {
-                return GetAllCollections();
+                return GetAllCollections(credentials);
             }
             else
             {
-                return GetSingleCollection();
+                return GetSingleCollection(credentials);
             }
         }
 
-        protected override async Task LoadDefaultsFromContext()
+        private async Task GetSingleCollection(SubscriptionCloudCredentials credentials)
         {
-            await base.LoadDefaultsFromContext();
-
-            if (Session != null && Session.CurrentEnvironment != null)
-            {
-                CloudService = String.IsNullOrEmpty(CloudService) ?
-                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
-                    CloudService;
-            }
-        }
-
-        private async Task GetSingleCollection()
-        {
-            using (var client = CloudContext.Clients.CreateSchedulerManagementClient(Credentials))
+            using (var client = CloudContext.Clients.CreateSchedulerManagementClient(credentials))
             {
                 await Console.WriteInfoLine(Strings.Scheduler_CollectionsCommand_GettingCollection, Name, CloudService);
                 var response = await client.JobCollections.GetAsync(CloudService, Name);
@@ -56,9 +41,9 @@ namespace NuCmd.Commands.Scheduler
             }
         }
 
-        private async Task GetAllCollections()
+        private async Task GetAllCollections(SubscriptionCloudCredentials credentials)
         {
-            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(Credentials))
+            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(credentials))
             {
                 await Console.WriteInfoLine(Strings.Scheduler_CollectionsCommand_ListingCollections, CloudService);
                 var response = await client.CloudServices.GetAsync(CloudService);

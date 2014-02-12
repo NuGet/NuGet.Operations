@@ -125,8 +125,8 @@ Details:
   <data name="Commands_UsingServiceUri" xml:space="preserve">
     <value>Using service at: {0}</value>
   </data>
-  <data name="Command_RequiresManagementCert" xml:space="preserve">
-    <value>This command must be run from the NuGet Ops console with a current environment that has a Management Certificate</value>
+  <data name="AzureCommandBase_RequiresSubscription" xml:space="preserve">
+    <value>This command must be run from the NuGet Ops console with a current environment that has a subscription.</value>
   </data>
   <data name="CredentialProvider_Message" xml:space="preserve">
     <value>Enter the admin password for {0}.</value>
@@ -400,5 +400,23 @@ Connection String: {3}</value>
   </data>
   <data name="EnvCommand_Data_SecretStore" xml:space="preserve">
     <value> {0} secret store '{1}': {2}</value>
+  </data>
+  <data name="AzureCommandBase_RequiresToken" xml:space="preserve">
+    <value>You must log in to Azure using "nucmd azure login" before running this command</value>
+  </data>
+  <data name="AzureCommandBase_TokenExpired" xml:space="preserve">
+    <value>Your login token has expired, use "nucmd azure login" to refresh it.</value>
+  </data>
+  <data name="Azure_LoginCommand_AuthenticatedGettingSubscription" xml:space="preserve">
+    <value>Authenticated. Verifying subscription access...</value>
+  </data>
+  <data name="Azure_LoginCommand_AuthenticationComplete" xml:space="preserve">
+    <value>Authentication Complete. This subscription is now ready for use in other Azure commands.</value>
+  </data>
+  <data name="Azure_LoginCommand_AuthenticationFailed" xml:space="preserve">
+    <value>Authentication Failed!</value>
+  </data>
+  <data name="Azure_LoginCommand_SubscriptionDisabled" xml:space="preserve">
+    <value>Subscription is disabled!</value>
   </data>
 </root>

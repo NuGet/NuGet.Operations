@@ -15,6 +15,12 @@ namespace NuGet.Services.Operations
 
         public AppModel Model { get; private set; }
         public DeploymentEnvironment CurrentEnvironment { get; private set; }
+        public AzureTokenManager AzureTokens { get; private set; }
+
+        public static string DefaultTokenStore
+        {
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NuOps"); }
+        }
 
         private IDictionary<string, DeploymentEnvironment> Environments { get; set; }
 
@@ -31,9 +37,10 @@ namespace NuGet.Services.Operations
             }
         }
 
-        public OperationsSession(AppModel model)
+        public OperationsSession(AppModel model, AzureTokenManager azureTokens)
         {
             Model = model;
+            AzureTokens = azureTokens;
             Environments = Model.Environments.ToDictionaryByFirstItemWithKey(e => e.Name, StringComparer.OrdinalIgnoreCase);
         }
 
@@ -67,7 +74,18 @@ namespace NuGet.Services.Operations
         /// <returns></returns>
         public static OperationsSession Load(string serviceModel)
         {
-            // We want to throw FileNotFound if the service model doesn't exist
+            return Load(serviceModel, DefaultTokenStore);
+        }
+
+        /// <summary>
+        /// Loads an operations session using the ServiceModel file located at the specified path
+        /// </summary>
+        /// <param name="serviceModel">The path to the service model file</param>
+        /// <param name="tokenStore">The path to the directory that holds Azure Tokens</param>
+        /// <returns></returns>
+        public static OperationsSession Load(string serviceModel, string azureTokenStore)
+        {
+        // We want to throw FileNotFound if the service model doesn't exist
             if (!File.Exists(serviceModel))
             {
                 throw new FileNotFoundException(String.Format(
@@ -77,7 +95,8 @@ namespace NuGet.Services.Operations
             }
 
             var model = XmlServiceModelDeserializer.LoadServiceModel(serviceModel);
-            return new OperationsSession(model);
+            var tokens = new AzureTokenManager(azureTokenStore);
+            return new OperationsSession(model, tokens);
         }
 
         public void SetCurrentEnvironment(string name)

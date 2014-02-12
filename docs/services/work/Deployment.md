@@ -96,3 +96,6 @@ The service should respond with a list of available jobs. That should be everyth
 ```posh
 nucmd work invoke -j TestPing -pass $pass
 ```
+
+### Final Steps
+If any new Azure Scheduler jobs need to be queued in the new environment, go to the [Scheduler Setup](Scheduler.md) section.

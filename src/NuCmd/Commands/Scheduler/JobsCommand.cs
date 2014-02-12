@@ -13,24 +13,16 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Lists the jobs in the specified collection")]
-    public class JobsCommand : SchedulerCommandBase
+    public class JobsCommand : JobCollectionCommandBase
     {
-        [ArgShortcut("cs")]
-        [ArgDescription("Specifies the scheduler service for the collection. Defaults to the standard one for this environment (nuget-[environment]-0-scheduler)")]
-        public string CloudService { get; set; }
-
-        [ArgShortcut("c")]
-        [ArgDescription("The job collection to list jobs from")]
-        public string Collection { get; set; }
-
         [ArgShortcut("j")]
         [ArgPosition(0)]
         [ArgDescription("Specify this value to retrieve information on a specific job.")]
         public string Id { get; set; }
 
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
-            using (var client = CloudContext.Clients.CreateSchedulerClient(Credentials, CloudService, Collection))
+            using (var client = CloudContext.Clients.CreateSchedulerClient(credentials, CloudService, Collection))
             {
                 await Console.WriteInfoLine(Strings.Scheduler_JobsCommand_ListingJobs, CloudService, Collection);
                 if (String.IsNullOrEmpty(Id))
@@ -48,21 +40,6 @@ namespace NuCmd.Commands.Scheduler
                     var job = await client.Jobs.GetAsync(Id, CancellationToken.None);
                     await Console.WriteObject(job.Job);
                 }
-            }
-        }
-
-        protected override async Task LoadDefaultsFromContext()
-        {
-            await base.LoadDefaultsFromContext();
-
-            if (Session != null && Session.CurrentEnvironment != null)
-            {
-                CloudService = String.IsNullOrEmpty(CloudService) ?
-                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
-                    CloudService;
-                Collection = String.IsNullOrEmpty(Collection) ?
-                    String.Format("nuget-{0}-0-scheduler-0", Session.CurrentEnvironment.Name) :
-                    Collection;
             }
         }
     }

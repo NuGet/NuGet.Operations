@@ -25,3 +25,13 @@ TODO
 
 ## CSCFG Setup
 TODO
+
+## Azure Scheduler
+In order to actually perform work, Invocations must be queued on the Work Service by an external agent. The primary service we use for that purpose is the [Windows Azure Scheduler](http://www.windowsazure.com/en-us/services/scheduler/). There are commands in `nucmd` for managing scheduler resources, specifically those focused on creating invocations.
+
+Azure Scheduler jobs are grouped in to Job Collections, which are further grouped in to Scheduler Services. In order to begin provisioning jobs, one of each must be created using the below commands. Replace "dev" with the name of the environment, and "North Central US" with the name of the Azure Region in which the scheduler is to be placed. **Scheduler Services** are datacenter-independent, there is one per environment (nuget-[environment name]-scheduler). **Job Collections** are datacenter-dependent, there is one per datacenter (nuget-[environment name]-0-scheduler)
+
+```posh
+nucmd scheduler newservice nuget-dev-scheduler -d "NuGet Scheduler Services (dev environment)" -r "North Central US" -l nuget-dev-scheduler
+nucmd scheduler newcol nuget-dev-0-scheduler -l nuget-dev-0-scheduler
+```

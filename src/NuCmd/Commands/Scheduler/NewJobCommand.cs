@@ -18,16 +18,8 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Creates a new job in the scheduler")]
-    public class NewJobCommand : SchedulerCommandBase
+    public class NewJobCommand : JobCollectionCommandBase
     {
-        [ArgShortcut("cs")]
-        [ArgDescription("Specifies the scheduler service for the collection. Defaults to the standard one for this environment (nuget-[environment]-0-scheduler)")]
-        public string CloudService { get; set; }
-
-        [ArgShortcut("c")]
-        [ArgDescription("The collection in which to put the job")]
-        public string Collection { get; set; }
-
         [ArgRequired]
         [ArgPosition(0)]
         [ArgShortcut("j")]
@@ -83,7 +75,7 @@ namespace NuCmd.Commands.Scheduler
         [ArgDescription("Set this flag and the job invocation will only be queued if there is no invocation already in progress")]
         public bool Singleton { get; set; }
 
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
             if (!String.IsNullOrEmpty(EncodedPayload))
             {
@@ -140,7 +132,7 @@ namespace NuCmd.Commands.Scheduler
                     }
                 };
                 
-                using (var client = CloudContext.Clients.CreateSchedulerClient(Credentials, CloudService, Collection))
+                using (var client = CloudContext.Clients.CreateSchedulerClient(credentials, CloudService, Collection))
                 {
                     await Console.WriteInfoLine(Strings.Scheduler_NewJobCommand_CreatingJob, Job, CloudService, Collection);
                     if (WhatIf)
@@ -169,20 +161,13 @@ namespace NuCmd.Commands.Scheduler
                         String.Concat("admin:", password))));
         }
 
-        protected override async Task LoadDefaultsFromContext()
+        protected override Task LoadDefaultsFromContext()
         {
-            await base.LoadDefaultsFromContext();
-
             if (Session != null && Session.CurrentEnvironment != null)
             {
-                CloudService = String.IsNullOrEmpty(CloudService) ?
-                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
-                    CloudService;
-                Collection = String.IsNullOrEmpty(Collection) ?
-                    String.Format("nuget-{0}-0-scheduler-0", Session.CurrentEnvironment.Name) :
-                    Collection;
                 ServiceUri = ServiceUri ?? Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: "work");
             }
+            return base.LoadDefaultsFromContext();
         }
     }
 }

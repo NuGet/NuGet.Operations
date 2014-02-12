@@ -10,11 +10,11 @@ using Microsoft.WindowsAzure.Management.Scheduler;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Lists the scheduler services available")]
-    public class ServicesCommand : SchedulerCommandBase
+    public class ServicesCommand : AzureCommandBase
     {
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
-            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(Credentials))
+            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(credentials))
             {
                 await Console.WriteInfoLine(Strings.Scheduler_CsListCommand_ListingAvailableServices);
                 var response = await client.CloudServices.ListAsync();

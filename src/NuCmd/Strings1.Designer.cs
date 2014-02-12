@@ -61,6 +61,69 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authenticated. Verifying subscription access....
+        /// </summary>
+        internal static string Azure_LoginCommand_AuthenticatedGettingSubscription {
+            get {
+                return ResourceManager.GetString("Azure_LoginCommand_AuthenticatedGettingSubscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authentication Complete. This subscription is now ready for use in other Azure commands..
+        /// </summary>
+        internal static string Azure_LoginCommand_AuthenticationComplete {
+            get {
+                return ResourceManager.GetString("Azure_LoginCommand_AuthenticationComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authentication Failed!.
+        /// </summary>
+        internal static string Azure_LoginCommand_AuthenticationFailed {
+            get {
+                return ResourceManager.GetString("Azure_LoginCommand_AuthenticationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subscription is disabled!.
+        /// </summary>
+        internal static string Azure_LoginCommand_SubscriptionDisabled {
+            get {
+                return ResourceManager.GetString("Azure_LoginCommand_SubscriptionDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command must be run from the NuGet Ops console with a current environment that has a subscription..
+        /// </summary>
+        internal static string AzureCommandBase_RequiresSubscription {
+            get {
+                return ResourceManager.GetString("AzureCommandBase_RequiresSubscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must log in to Azure using &quot;nucmd azure login&quot; before running this command.
+        /// </summary>
+        internal static string AzureCommandBase_RequiresToken {
+            get {
+                return ResourceManager.GetString("AzureCommandBase_RequiresToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your login token has expired, use &quot;nucmd azure login&quot; to refresh it..
+        /// </summary>
+        internal static string AzureCommandBase_TokenExpired {
+            get {
+                return ResourceManager.GetString("AzureCommandBase_TokenExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No current environment. This command requires an environment..
         /// </summary>
         internal static string Command_NoEnv {
@@ -75,15 +138,6 @@ namespace NuCmd {
         internal static string Command_NoSession {
             get {
                 return ResourceManager.GetString("Command_NoSession", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This command must be run from the NuGet Ops console with a current environment that has a Management Certificate.
-        /// </summary>
-        internal static string Command_RequiresManagementCert {
-            get {
-                return ResourceManager.GetString("Command_RequiresManagementCert", resourceCulture);
             }
         }
         

@@ -12,16 +12,16 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Deletes the specified scheduler service")]
-    public class DeleteServiceCommand : SchedulerCommandBase
+    public class DeleteServiceCommand : AzureCommandBase
     {
         [ArgRequired]
         [ArgPosition(0)]
         [ArgShortcut("cs")]
         public string Name { get; set; }
 
-        protected override async Task OnExecute()
+        protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {
-            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(Credentials))
+            using (var client = CloudContext.Clients.CreateCloudServiceManagementClient(credentials))
             {
                 await Console.WriteInfoLine(String.Format(
                     CultureInfo.CurrentCulture,
