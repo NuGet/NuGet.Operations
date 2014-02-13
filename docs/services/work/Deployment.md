@@ -3,6 +3,13 @@
 
 The primary deployment vessel for the Work Service is an [Azure Service Host](../../deployment/AzureHosting.md). The "NuGet.Services.Work.Cloud" project is an Azure Cloud Service project that is configured to create an Azure Worker Role that hosts the Work Service. During the integration build on [build.nuget.org](http://build.nuget.org), this project is used to produce a CSPKG file with the same name (NuGet.Services.Work.Cloud.cspkg).
 
+For all the database commands, you will need to enter the admin password. This can either be typed into the command prompt, pasted in, or provided with the '-pass' argument. You should avoid typing the password into the raw console as much as possible, so if you use PowerShell, I recommend using a variable:
+
+```posh
+$pass = "<paste>"
+nucmd db dacs -db primary -pass $pass
+```
+
 ## Deployment Process
 
 ### Part 0. Prepare for Deployment
