@@ -9,6 +9,7 @@ The Work service is a simple queue-driven processing service. The service uses a
 
 ## Architecture
 The Work service consists of the following elements:
+
 1. The Work Service (see the [Service Model](../README.md) documentation for more information)
 2. A collection of Workers, hosted within each Work Service
 3. A SQL Database holding the work queue

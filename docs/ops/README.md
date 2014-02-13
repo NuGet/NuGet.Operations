@@ -5,7 +5,7 @@ NuOps is the operations console and command-line tool for managing NuGet Service
 To configure NuOps, you need the following:
 
 1. A [Deployment Settings Repository](DeploymentRepo.md) (this can be a git repository or just a folder on disk)
-2. An App Model file, within the Deployment Settings
+2. An App Model file, within the Deployment Settings. A sample can be found [here](SampleAppModel.xml).
 3. A clone of the NuGetApi repository
 
 You must install the following components on your machine, if you have not already:
@@ -24,3 +24,7 @@ _NOTE: For engineers working on the NuGet.org Service there is a script which ca
 3. Clone this repository to `C:\Code\Git\NuGet\Api`
 
 4. Open a Console/PowerShell window to `C:\Code\Git\NuGet\Api` and run `.\ops` to enter the NuOps console
+
+## Using your own folder structure
+
+If you don't want to use the `\Deployment` and `\Api` subfolder structure, you can set NuOps up to use a different folder structure by setting the `NUOPS_APP_MODEL` environment variable to point at the "AppModel.xml" file within your Deployment Settings Repository.
