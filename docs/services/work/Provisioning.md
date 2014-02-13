@@ -35,3 +35,5 @@ Azure Scheduler jobs are grouped in to Job Collections, which are further groupe
 nucmd scheduler newservice nuget-dev-scheduler -d "NuGet Scheduler Services (dev environment)" -r "North Central US" -l nuget-dev-scheduler
 nucmd scheduler newcol nuget-dev-0-scheduler -l nuget-dev-0-scheduler
 ```
+
+The API is a little quirky, so after creating the service and collection, go to the Portal, open the Scheduler Tab, click on the Job Collection you just created (nuget-dev-0-scheduler in the example above) and go to the Scale tab. Change the plan to "Standard", the Max Jobs to 50 and the Max Frequency to Minute. Then press save.
