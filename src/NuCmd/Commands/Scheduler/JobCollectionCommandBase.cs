@@ -21,7 +21,7 @@ namespace NuCmd.Commands.Scheduler
             if (Session != null && Session.CurrentEnvironment != null)
             {
                 Collection = String.IsNullOrEmpty(Collection) ?
-                    String.Format("nuget-{0}-scheduler-0", Session.CurrentEnvironment.Name) :
+                    String.Format("nuget-{0}-0-scheduler", Session.CurrentEnvironment.Name) :
                     Collection;
             }
         }
