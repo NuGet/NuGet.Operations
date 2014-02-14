@@ -68,27 +68,9 @@ NOTE: If this is the first deployment, you will be prompted to enter the name of
 
 3. Paste the new storage connection string in as the new value for `Storage.Primary` **AND** `Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString` CSCFG settings
 
-4. Generate a new SQL User for the service by running the following command in NuOps (while in the root of the NuGetApi repository)
+4. Set the admin password for each SQL Server, using the Azure Portal, to a new random value. This should be done **shortly before deploying**. Changing the password will immediately cause the Work service to fail to execute jobs, which is fine, but the new service, with the new password, should be deployed as soon as possible.
 
-```posh
-nucmd db createuser -dc 0 -sv work -sa -s work -db primary -Clip
-```
-
-5. Paste the new SQL connection string in as the new value for the "Sql.Primary" CSCFG setting
-
-6. Generate new SQL Users for the service to use when connecting to the legacy and warehouse databases
-
-```posh
-nucmd db createuser -dc 0 -sv work -sa -s dbo -db legacy -d Legacy -Clip
-```
-
-Paste the Connection String that was placed in your clipboard in as the value for the "Sql.Legacy" CSCFG setting
-
-```posh
-nucmd db createuser -dc 0 -sv work -sa -s dbo -db warehouse -d Warehouse -Clip
-```
-
-Paste the Connection String that was placed in your clipboard in as the value for the "Sql.Warehouse" CSCFG setting
+5. Update the 'Sql.*' settings as appropriate.
 
 ### Part 3. Deploy the package
 First, generate a deployment name:
