@@ -41,7 +41,7 @@ namespace NuGet.Services.Work.Jobs
 
             Log.ImportEndpoint(endPointUri);
 
-            var cstr = TargetDatabaseConnection ?? Config.Sql.GetConnectionString(KnownSqlConnection.Primary);
+            var cstr = GetConnectionString() ?? Config.Sql.GetConnectionString(KnownSqlConnection.Primary);
             if (cstr == null || cstr.InitialCatalog == null || cstr.Password == null || cstr.DataSource == null || cstr.UserID == null)
             {
                 throw new ArgumentNullException("One of the connection string parameters or the string itself is null");

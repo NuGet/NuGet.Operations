@@ -44,7 +44,7 @@ namespace NuGet.Services.Work.Jobs
 
             Log.ExportEndpoint(endPointUri);
 
-            var cstr = TargetDatabaseConnection ?? Config.Sql.GetConnectionString(KnownSqlConnection.Legacy);
+            var cstr = GetConnectionString() ?? Config.Sql.GetConnectionString(KnownSqlConnection.Legacy);
             if (cstr == null || cstr.InitialCatalog == null || cstr.Password == null || cstr.DataSource == null || cstr.UserID == null)
             {
                 throw new ArgumentNullException("One of the connection string parameters or the string itself is null");
