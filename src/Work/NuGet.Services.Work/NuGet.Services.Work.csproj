@@ -191,6 +191,7 @@
     <Compile Include="Jobs\TestLongRunningJob.cs" />
     <Compile Include="Jobs\Models\Database.cs" />
     <Compile Include="Jobs\TestPingJob.cs" />
+    <Compile Include="Jobs\TransferBackupPackagesJob.cs" />
     <Compile Include="Jobs\UpdateLicenseReportsJob.cs" />
     <Compile Include="LocalWorkService.cs" />
     <Compile Include="ServiceReferences\DACWebServiceReference.cs" />
