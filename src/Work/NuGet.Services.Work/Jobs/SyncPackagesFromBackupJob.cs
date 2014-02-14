@@ -15,7 +15,7 @@ using System.Diagnostics.Tracing;
 namespace NuGet.Services.Work.Jobs
 {
     [Description("Syncs the packages in the failover Datacenter")]
-    public class SyncPackagesInFailoverDCJob : JobHandler<SyncPackagesInFailoverDCEventSource>
+    public class SyncPackagesFromBackupJob : JobHandler<SyncPackagesFromBackupEventSource>
     {
         // Source storage account has the packages in '{id}/{version}/{packageHash}.nupkg' format
         public CloudStorageAccount Source { get; set; }
@@ -34,7 +34,7 @@ namespace NuGet.Services.Work.Jobs
 
         protected ConfigurationHub Config { get; set; }
 
-        public SyncPackagesInFailoverDCJob(ConfigurationHub config)
+        public SyncPackagesFromBackupJob(ConfigurationHub config)
         {
             Config = config;
         }
@@ -53,10 +53,10 @@ namespace NuGet.Services.Work.Jobs
 
             // Gather packages
             Log.GatheringListOfPackages(PackageDatabase.DataSource, PackageDatabase.InitialCatalog);
-            IList<PackageRefWithLastEdited> packagesInDB;
+            IList<PackageRef> packagesInDB;
             using (var connection = await PackageDatabase.ConnectTo())
             {
-                packagesInDB = (await connection.QueryAsync<PackageRefWithLastEdited>(@"
+                packagesInDB = (await connection.QueryAsync<PackageRef>(@"
                     SELECT pr.Id, p.NormalizedVersion AS Version, p.Hash, p.LastEdited
                     FROM Packages p
                     INNER JOIN PackageRegistrations pr ON p.PackageRegistrationKey = pr.[Key]"))
@@ -163,7 +163,7 @@ namespace NuGet.Services.Work.Jobs
             return results;
         }
 
-        private IList<PackageRefWithLastEdited> PackagesToCopyOrOverwrite(IList<PackageRefWithLastEdited> packagesInDB, Dictionary<string, DateTimeOffset> packages)
+        private IList<PackageRef> PackagesToCopyOrOverwrite(IList<PackageRef> packagesInDB, Dictionary<string, DateTimeOffset> packages)
         {
             var packagesToCopy = packagesInDB.Where(pkgRef =>
                 {
@@ -171,7 +171,7 @@ namespace NuGet.Services.Work.Jobs
                     DateTimeOffset lastModified;
                     if (packages.TryGetValue(blobName, out lastModified))
                     {
-                        if (pkgRef.LastEdited == null)
+                        if (!pkgRef.LastEdited.HasValue || pkgRef.LastEdited.Value == null)
                         {
                             // Package Exists and Don't overwrite
                             // LastEdited is null meaning packages was not edited after getting published
@@ -180,7 +180,7 @@ namespace NuGet.Services.Work.Jobs
                         else
                         {
                             // Overwrite if LastEdited of the package is greater than the last modified of the package blob
-                            return lastModified < pkgRef.LastEdited.ToUniversalTime();
+                            return lastModified < pkgRef.LastEdited.Value.ToUniversalTime();
                         }
                     }
                     else
@@ -194,7 +194,7 @@ namespace NuGet.Services.Work.Jobs
             return packagesToCopy.ToList();
         }
 
-        private IList<string> PackagesToDelete(IList<PackageRefWithLastEdited> packagesInDB, Dictionary<string, DateTimeOffset> packages)
+        private IList<string> PackagesToDelete(IList<PackageRef> packagesInDB, Dictionary<string, DateTimeOffset> packages)
         {
             var packagesInDBAsFilenames = new HashSet<string>(from pkgRef in packagesInDB
                                                               select StorageHelpers.GetPackageBlobName(pkgRef));
@@ -242,10 +242,10 @@ namespace NuGet.Services.Work.Jobs
     }
 
     [EventSource(Name = "Outercurve-NuGet-Jobs-SyncPackagesInFailoverDC")]
-    public class SyncPackagesInFailoverDCEventSource : EventSource
+    public class SyncPackagesFromBackupEventSource : EventSource
     {
-        public static readonly SyncPackagesInFailoverDCEventSource Log = new SyncPackagesInFailoverDCEventSource();
-        private SyncPackagesInFailoverDCEventSource() { }
+        public static readonly SyncPackagesFromBackupEventSource Log = new SyncPackagesFromBackupEventSource();
+        private SyncPackagesFromBackupEventSource() { }
 
         [Event(
             eventId: 1,
