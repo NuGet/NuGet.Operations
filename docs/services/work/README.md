@@ -6,6 +6,9 @@ The Work service is a simple queue-driven processing service. The service uses a
 2. [API](API.md)
 3. [Management Commands](NuCmd.md)
 4. [Monitoring and Testing](Testing.md)
+5. [Provisioning Resources](Provisioning.md)
+6. [Deploying the Work Service](Deployment.md)
+7. [Azure Scheduler](Scheduler.md)
 
 ## Architecture
 The Work service consists of the following elements:
