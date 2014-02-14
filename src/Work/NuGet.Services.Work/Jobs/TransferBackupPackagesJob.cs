@@ -11,8 +11,8 @@ using NuGet.Services.Configuration;
 
 namespace NuGet.Services.Work.Jobs
 {
-    [Description("Updates backup packages in failover DC with backup packages in primary DC")]
-    public class UpdateBackupWithBackupJob : JobHandler<UpdateBackupWithBackupEventSource>
+    [Description("Transfer backup packages in primary DC to failover DC")]
+    public class TransferBackupPackagesJob : JobHandler<TransferBackupPackagesEventSource>
     {
         // Source storage account has the packages in '{id}/{version}/{packageHash}.nupkg' format
         public CloudStorageAccount Source { get; set; }
@@ -29,7 +29,7 @@ namespace NuGet.Services.Work.Jobs
 
         protected ConfigurationHub Config { get; set; }
 
-        public UpdateBackupWithBackupJob(ConfigurationHub config)
+        public TransferBackupPackagesJob(ConfigurationHub config)
         {
             Config = config;
         }
@@ -43,7 +43,7 @@ namespace NuGet.Services.Work.Jobs
                 String.IsNullOrEmpty(SourceContainerName) ? BlobContainerNames.Backups : SourceContainerName);
             DestinationContainer = Destination.CreateCloudBlobClient().GetContainerReference(
                 String.IsNullOrEmpty(DestinationContainerName) ? BlobContainerNames.Backups : DestinationContainerName);
-            Log.PreparingToUpdate(Source.Credentials.AccountName, SourceContainer.Name, Destination.Credentials.AccountName, DestinationContainer.Name);
+            Log.PreparingToTransfer(Source.Credentials.AccountName, SourceContainer.Name, Destination.Credentials.AccountName, DestinationContainer.Name);
 
             // Gather packages
             Log.GatheringListOfPackages(Source.BlobEndpoint.ToString(), SourceContainer.Name);
@@ -64,7 +64,7 @@ namespace NuGet.Services.Work.Jobs
             var packageBlobsToCopy = sourcePackages.Where(p => !destinationPackages.Contains(p)).ToList();
             Log.CalculatedCopyPackages(sourcePackages.Count, packageBlobsToCopy.Count);
 
-            Log.StartingUpdate(packageBlobsToCopy.Count);
+            Log.StartingTransfer(packageBlobsToCopy.Count);
 
             if (packageBlobsToCopy.Count > 0)
             {
@@ -82,7 +82,7 @@ namespace NuGet.Services.Work.Jobs
                     if ((Invocation.NextVisibleAt - DateTimeOffset.UtcNow) < TimeSpan.FromMinutes(1))
                     {
                         // Running out of time! Extend the job
-                        Log.ExtendingJobLeaseWhileUpdateProgresses();
+                        Log.ExtendingJobLeaseWhileTransferProgresses();
                         await Extend(TimeSpan.FromMinutes(5));
                         Log.ExtendedJobLease();
                     }
@@ -93,7 +93,7 @@ namespace NuGet.Services.Work.Jobs
                 }
             }
 
-            Log.StartedUpdate();
+            Log.StartedTransfer();
         }
 
         private async Task CopyPackageToDestination(string sourceContainerSharedAccessUri, string packageBlobName)
@@ -122,7 +122,7 @@ namespace NuGet.Services.Work.Jobs
             }
         }
 
-        private static async Task<HashSet<string>> LoadBlobList(UpdateBackupWithBackupEventSource log, CloudStorageAccount account, CloudBlobContainer container)
+        private static async Task<HashSet<string>> LoadBlobList(TransferBackupPackagesEventSource log, CloudStorageAccount account, CloudBlobContainer container)
         {
             if (!(await container.ExistsAsync()))
             {
@@ -157,18 +157,18 @@ namespace NuGet.Services.Work.Jobs
         }
     }
 
-    [EventSource(Name = "Outercurve-NuGet-Jobs-UpdateBackupWithBackup")]
-    public class UpdateBackupWithBackupEventSource : EventSource
+    [EventSource(Name = "Outercurve-NuGet-Jobs-TransferBackupPackages")]
+    public class TransferBackupPackagesEventSource : EventSource
     {
-        public static readonly UpdateBackupWithBackupEventSource Log = new UpdateBackupWithBackupEventSource();
+        public static readonly TransferBackupPackagesEventSource Log = new TransferBackupPackagesEventSource();
 
-        private UpdateBackupWithBackupEventSource() { }
+        private TransferBackupPackagesEventSource() { }
 
         [Event(
             eventId: 1,
             Level = EventLevel.Informational,
-            Message = "Preparing to update package blobs of {2}/{3} from {0}/{1}")]
-        public void PreparingToUpdate(string sourceAccount, string sourceContainer, string destAccount, string destContainer) { WriteEvent(1, sourceAccount, sourceContainer, destAccount, destContainer); }
+            Message = "Preparing to transfer package blobs from {0}/{1} to {2}/{3}")]
+        public void PreparingToTransfer(string sourceAccount, string sourceContainer, string destAccount, string destContainer) { WriteEvent(1, sourceAccount, sourceContainer, destAccount, destContainer); }
 
         [Event(
             eventId: 4,
@@ -191,15 +191,15 @@ namespace NuGet.Services.Work.Jobs
             Level = EventLevel.Informational,
             Task = Tasks.ExtendingJobLease,
             Opcode = EventOpcode.Start,
-            Message = "Extending job lease while update progresses")]
-        public void ExtendingJobLeaseWhileUpdateProgresses() { WriteEvent(6); }
+            Message = "Extending job lease while transfer progresses")]
+        public void ExtendingJobLeaseWhileTransferProgresses() { WriteEvent(6); }
 
         [Event(
             eventId: 7,
             Level = EventLevel.Informational,
             Task = Tasks.ExtendingJobLease,
             Opcode = EventOpcode.Stop,
-            Message = "Extended job lease while update progresses")]
+            Message = "Extended job lease while transfer progresses")]
         public void ExtendedJobLease() { WriteEvent(7); }
 
         [Event(
@@ -211,18 +211,18 @@ namespace NuGet.Services.Work.Jobs
         [Event(
             eventId: 10,
             Level = EventLevel.Informational,
-            Task = Tasks.UpdatingPackages,
+            Task = Tasks.TransferringPackages,
             Opcode = EventOpcode.Start,
-            Message = "Starting update of {0} packages.")]
-        public void StartingUpdate(int count) { WriteEvent(10, count); }
+            Message = "Starting transfer of {0} packages.")]
+        public void StartingTransfer(int count) { WriteEvent(10, count); }
 
         [Event(
             eventId: 11,
             Level = EventLevel.Informational,
-            Task = Tasks.UpdatingPackages,
+            Task = Tasks.TransferringPackages,
             Opcode = EventOpcode.Stop,
-            Message = "Started update.")]
-        public void StartedUpdate() { WriteEvent(11); }
+            Message = "Started transfer.")]
+        public void StartedTransfer() { WriteEvent(11); }
 
         [Event(
             eventId: 12,
@@ -281,7 +281,7 @@ namespace NuGet.Services.Work.Jobs
         public static class Tasks
         {
             public const EventTask GatheringPackages = (EventTask)0x1;
-            public const EventTask UpdatingPackages = (EventTask)0x2;
+            public const EventTask TransferringPackages = (EventTask)0x2;
             public const EventTask StartingPackageCopy = (EventTask)0x3;
             public const EventTask ExtendingJobLease = (EventTask)0x4;
             public const EventTask GatheringDestinationPackagesList = (EventTask)0x5;
