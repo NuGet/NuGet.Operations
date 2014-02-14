@@ -11,6 +11,8 @@ namespace NuGet.Services.Work
 {
     public static class StorageHelpers
     {
+        public static readonly string PackageHashMetadataKey = "Hash";
+
         public static readonly string PackageBackupsDirectory = "packages";
 
         private static readonly string PackageBlobNameFormat = "{0}.{1}.nupkg";

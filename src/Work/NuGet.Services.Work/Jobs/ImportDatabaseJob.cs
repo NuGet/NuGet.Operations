@@ -203,7 +203,7 @@ namespace NuGet.Services.Work.Jobs
         }
     }
 
-    [EventSource(Name = "Outercurve-NuGet-Jobs-ExportDatabase")]
+    [EventSource(Name = "Outercurve-NuGet-Jobs-ImportDatabase")]
     public class ImportDatabaseEventSource : EventSource
     {
         public static readonly ImportDatabaseEventSource Log = new ImportDatabaseEventSource();
