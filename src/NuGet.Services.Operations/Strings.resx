@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DeploymentEnvironment_NoSecretStore" xml:space="preserve">
+    <value>No secret stores are configured.</value>
+  </data>
+  <data name="DeploymentEnvironment_NoSecretStoreWithName" xml:space="preserve">
+    <value>No secret store named '{0}' is configured for this environment.</value>
+  </data>
   <data name="DeploymentEnvironment_UnknownDatacenter" xml:space="preserve">
     <value>Unknown datacenter: {0}.</value>
   </data>
@@ -131,6 +137,15 @@
   </data>
   <data name="OperationsSession_UnknownEnvironment" xml:space="preserve">
     <value>Unknown environment: '{0}'.</value>
+  </data>
+  <data name="SecretStoreConnection_UnknownSecretStoreType" xml:space="preserve">
+    <value>Unknown secret store type: '{0}'.</value>
+  </data>
+  <data name="SharepointSecretStoreConnection_AmbiguousMatch" xml:space="preserve">
+    <value>Ambiguous match for secret '{0}' in scope '{1}'.</value>
+  </data>
+  <data name="SharepointSecretStoreConnection_UnsupportedVersion" xml:space="preserve">
+    <value>This type does not support version '{0}' of the Sharepoint Secret Store.</value>
   </data>
   <data name="XmlServiceModelDeserializer_SettingMissingName" xml:space="preserve">
     <value>Config setting is missing required attribute 'name'.</value>

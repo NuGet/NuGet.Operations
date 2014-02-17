@@ -39,6 +39,14 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms">
       <HintPath>..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.1.0.2\lib\net40\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SharePoint.Client, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ext\Sharepoint\Microsoft.SharePoint.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ext\Sharepoint\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
@@ -58,10 +66,13 @@
     <Compile Include="Model\EnvironmentComponentBase.cs" />
     <Compile Include="Model\PackageSource.cs" />
     <Compile Include="Model\Resource.cs" />
+    <Compile Include="Model\Secret.cs" />
     <Compile Include="Model\SecretStore.cs" />
+    <Compile Include="Model\SecretStoreConnection.cs" />
     <Compile Include="Model\Service.cs" />
     <Compile Include="Model\AppModel.cs" />
     <Compile Include="Model\DeploymentEnvironment.cs" />
+    <Compile Include="Model\SharepointSecretStoreConnection.cs" />
     <Compile Include="Model\XmlServiceModelDeserializer.cs" />
     <Compile Include="OperationsSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NuGet.Services.Operations.Model
 {
@@ -15,11 +16,16 @@ namespace NuGet.Services.Operations.Model
         public IList<Resource> Resources { get; private set; }
         public IList<Service> Services { get; private set; }
 
-        public Datacenter()
+        public DeploymentEnvironment Environment { get; private set; }
+        public string FullName { get { return Environment.FullName + "-" + Id.ToString(); } }
+
+        public Datacenter(DeploymentEnvironment environment)
         {
             Resources = new List<Resource>();
             Services = new List<Service>();
             Config = new Dictionary<string, string>();
+
+            Environment = environment;
         }
 
         public Uri GetServiceUri(string service)

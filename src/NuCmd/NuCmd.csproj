@@ -199,6 +199,7 @@
     <Compile Include="Commands\Scheduler\DeleteServiceCommand.cs" />
     <Compile Include="Commands\Scheduler\SchedulerServiceCommandBase.cs" />
     <Compile Include="Commands\Scheduler\ServicesCommand.cs" />
+    <Compile Include="Commands\Secret\GetCommand.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />
     <Compile Include="Commands\Work\PurgeCommand.cs" />
     <Compile Include="Commands\Work\JobsCommand.cs" />

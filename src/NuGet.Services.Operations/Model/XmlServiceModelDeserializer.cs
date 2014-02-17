@@ -23,10 +23,13 @@ namespace NuGet.Services.Operations.Model
         {
             var subs = LoadSubscriptions(root.Element("subscriptions"));
 
-            return new AppModel(
-                root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion),
-                LoadEnvironments(root.Element("environments"), subs),
-                subs);
+            var app = new AppModel(
+                root.AttributeValueOrDefault("name"),
+                root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion));
+
+            app.Environments.AddRange(LoadEnvironments(root.Element("environments"), app, subs));
+            app.Subscriptions.AddRange(subs);
+            return app;
         }
 
         private static IEnumerable<AzureSubscription> LoadSubscriptions(XElement root)
@@ -43,7 +46,7 @@ namespace NuGet.Services.Operations.Model
         }
 
         
-        private static IEnumerable<DeploymentEnvironment> LoadEnvironments(XElement root, IEnumerable<AzureSubscription> subscriptions = null)
+        private static IEnumerable<DeploymentEnvironment> LoadEnvironments(XElement root, AppModel app, IEnumerable<AzureSubscription> subscriptions = null)
         {
             if (root == null)
             {
@@ -56,12 +59,12 @@ namespace NuGet.Services.Operations.Model
                     s => s.Name,
                     StringComparer.OrdinalIgnoreCase);
 
-            return root.Elements("environment").Select(e => LoadEnvironment(e, subDict));
+            return root.Elements("environment").Select(e => LoadEnvironment(e, app, subDict));
         }
 
-        private static DeploymentEnvironment LoadEnvironment(XElement e, IDictionary<string, AzureSubscription> subscriptions)
+        private static DeploymentEnvironment LoadEnvironment(XElement e, AppModel app, IDictionary<string, AzureSubscription> subscriptions)
         {
-            var env = new DeploymentEnvironment()
+            var env = new DeploymentEnvironment(app)
             {
                 Name = e.AttributeValueOrDefault("name"),
                 Version = Version.Parse(e.AttributeValueOrDefault("version"))
@@ -82,7 +85,7 @@ namespace NuGet.Services.Operations.Model
 
             LoadConfig(env.Config, e.Element("config"));
 
-            env.Datacenters.AddRange(e.Elements("datacenter").Select(el => LoadDatacenter(el)));
+            env.Datacenters.AddRange(e.Elements("datacenter").Select(el => LoadDatacenter(el, env)));
 
             var srcElem = e.Element("packageSources");
             if (srcElem != null)
@@ -99,9 +102,9 @@ namespace NuGet.Services.Operations.Model
             return env;
         }
 
-        private static Datacenter LoadDatacenter(XElement e)
+        private static Datacenter LoadDatacenter(XElement e, DeploymentEnvironment env)
         {
-            var dc = new Datacenter()
+            var dc = new Datacenter(env)
             {
                 Id = e.AttributeValueOrDefault<int>("id", Int32.Parse),
                 Region = e.AttributeValueOrDefault("region"),
@@ -143,6 +146,8 @@ namespace NuGet.Services.Operations.Model
             instance.Name = e.AttributeValueOrDefault("name");
             instance.Type = e.Name.LocalName;
             instance.Value = e.Value;
+            instance.Version = e.AttributeValueOrDefault<Version>(
+                "version", Version.Parse, new Version(1, 0));
 
             foreach (var attr in e.Attributes())
             {

@@ -10,6 +10,7 @@ namespace NuGet.Services.Operations.Model
         public string Type { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
+        public Version Version { get; set; }
         
         public IDictionary<string, string> Attributes { get; protected set; }
 

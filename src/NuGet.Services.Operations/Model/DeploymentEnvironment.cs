@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NuGet.Services.Operations.Model
 {
@@ -17,6 +19,10 @@ namespace NuGet.Services.Operations.Model
         public IDictionary<string, string> Config { get; private set; }
         public IList<Datacenter> Datacenters { get; private set; }
 
+        public AppModel App { get; private set; }
+
+        public string FullName { get { return App.Name + "-" + Name; } }
+
         public Datacenter this[int id]
         {
             get
@@ -25,8 +31,9 @@ namespace NuGet.Services.Operations.Model
             }
         }
 
-        public DeploymentEnvironment()
+        public DeploymentEnvironment(AppModel app)
         {
+            App = app;
             Datacenters = new List<Datacenter>();
             PackageSources = new List<PackageSource>();
             SecretStores = new List<SecretStore>();
@@ -57,6 +64,40 @@ namespace NuGet.Services.Operations.Model
                     datacenter));
             }
             return dc.GetService(name);
+        }
+
+        public SecretStoreConnection ConnectToSecretStore()
+        {
+            return ConnectToSecretStore(name: null);
+        }
+
+        public SecretStoreConnection ConnectToSecretStore(string name)
+        {
+            // Find the secret store
+            SecretStore store;
+            if (String.IsNullOrEmpty(name))
+            {
+                store = SecretStores.FirstOrDefault();
+                if (store == null)
+                {
+                    throw new KeyNotFoundException(Strings.DeploymentEnvironment_NoSecretStore);
+                }
+            }
+            else
+            {
+                store = SecretStores.FirstOrDefault(s => String.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+                if (store == null)
+                {
+                    throw new KeyNotFoundException(String.Format(
+                        CultureInfo.CurrentCulture,
+                        Strings.DeploymentEnvironment_NoSecretStoreWithName,
+                        name));
+                }
+            }
+            Debug.Assert(store != null);
+
+            // Try to open the connection
+            return SecretStoreConnection.Open(store);
         }
     }
 }
