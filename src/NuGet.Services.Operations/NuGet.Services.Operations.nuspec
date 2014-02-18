@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+    <metadata>
+        <id>$id$</id>
+        <version>$version$</version>
+        <title>$title$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <licenseUrl>https://github.com/NuGet/NuGet.Operations/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/NuGet/NuGet.Operations</projectUrl>
+        <iconUrl>https://github.com/NuGet/Media/blob/master/Images/MainLogo/96x96/nuget_96.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>$description$</description>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright 2014 Outercurve Foundation</copyright>
+        <tags>nuget services gallery</tags>
+    </metadata>
+</package>

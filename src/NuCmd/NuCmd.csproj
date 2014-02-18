@@ -146,7 +146,7 @@
       <HintPath>..\..\packages\NuGet.Services.Work.3.0.1-alpha-13\lib\net45\NuGet.Services.Work.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Work.Client">
-      <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.1-alpha-12\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.1-alpha-13\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>

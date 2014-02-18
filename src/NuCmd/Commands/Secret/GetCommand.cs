@@ -25,7 +25,7 @@ namespace NuCmd.Commands.Secret
         [ArgDescription("The key defining the specific secret value to get, if multiple values are available for this resource")]
         public string Key { get; set; }
 
-        protected override async Task OnExecute()
+        protected override Task OnExecute()
         {
             throw new NotImplementedException();
 
