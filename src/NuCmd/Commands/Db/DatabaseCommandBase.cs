@@ -130,7 +130,11 @@ namespace NuCmd.Commands.Db
 
         public Task<SqlConnection> Connect(string alternateDatabase)
         {
-            return ConnectCore(ConnectionString.ChangeDatabase(alternateDatabase));
+            var connStr = new SqlConnectionStringBuilder(ConnectionString.ConnectionString)
+            {
+                InitialCatalog = alternateDatabase
+            };
+            return ConnectCore(connStr);
         }
 
         private async Task<SqlConnection> ConnectCore(SqlConnectionStringBuilder connStr)

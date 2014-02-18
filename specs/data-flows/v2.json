@@ -1,8 +1,0 @@
-{
-	"http://api.nuget.org/v2" : {
-		"self" : "http://api.nuget.org/v2",
-		"nuget.org" : "http://www.nuget.org/api/v2/",
-		"Windows 8 Packages" : "http://www.nuget.org/api/v2/curated-feeds/Windows8/",
-		"WebMatrix Package Source" : "http://www.nuget.org/api/v2/curated-feeds/WebMatrix"
-	}
-}

@@ -1,2 +1,0 @@
-# Deployment Settings Repository
-TODO

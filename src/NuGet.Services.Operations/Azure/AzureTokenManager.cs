@@ -5,8 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using NuGet.Services.Client;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace NuGet.Services.Operations
 {

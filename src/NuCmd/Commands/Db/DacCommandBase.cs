@@ -14,7 +14,10 @@ namespace NuCmd.Commands.Db
         protected DacServices ConnectDac(SqlConnectionInfo connInfo)
         {
             // We have to use an insecure string :(
-            var connStr = new SqlConnectionStringBuilder(connInfo.ConnectionString.ChangeDatabase("master").ConnectionString);
+            var connStr = new SqlConnectionStringBuilder(connInfo.ConnectionString.ConnectionString)
+            {
+                InitialCatalog = "master"
+            };
             connStr.UserID = connInfo.Credential.UserId;
 
             var passwordPtr = Marshal.SecureStringToBSTR(connInfo.Credential.Password);
