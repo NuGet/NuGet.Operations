@@ -419,4 +419,25 @@ Connection String: {3}</value>
   <data name="Azure_LoginCommand_SubscriptionDisabled" xml:space="preserve">
     <value>Subscription is disabled!</value>
   </data>
+  <data name="Package_DeleteCommand_AllVersionsRequiredIfVersionNull" xml:space="preserve">
+    <value>Either the "Version" parameter must be specified or the "AllVersions" flag must be explicitly specified.</value>
+  </data>
+  <data name="Package_DeleteCommand_DeleteList_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Package_DeleteCommand_DeleteList_Header" xml:space="preserve">
+    <value>Do you want to delete the following packages from the {0} datacenter?</value>
+  </data>
+  <data name="Package_DeleteCommand_DeleteList_Item" xml:space="preserve">
+    <value>* {0} {1}</value>
+  </data>
+  <data name="SystemConsole_ConfirmSuffix_DefaultNo" xml:space="preserve">
+    <value>[y/N]:</value>
+  </data>
+  <data name="SystemConsole_ConfirmSuffix_DefaultYes" xml:space="preserve">
+    <value>[Y/n]:</value>
+  </data>
+  <data name="SystemConsole_ConfirmUnknownAnswer" xml:space="preserve">
+    <value>Unknown answer: '{0}'.</value>
+  </data>
 </root>

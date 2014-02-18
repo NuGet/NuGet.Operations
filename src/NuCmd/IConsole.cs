@@ -26,6 +26,8 @@ namespace NuCmd
         Task WriteTable<T>(IEnumerable<T> objs, Func<T, object> selector);
 
         SecureString PromptForPassword(string message);
+
+        Task<bool> Confirm(string message, bool defaultValue);
     }
 
     public static class ConsoleExtensions

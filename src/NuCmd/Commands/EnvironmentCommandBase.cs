@@ -17,5 +17,10 @@ namespace NuCmd.Commands
         {
             return GetEnvironment(Environment);
         }
+
+        protected virtual Datacenter GetDatacenter(int datacenter)
+        {
+            return GetDatacenter(GetEnvironment(), datacenter);
+        }
     }
 }

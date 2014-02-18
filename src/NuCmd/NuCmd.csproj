@@ -224,6 +224,7 @@
     <Compile Include="Commands\EnvCommand.cs" />
     <Compile Include="Commands\EnvironmentCommandBase.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="Commands\Package\DeleteCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
     <Compile Include="Commands\Scheduler\JobCollectionCommandBase.cs" />
     <Compile Include="Commands\Scheduler\JobsCommand.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="Commands\Work\WorkServiceCommandBase.cs" />
     <Compile Include="ConsoleHttpTraceHandler.cs" />
     <Compile Include="ConsoleTable.cs" />
+    <Compile Include="SqlConnectionExtensions.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IConsoleFormatter.cs" />
     <Compile Include="Models\SqlDac.cs" />
@@ -256,6 +258,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceTypes.cs" />
+    <Compile Include="SemanticVersionHelper.cs" />
     <Compile Include="Strings1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

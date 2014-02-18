@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -62,6 +63,41 @@ namespace NuCmd
         {
             var table = ConsoleTable.For(objs, selector);
             return WriteTable(table);
+        }
+
+        private static readonly Dictionary<string, bool> _values = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase) {
+            {"y", true},
+            {"yes", true},
+            {"n", false},
+            {"no", false}
+        };
+
+        public async Task<bool> Confirm(string message, bool defaultValue)
+        {
+            string prompt = message + " " + (defaultValue ? Strings.SystemConsole_ConfirmSuffix_DefaultYes : Strings.SystemConsole_ConfirmSuffix_DefaultNo);
+            bool? result = null;
+            while (result == null)
+            {
+                await this.WriteInfo(prompt);
+                string str = Console.ReadLine();
+                bool b;
+                if (String.IsNullOrWhiteSpace(str))
+                {
+                    b = defaultValue;
+                }
+                else if (_values.TryGetValue(str, out b))
+                {
+                    result = b;
+                }
+                else
+                {
+                    await this.WriteInfoLine(String.Format(
+                        CultureInfo.CurrentCulture,
+                        Strings.SystemConsole_ConfirmUnknownAnswer,
+                        str));
+                }
+            }
+            return result.Value;
         }
 
         public SecureString PromptForPassword(string prompt)
