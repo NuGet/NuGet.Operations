@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Management.Scheduler;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Lists the scheduler services available")]
-    public class ServicesCommand : AzureCommandBase
+    public class ServicesCommand : AzureConnectionCommandBase
     {
         protected override async Task OnExecute(SubscriptionCloudCredentials credentials)
         {

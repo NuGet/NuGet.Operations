@@ -162,6 +162,10 @@ namespace NuCmd
                 {
                     thrown = aex.InnerException;
                 }
+                catch (OperationCanceledException)
+                {
+                    // Do nothing when this is thrown, it's just used to jump out of the job.
+                }
                 catch (Exception ex)
                 {
                     thrown = ex;

@@ -7,7 +7,7 @@ using PowerArgs;
 
 namespace NuCmd.Commands.Scheduler
 {
-    public abstract class SchedulerServiceCommandBase : AzureCommandBase
+    public abstract class SchedulerServiceCommandBase : AzureConnectionCommandBase
     {
         [ArgShortcut("cs")]
         [ArgDescription("Specifies the scheduler service to work with. Defaults to the standard one for this environment (nuget-[environment]-scheduler)")]

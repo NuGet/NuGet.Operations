@@ -12,7 +12,7 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Deletes the specified scheduler service")]
-    public class DeleteServiceCommand : AzureCommandBase
+    public class DeleteServiceCommand : AzureConnectionCommandBase
     {
         [ArgRequired]
         [ArgPosition(0)]

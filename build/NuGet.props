@@ -13,7 +13,7 @@
     <BuildUser Condition="'$(BuildUser)' == ''">$([System.Environment]::UserName)</BuildUser>
     <BuildMachine Condition="'$(BuildMachine)' == ''">$([System.Environment]::MachineName)</BuildMachine>
 
-    <SimpleVersion Condition="'$(SimpleVersion)' == ''">3.0.0</SimpleVersion>
+    <SimpleVersion Condition="'$(SimpleVersion)' == ''">3.0.1</SimpleVersion>
     <SemanticVersion Condition="'$(SemanticVersion)' == ''">$(SimpleVersion)-local-$(Branch)-$(Commit)</SemanticVersion>
     
     <!-- Directories -->

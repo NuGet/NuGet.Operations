@@ -13,7 +13,7 @@ using PowerArgs;
 namespace NuCmd.Commands.Scheduler
 {
     [Description("Creates a scheduler service")]
-    public class NewServiceCommand : AzureCommandBase
+    public class NewServiceCommand : AzureConnectionCommandBase
     {
         [ArgRequired]
         [ArgShortcut("cs")]

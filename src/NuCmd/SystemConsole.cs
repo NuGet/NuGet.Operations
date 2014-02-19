@@ -14,14 +14,14 @@ namespace NuCmd
 {
     public class SystemConsole : IConsole
     {
-        private TextWriter _error = new ConsoleWriter("error", ConsoleColor.Red, Console.Error);
-        private TextWriter _warning = new ConsoleWriter("warn", ConsoleColor.Yellow, Console.Error);
-        private TextWriter _info = new ConsoleWriter("info", ConsoleColor.Green, Console.Out);
-        private TextWriter _help = new ConsoleWriter("help", ConsoleColor.Blue, Console.Error);
-        private TextWriter _trace = new ConsoleWriter("trace", ConsoleColor.Gray, Console.Error);
-        private TextWriter _data = new ConsoleWriter("data", ConsoleColor.DarkRed, Console.Out);
-        private TextWriter _http = new ConsoleWriter("http", ConsoleColor.Cyan, Console.Out);
-        private TextWriter _fatal = new ConsoleWriter("fatal", ConsoleColor.Red, Console.Out);
+        private ConsoleWriter _error = new ConsoleWriter("error", ConsoleColor.Red, Console.Error);
+        private ConsoleWriter _warning = new ConsoleWriter("warn", ConsoleColor.Yellow, Console.Error);
+        private ConsoleWriter _info = new ConsoleWriter("info", ConsoleColor.Green, Console.Out);
+        private ConsoleWriter _help = new ConsoleWriter("help", ConsoleColor.Blue, Console.Error);
+        private ConsoleWriter _trace = new ConsoleWriter("trace", ConsoleColor.Gray, Console.Error);
+        private ConsoleWriter _data = new ConsoleWriter("data", ConsoleColor.DarkRed, Console.Out);
+        private ConsoleWriter _http = new ConsoleWriter("http", ConsoleColor.Cyan, Console.Out);
+        private ConsoleWriter _fatal = new ConsoleWriter("fatal", ConsoleColor.Red, Console.Out);
 
         public TextWriter Error { get { return _error; } }
         public TextWriter Fatal { get { return _fatal; } }
@@ -74,16 +74,17 @@ namespace NuCmd
 
         public async Task<bool> Confirm(string message, bool defaultValue)
         {
-            string prompt = message + " " + (defaultValue ? Strings.SystemConsole_ConfirmSuffix_DefaultYes : Strings.SystemConsole_ConfirmSuffix_DefaultNo);
+            string prompt = message + " " + (defaultValue ? Strings.SystemConsole_ConfirmSuffix_DefaultYes : Strings.SystemConsole_ConfirmSuffix_DefaultNo) + " ";
             bool? result = null;
             while (result == null)
             {
                 await this.WriteInfo(prompt);
                 string str = Console.ReadLine();
+                _info.RestartLine();
                 bool b;
                 if (String.IsNullOrWhiteSpace(str))
                 {
-                    b = defaultValue;
+                    result = defaultValue;
                 }
                 else if (_values.TryGetValue(str, out b))
                 {
@@ -159,6 +160,11 @@ namespace NuCmd
                 _getForegroundColor = getForegroundColor;
 
                 _prefixes.Add(prefix);
+            }
+
+            public void RestartLine()
+            {
+                _previous = null;
             }
 
             public override async Task WriteAsync(char value)

@@ -97,6 +97,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetching service configuration data for &apos;{0}&apos;....
+        /// </summary>
+        internal static string AzureCommandBase_FetchingServiceConfig {
+            get {
+                return ResourceManager.GetString("AzureCommandBase_FetchingServiceConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This command must be run from the NuGet Ops console with a current environment that has a subscription..
         /// </summary>
         internal static string AzureCommandBase_RequiresSubscription {
@@ -606,6 +615,60 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The audit blob &apos;{0}&apos; already exists! Audit records are timestamped, so just try the request again..
+        /// </summary>
+        internal static string Package_DeleteCommand_AuditBlobExists {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_AuditBlobExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No backup found, creating a backup..
+        /// </summary>
+        internal static string Package_DeleteCommand_BackingUp {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_BackingUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup already exists..
+        /// </summary>
+        internal static string Package_DeleteCommand_BackupExists {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_BackupExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking for a backup..
+        /// </summary>
+        internal static string Package_DeleteCommand_CheckingBackup {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_CheckingBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using SQL server &apos;{0}&apos; and storage account &apos;{1}&apos;..
+        /// </summary>
+        internal static string Package_DeleteCommand_ConnectionInfo {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_ConnectionInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed the following operations:.
+        /// </summary>
+        internal static string Package_DeleteCommand_DatabaseActions {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_DatabaseActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         internal static string Package_DeleteCommand_DeleteList_Confirm {
@@ -629,6 +692,96 @@ namespace NuCmd {
         internal static string Package_DeleteCommand_DeleteList_Item {
             get {
                 return ResourceManager.GetString("Package_DeleteCommand_DeleteList_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting package blob &apos;{0}&apos;..
+        /// </summary>
+        internal static string Package_DeleteCommand_DeletingPackageBlob {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_DeletingPackageBlob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting data for &apos;{0} {1}&apos; from the &apos;{2}&apos; database on &apos;{3}&apos;..
+        /// </summary>
+        internal static string Package_DeleteCommand_DeletingPackageData {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_DeletingPackageData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deletion completed. The effects may take a few minutes to propagate..
+        /// </summary>
+        internal static string Package_DeleteCommand_DeletionCompleted {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_DeletionCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading Package to temporary file....
+        /// </summary>
+        internal static string Package_DeleteCommand_DownloadingBlob {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_DownloadingBlob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &quot;-db&quot; and &quot;-st&quot; arguments must be specified if there is no current environment..
+        /// </summary>
+        internal static string Package_DeleteCommand_MissingData {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_MissingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package blob not found!.
+        /// </summary>
+        internal static string Package_DeleteCommand_MissingSourceBlob {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_MissingSourceBlob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading Package Blob to backup container....
+        /// </summary>
+        internal static string Package_DeleteCommand_UploadingBackup {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_UploadingBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A specific version number to delete AND the AllVersions switch were both specified. Only one of these can be specified..
+        /// </summary>
+        internal static string Package_DeleteCommand_VersionAndAllVersionsSpecified {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_VersionAndAllVersionsSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing audit record &apos;{0}&apos; to packages audit store..
+        /// </summary>
+        internal static string Package_DeleteCommand_WritingAuditRecord {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_WritingAuditRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing audit record &apos;{0}&apos; to package registrations audit store..
+        /// </summary>
+        internal static string Package_DeleteCommand_WritingRegistrationAuditRecord {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_WritingRegistrationAuditRecord", resourceCulture);
             }
         }
         

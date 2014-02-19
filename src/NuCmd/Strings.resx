@@ -419,8 +419,29 @@ Connection String: {3}</value>
   <data name="Azure_LoginCommand_SubscriptionDisabled" xml:space="preserve">
     <value>Subscription is disabled!</value>
   </data>
+  <data name="AzureCommandBase_FetchingServiceConfig" xml:space="preserve">
+    <value>Fetching service configuration data for '{0}'...</value>
+  </data>
   <data name="Package_DeleteCommand_AllVersionsRequiredIfVersionNull" xml:space="preserve">
     <value>Either the "Version" parameter must be specified or the "AllVersions" flag must be explicitly specified.</value>
+  </data>
+  <data name="Package_DeleteCommand_AuditBlobExists" xml:space="preserve">
+    <value>The audit blob '{0}' already exists! Audit records are timestamped, so just try the request again.</value>
+  </data>
+  <data name="Package_DeleteCommand_BackingUp" xml:space="preserve">
+    <value>No backup found, creating a backup.</value>
+  </data>
+  <data name="Package_DeleteCommand_BackupExists" xml:space="preserve">
+    <value>Backup already exists.</value>
+  </data>
+  <data name="Package_DeleteCommand_CheckingBackup" xml:space="preserve">
+    <value>Checking for a backup.</value>
+  </data>
+  <data name="Package_DeleteCommand_ConnectionInfo" xml:space="preserve">
+    <value>Using SQL server '{0}' and storage account '{1}'.</value>
+  </data>
+  <data name="Package_DeleteCommand_DatabaseActions" xml:space="preserve">
+    <value>Completed the following operations:</value>
   </data>
   <data name="Package_DeleteCommand_DeleteList_Confirm" xml:space="preserve">
     <value>Confirm</value>
@@ -430,6 +451,36 @@ Connection String: {3}</value>
   </data>
   <data name="Package_DeleteCommand_DeleteList_Item" xml:space="preserve">
     <value>* {0} {1}</value>
+  </data>
+  <data name="Package_DeleteCommand_DeletingPackageBlob" xml:space="preserve">
+    <value>Deleting package blob '{0}'.</value>
+  </data>
+  <data name="Package_DeleteCommand_DeletingPackageData" xml:space="preserve">
+    <value>Deleting data for '{0} {1}' from the '{2}' database on '{3}'.</value>
+  </data>
+  <data name="Package_DeleteCommand_DeletionCompleted" xml:space="preserve">
+    <value>Deletion completed. The effects may take a few minutes to propagate.</value>
+  </data>
+  <data name="Package_DeleteCommand_DownloadingBlob" xml:space="preserve">
+    <value>Downloading Package to temporary file...</value>
+  </data>
+  <data name="Package_DeleteCommand_MissingData" xml:space="preserve">
+    <value>The "-db" and "-st" arguments must be specified if there is no current environment.</value>
+  </data>
+  <data name="Package_DeleteCommand_MissingSourceBlob" xml:space="preserve">
+    <value>Package blob not found!</value>
+  </data>
+  <data name="Package_DeleteCommand_UploadingBackup" xml:space="preserve">
+    <value>Uploading Package Blob to backup container...</value>
+  </data>
+  <data name="Package_DeleteCommand_VersionAndAllVersionsSpecified" xml:space="preserve">
+    <value>A specific version number to delete AND the AllVersions switch were both specified. Only one of these can be specified.</value>
+  </data>
+  <data name="Package_DeleteCommand_WritingAuditRecord" xml:space="preserve">
+    <value>Writing audit record '{0}' to packages audit store.</value>
+  </data>
+  <data name="Package_DeleteCommand_WritingRegistrationAuditRecord" xml:space="preserve">
+    <value>Writing audit record '{0}' to package registrations audit store.</value>
   </data>
   <data name="SystemConsole_ConfirmSuffix_DefaultNo" xml:space="preserve">
     <value>[y/N]:</value>
