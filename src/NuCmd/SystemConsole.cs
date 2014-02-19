@@ -65,6 +65,14 @@ namespace NuCmd
             return WriteTable(table);
         }
 
+        public async Task<string> Prompt(string message)
+        {
+            await this.WriteInfo(message + " ");
+            string str = Console.ReadLine();
+            _info.RestartLine();
+            return str;
+        }
+
         private static readonly Dictionary<string, bool> _values = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase) {
             {"y", true},
             {"yes", true},
@@ -74,13 +82,11 @@ namespace NuCmd
 
         public async Task<bool> Confirm(string message, bool defaultValue)
         {
-            string prompt = message + " " + (defaultValue ? Strings.SystemConsole_ConfirmSuffix_DefaultYes : Strings.SystemConsole_ConfirmSuffix_DefaultNo) + " ";
+            string prompt = message + " " + (defaultValue ? Strings.SystemConsole_ConfirmSuffix_DefaultYes : Strings.SystemConsole_ConfirmSuffix_DefaultNo);
             bool? result = null;
             while (result == null)
             {
-                await this.WriteInfo(prompt);
-                string str = Console.ReadLine();
-                _info.RestartLine();
+                string str = await Prompt(prompt);
                 bool b;
                 if (String.IsNullOrWhiteSpace(str))
                 {

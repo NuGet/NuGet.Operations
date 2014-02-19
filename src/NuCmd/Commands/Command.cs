@@ -33,6 +33,12 @@ namespace NuCmd.Commands
             if (await LoadContext(session, console, definition, directory))
             {
                 await LoadDefaultsFromContext();
+
+                if (WhatIf)
+                {
+                    await Console.WriteInfoLine(Strings.Command_WhatIfMode);
+                }
+
                 await OnExecute();
             }
         }

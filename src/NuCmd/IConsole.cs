@@ -28,6 +28,7 @@ namespace NuCmd
         SecureString PromptForPassword(string message);
 
         Task<bool> Confirm(string message, bool defaultValue);
+        Task<string> Prompt(string message);
     }
 
     public static class ConsoleExtensions

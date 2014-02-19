@@ -422,6 +422,9 @@ Connection String: {3}</value>
   <data name="AzureCommandBase_FetchingServiceConfig" xml:space="preserve">
     <value>Fetching service configuration data for '{0}'...</value>
   </data>
+  <data name="Command_WhatIfMode" xml:space="preserve">
+    <value>**** Running in WhatIf mode. ****</value>
+  </data>
   <data name="Package_DeleteCommand_AllVersionsRequiredIfVersionNull" xml:space="preserve">
     <value>Either the "Version" parameter must be specified or the "AllVersions" flag must be explicitly specified.</value>
   </data>
@@ -444,7 +447,7 @@ Connection String: {3}</value>
     <value>Completed the following operations:</value>
   </data>
   <data name="Package_DeleteCommand_DeleteList_Confirm" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Retype the Package ID (case-sensitive) to confirm:</value>
   </data>
   <data name="Package_DeleteCommand_DeleteList_Header" xml:space="preserve">
     <value>Do you want to delete the following packages from the {0} datacenter?</value>
@@ -464,11 +467,17 @@ Connection String: {3}</value>
   <data name="Package_DeleteCommand_DownloadingBlob" xml:space="preserve">
     <value>Downloading Package to temporary file...</value>
   </data>
+  <data name="Package_DeleteCommand_IncorrectId" xml:space="preserve">
+    <value>'{0}' is not the right Id. Remember it is case-sensitive</value>
+  </data>
   <data name="Package_DeleteCommand_MissingData" xml:space="preserve">
     <value>The "-db" and "-st" arguments must be specified if there is no current environment.</value>
   </data>
   <data name="Package_DeleteCommand_MissingSourceBlob" xml:space="preserve">
     <value>Package blob not found!</value>
+  </data>
+  <data name="Package_DeleteCommand_NonWhatIf" xml:space="preserve">
+    <value>The command is NOT in WhatIf mode. Changes will be applied IMMEDIATELY.</value>
   </data>
   <data name="Package_DeleteCommand_UploadingBackup" xml:space="preserve">
     <value>Uploading Package Blob to backup container...</value>

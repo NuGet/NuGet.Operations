@@ -111,17 +111,27 @@ namespace NuCmd.Commands.Package
                         (string)package.Id,
                         (string)package.Version);
                 }
-                if (await Console.Confirm(Strings.Package_DeleteCommand_DeleteList_Confirm, defaultValue: false))
-                {
-                    foreach (var package in packages)
-                    {
-                        await DeletePackage(package, conn);
-                    }
 
-                    if (AllVersions)
+                // Ask the user to confirm by typing the ID
+                if(!WhatIf) 
+                { 
+                    await Console.WriteInfoLine(Strings.Package_DeleteCommand_NonWhatIf);
+                    string typed = await Console.Prompt(Strings.Package_DeleteCommand_DeleteList_Confirm);
+                    if (!String.Equals(typed, Id, StringComparison.Ordinal))
                     {
-                        await DeleteRegistration(conn);
+                        await Console.WriteErrorLine(Strings.Package_DeleteCommand_IncorrectId, typed);
+                        return;
                     }
+                }
+                 
+                foreach (var package in packages)
+                {
+                    await DeletePackage(package, conn);
+                }
+
+                if (AllVersions)
+                {
+                    await DeleteRegistration(conn);
                 }
             }
         }

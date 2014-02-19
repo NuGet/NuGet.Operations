@@ -169,6 +169,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to **** Running in WhatIf mode. ****.
+        /// </summary>
+        internal static string Command_WhatIfMode {
+            get {
+                return ResourceManager.GetString("Command_WhatIfMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Received &apos;{0} {1}&apos; response from server.
         ///Details:
         ///{2}.
@@ -669,7 +678,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirm.
+        ///   Looks up a localized string similar to Retype the Package ID (case-sensitive) to confirm:.
         /// </summary>
         internal static string Package_DeleteCommand_DeleteList_Confirm {
             get {
@@ -732,6 +741,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not the right Id. Remember it is case-sensitive.
+        /// </summary>
+        internal static string Package_DeleteCommand_IncorrectId {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_IncorrectId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &quot;-db&quot; and &quot;-st&quot; arguments must be specified if there is no current environment..
         /// </summary>
         internal static string Package_DeleteCommand_MissingData {
@@ -746,6 +764,15 @@ namespace NuCmd {
         internal static string Package_DeleteCommand_MissingSourceBlob {
             get {
                 return ResourceManager.GetString("Package_DeleteCommand_MissingSourceBlob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The command is NOT in WhatIf mode. Changes will be applied IMMEDIATELY..
+        /// </summary>
+        internal static string Package_DeleteCommand_NonWhatIf {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_NonWhatIf", resourceCulture);
             }
         }
         
