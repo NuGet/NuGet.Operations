@@ -23,7 +23,7 @@
         <ItemGroup>
             <!-- Package sources used to restore packages. By default will used the registered sources under %APPDATA%\NuGet\NuGet.Config -->
             <PackageSource Include="https://www.nuget.org/api/v2" />
-            <PackageSource Include="https://www.myget.org/F/nugetdeployment/" />
+            <PackageSource Include="https://www.myget.org/F/nugetbuild/" />
         </ItemGroup>
         <PropertyGroup>
             <NuGetExePath>$(MsBuildThisFileDirectory)\nuget.exe</NuGetExePath>
