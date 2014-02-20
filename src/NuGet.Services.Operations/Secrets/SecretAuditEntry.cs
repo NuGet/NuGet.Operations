@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -12,21 +13,25 @@ namespace NuGet.Services.Operations.Secrets
     public class SecretAuditEntry
     {
         public string User { get; private set; }
+        public string ClientOperation { get; private set; }
+        public string ProcessName { get; private set; }
         public string MachineName { get; private set; }
         public string MachineIP { get; private set; }
         public DateTime TimestampUtc { get; private set; }
         public SecretAuditAction Action { get; private set; }
 
-        public SecretAuditEntry(string user, string machineName, string machineIP, DateTime timestampUtc, SecretAuditAction action)
+        public SecretAuditEntry(string user, string clientOperation, string processName, string machineName, string machineIP, DateTime timestampUtc, SecretAuditAction action)
         {
             TimestampUtc = timestampUtc;
+            ClientOperation = clientOperation;
+            ProcessName = processName;
             User = user;
             Action = action;
             MachineName = machineName;
             MachineIP = machineIP;
         }
 
-        public static async Task<SecretAuditEntry> CreateForLocalUser(SecretAuditAction action)
+        public static async Task<SecretAuditEntry> CreateForLocalUser(string clientOperation, SecretAuditAction action)
         {
             // Get the current IP address
             string ipAddress = null;
@@ -44,6 +49,8 @@ namespace NuGet.Services.Operations.Secrets
             // Return the entry
             return new SecretAuditEntry(
                 Environment.UserDomainName + "\\" + Environment.UserName,
+                clientOperation,
+                Process.GetCurrentProcess().ProcessName,
                 Environment.MachineName,
                 ipAddress,
                 DateTime.UtcNow,

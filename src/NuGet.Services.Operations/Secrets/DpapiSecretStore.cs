@@ -33,7 +33,7 @@ namespace NuGet.Services.Operations.Secrets
                 .Select(s => Encoding.UTF8.GetString(Convert.FromBase64String(s)));
         }
 
-        public override async Task Write(Secret secret)
+        public override async Task Write(Secret secret, string clientOperation)
         {
             // Try to read the secret
             var existingSecret = await UnauditedReadSecret(secret.Key);
@@ -41,7 +41,7 @@ namespace NuGet.Services.Operations.Secrets
             {
                 // Copy the new data and add audit records
                 existingSecret.Update(secret);
-                existingSecret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(SecretAuditAction.Changed));
+                existingSecret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Changed));
 
                 // Now resave the existing secret instead
                 secret = existingSecret;
@@ -49,7 +49,7 @@ namespace NuGet.Services.Operations.Secrets
             else
             {
                 // Add an audit record
-                secret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(SecretAuditAction.Created));
+                secret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Created));
             }
 
             // Write the secret
@@ -69,7 +69,7 @@ namespace NuGet.Services.Operations.Secrets
             return new List<SecretAuditEntry>(secret.AuditLog);
         }
 
-        public override async Task<Secret> Read(string key)
+        public override async Task<Secret> Read(string key, string clientOperation)
         {
             // Read the secret
             var secret = await UnauditedReadSecret(key);
@@ -79,7 +79,7 @@ namespace NuGet.Services.Operations.Secrets
             }
 
             // Add audit log entry and rewrite
-            secret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(SecretAuditAction.Retrieved));
+            secret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Retrieved));
             await UnauditedWriteSecret(secret);
 
             // Return the secret value

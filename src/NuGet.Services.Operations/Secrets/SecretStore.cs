@@ -15,8 +15,8 @@ namespace NuGet.Services.Operations.Secrets
             Metadata = metadata;
         }
 
-        public abstract Task Write(Secret secret);
-        public abstract Task<Secret> Read(string key);
+        public abstract Task Write(Secret secret, string clientOperation);
+        public abstract Task<Secret> Read(string key, string clientOperation);
         public abstract IEnumerable<string> List();
         public abstract Task<IEnumerable<SecretAuditEntry>> ReadAuditLog(string key);
     }

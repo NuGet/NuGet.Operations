@@ -29,7 +29,7 @@ namespace NuCmd.Commands.Secrets
             var store = await OpenSecretStore();
 
             // Read the secret
-            var secret = await store.Read(Key);
+            var secret = await store.Read(Key, "nucmd get");
 
             // Write the value
             if (secret == null)
@@ -38,7 +38,7 @@ namespace NuCmd.Commands.Secrets
             }
             else if (CopyToClipboard)
             {
-                STAHelper.InSTAThread(() => Clipboard.SetText(secret.Value));
+                await STAHelper.InSTAThread(() => Clipboard.SetText(secret.Value));
                 await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretCopied, Key);
             }
             else

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
+using NuGet.Services.Operations.Secrets;
 
 namespace NuGet.Services.Operations.Model
 {

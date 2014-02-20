@@ -65,19 +65,13 @@ namespace NuCmd.Commands.Secrets
                 ExpiresAt = DateTime.Now + ExpiresIn.Value;
             }
 
-            if (ExpiresAt == null)
-            {
-                await Console.WriteErrorLine(Strings.Secrets_SetCommand_ExpiryNotSet);
-                throw new OperationCanceledException();
-            }
-
             // Create the secret to set
             var secret = new Secret(Key, Value, DateTime.UtcNow, ExpiresAt.Value.ToUniversalTime());
 
             await Console.WriteInfoLine(Strings.Secrets_SetCommand_Writing, Key, ExpiresAt.Value);
             if (!WhatIf)
             {
-                await store.Write(secret);
+                await store.Write(secret, "nucmd set");
             }
 
             await Console.WriteInfoLine(Strings.Secrets_SetCommand_Written, Key);
