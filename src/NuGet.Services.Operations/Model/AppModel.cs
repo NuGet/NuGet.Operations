@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class AppModel
+    public class AppModel : ConfigurableNode
     {
         public static readonly Version DefaultVersion = new Version(3, 0);
 
@@ -15,18 +15,20 @@ namespace NuGet.Services.Operations.Model
         public IList<DeploymentEnvironment> Environments { get; private set; }
         public IList<AzureSubscription> Subscriptions { get; private set; }
 
+        public IList<Resource> Resources { get; private set; }
+
         public AppModel() : this(String.Empty, DefaultVersion)
         {
         }
 
-        public AppModel(string name, Version version) : this(name, version, new List<DeploymentEnvironment>(), new List<AzureSubscription>()) { }
-
-        public AppModel(string name, Version version, IEnumerable<DeploymentEnvironment> environments, IEnumerable<AzureSubscription> subscriptions)
+        public AppModel(string name, Version version) : base(null)
         {
             Name = name;
-            Version = version;
-            Environments = environments.ToList();
-            Subscriptions = subscriptions.ToList();
+            Version = Version;
+
+            Environments = new List<DeploymentEnvironment>();
+            Subscriptions = new List<AzureSubscription>();
+            Resources = new List<Resource>();
         }
     }
 }

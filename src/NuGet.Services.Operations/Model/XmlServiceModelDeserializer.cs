@@ -9,23 +9,26 @@ namespace NuGet.Services.Operations.Model
 {
     public static class XmlServiceModelDeserializer
     {
-        public static AppModel LoadServiceModel(string fileName)
+        public static AppModel LoadAppModel(string fileName)
         {
-            return LoadServiceModel(XDocument.Load(fileName).Root);
+            return LoadAppModel(XDocument.Load(fileName).Root);
         }
 
-        public static AppModel LoadServiceModel(TextReader file)
+        public static AppModel LoadAppModel(TextReader file)
         {
-            return LoadServiceModel(XDocument.Load(file).Root);
+            return LoadAppModel(XDocument.Load(file).Root);
         }
 
-        public static AppModel LoadServiceModel(XElement root)
+        public static AppModel LoadAppModel(XElement root)
         {
             var subs = LoadSubscriptions(root.Element("subscriptions"));
 
             var app = new AppModel(
                 root.AttributeValueOrDefault("name"),
                 root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion));
+
+            LoadConfig(app.Configuration, root.Element("config"));
+            app.Resources.AddRange(LoadComponents<Resource>(root.Element("resources")));
 
             app.Environments.AddRange(LoadEnvironments(root.Element("environments"), app, subs));
             app.Subscriptions.AddRange(subs);
@@ -45,7 +48,6 @@ namespace NuGet.Services.Operations.Model
             });
         }
 
-        
         private static IEnumerable<DeploymentEnvironment> LoadEnvironments(XElement root, AppModel app, IEnumerable<AzureSubscription> subscriptions = null)
         {
             if (root == null)
@@ -83,20 +85,15 @@ namespace NuGet.Services.Operations.Model
                 }
             }
 
-            LoadConfig(env.Config, e.Element("config"));
+            LoadConfig(env.Configuration, e.Element("config"));
 
             env.Datacenters.AddRange(e.Elements("datacenter").Select(el => LoadDatacenter(el, env)));
+            env.PackageSources.AddRange(LoadComponents<PackageSource>(e.Element("packageSources")));
 
-            var srcElem = e.Element("packageSources");
-            if (srcElem != null)
-            {
-                env.PackageSources.AddRange(srcElem.Elements().Select(el => LoadComponent<PackageSource>(el)));
-            }
-
-            var secElem = e.Element("secretStores");
+            var secElem = e.Element("secretStore");
             if (secElem != null)
             {
-                env.SecretStores.AddRange(secElem.Elements().Select(el => LoadComponent<SecretStoreReference>(el)));
+                env.SecretStore = LoadComponent<SecretStoreReference>(secElem, typeFromAttribute: true);
             }
 
             return env;
@@ -111,40 +108,78 @@ namespace NuGet.Services.Operations.Model
                 AffinityGroup = e.AttributeValueOrDefault("affinityGroup")
             };
 
-            var resElem = e.Element("resources");
-            if (resElem != null)
-            {
-                dc.Resources.AddRange(resElem.Elements().Select(el => LoadComponent<Resource>(el)));
-            }
+            dc.Resources.AddRange(LoadComponents<Resource>(e.Element("resources")));
+            dc.Services.AddRange(LoadServices(dc, e.Element("services")));
 
-            var svcElem = e.Element("services");
-            if (svcElem != null)
-            {
-                dc.Services.AddRange(svcElem.Elements().Select(el => LoadService(el)));
-            }
-
-            LoadConfig(dc.Config, e.Element("config"));
+            LoadConfig(dc.Configuration, e.Element("config"));
 
             return dc;
         }
 
-        private static Service LoadService(XElement e)
+        private static IEnumerable<Service> LoadServices(Datacenter dc, XElement root)
         {
-            return LoadComponent(e, new Service()
+            if (root == null)
             {
-                Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s))
+                return Enumerable.Empty<Service>();
+            }
+            return root.Elements().Select(e =>
+            {
+                var svc = new Service(dc)
+                {
+                    Name = e.AttributeValueOrDefault("name"),
+                    Type = e.Name.LocalName,
+                    Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s)),
+                    Value = e.AttributeValueOrDefault("service")
+                };
+                LoadConfig(svc.Configuration, e.Element("config"));
+                return svc;
             });
         }
 
-        private static T LoadComponent<T>(XElement e) where T : EnvironmentComponentBase, new()
+        private static IEnumerable<T> LoadComponents<T>(XElement root) where T : ModelComponentBase, new()
         {
-            return LoadComponent(e, new T());
+            return LoadComponents<T>(root, null);
         }
 
-        private static T LoadComponent<T>(XElement e, T instance) where T : EnvironmentComponentBase
+        private static IEnumerable<T> LoadComponents<T>(XElement root, Action<T, XElement> additionalLoaders) where T : ModelComponentBase, new()
         {
-            instance.Name = e.AttributeValueOrDefault("name");
-            instance.Type = e.Name.LocalName;
+            if (root == null)
+            {
+                yield break;
+            }
+            foreach (var el in root.Elements())
+            {
+                var component = LoadComponent<T>(el);
+                if (additionalLoaders != null)
+                {
+                    additionalLoaders(component, el);
+                }
+                yield return component;
+            }
+        }
+
+        private static T LoadComponent<T>(XElement e, bool typeFromAttribute = false) where T : ModelComponentBase, new()
+        {
+            return LoadComponent(e, typeFromAttribute, new T());
+        }
+
+        private static T LoadComponent<T>(XElement e, bool typeFromAttribute, T instance) where T : ModelComponentBase
+        {
+            var named = instance as NamedModelComponentBase;
+            if (named != null)
+            {
+                named.Name = e.AttributeValueOrDefault("name");
+            }
+
+            if (typeFromAttribute)
+            {
+                instance.Type = e.AttributeValueOrDefault("type");
+            }
+            else
+            {
+                instance.Type = e.Name.LocalName;
+            }
+
             instance.Value = e.Value;
             instance.Version = e.AttributeValueOrDefault<Version>(
                 "version", Version.Parse, new Version(1, 0));
@@ -157,18 +192,20 @@ namespace NuGet.Services.Operations.Model
             return instance;
         }
 
-        private static void LoadConfig(IDictionary<string, string> dictionary, XElement configElement)
+        private static void LoadConfig(IList<ConfigSetting> settings, XElement configElement)
         {
             if (configElement != null)
             {
-                foreach (var setting in configElement.Elements("setting"))
+                foreach (var e in configElement.Elements("setting"))
                 {
-                    var attr = setting.Attribute("name");
-                    if (attr == null)
+                    var setting = new ConfigSetting()
                     {
-                        throw new InvalidDataException(Strings.XmlServiceModelDeserializer_SettingMissingName);
-                    }
-                    dictionary[attr.Value] = setting.Value;
+                        Name = e.AttributeValueOrDefault("name"),
+                        Service = e.AttributeValueOrDefault("service"),
+                        Type = e.AttributeValueOrDefault<ConfigSettingType>("type", s => (ConfigSettingType)Enum.Parse(typeof(ConfigSettingType), s, ignoreCase: true), ConfigSettingType.Literal),
+                        Value = e.Value
+                    };
+                    settings.Add(setting);
                 }
             }
         }

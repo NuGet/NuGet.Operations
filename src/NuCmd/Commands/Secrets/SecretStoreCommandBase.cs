@@ -22,13 +22,14 @@ namespace NuCmd.Commands.Secrets
             if (String.IsNullOrEmpty(StoreRoot))
             {
                 var env = GetEnvironment();
-                if (env != null)
+                if (env != null && env.SecretStore != null)
                 {
-                    var store = env.SecretStores.FirstOrDefault(s => String.Equals(s.Type, DpapiSecretStoreProvider.AppModelTypeName, StringComparison.OrdinalIgnoreCase));
-                    if (store != null)
+                    if (!String.Equals(DpapiSecretStoreProvider.AppModelTypeName, env.SecretStore.Type))
                     {
-                        StoreRoot = store.Value;
+                        await Console.WriteErrorLine(Strings.SecretStoreProviderCommandBase_UnknownType, env.SecretStore.Type);
+                        throw new OperationCanceledException();
                     }
+                    StoreRoot = env.SecretStore.Value;
                 }
             }
 

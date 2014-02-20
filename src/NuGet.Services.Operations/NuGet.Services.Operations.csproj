@@ -121,8 +121,9 @@
     <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\XLinqExtensions.cs" />
     <Compile Include="Model\AzureSubscription.cs" />
+    <Compile Include="Model\ConfigurableNode.cs" />
     <Compile Include="Model\Datacenter.cs" />
-    <Compile Include="Model\EnvironmentComponentBase.cs" />
+    <Compile Include="Model\ModelComponentBase.cs" />
     <Compile Include="Model\PackageSource.cs" />
     <Compile Include="Model\Resource.cs" />
     <Compile Include="Model\SecretStoreReference.cs" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="Model\ConfigSetting.cs" />
     <None Include="NuGet.Services.Operations.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>

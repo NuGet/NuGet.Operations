@@ -5,10 +5,23 @@ using System.Text;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class Service : EnvironmentComponentBase
+    public class Service : ConfigurableNode
     {
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Value { get; set; }
         public Uri Uri { get; set; }
 
-        public Service() : base() { }
+        public Datacenter Datacenter { get; private set; }
+
+        public Service(Datacenter dc) : base(dc)
+        {
+            Datacenter = dc;
+        }
+
+        public IDictionary<string, ConfigSetting> GetMergedSettings()
+        {
+            return GetMergedSettings(Name);
+        }
     }
 }

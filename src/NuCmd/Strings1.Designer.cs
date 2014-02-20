@@ -198,29 +198,29 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must have a management certificate for &apos;{0}&apos; installed on this machine to use this command..
+        ///   Looks up a localized string similar to * {0} = {1} &lt;{2}&gt;.
         /// </summary>
-        internal static string Config_GenerateCommand_NoCert {
+        internal static string Config_ShowCommand_ConfigEntry {
             get {
-                return ResourceManager.GetString("Config_GenerateCommand_NoCert", resourceCulture);
+                return ResourceManager.GetString("Config_ShowCommand_ConfigEntry", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuration for {0}:.
+        ///   Looks up a localized string similar to Displaying configuration for &apos;{0}&apos; service in &apos;{1}&apos;:.
         /// </summary>
-        internal static string Config_ShowCommand_Header {
+        internal static string Config_ShowCommand_DisplayingConfig {
             get {
-                return ResourceManager.GetString("Config_ShowCommand_Header", resourceCulture);
+                return ResourceManager.GetString("Config_ShowCommand_DisplayingConfig", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  {0} = {1}.
+        ///   Looks up a localized string similar to Service &apos;{0}&apos; does not exist in &apos;{1}&apos;!.
         /// </summary>
-        internal static string Config_ShowCommand_Row {
+        internal static string Config_ShowCommand_NoSuchService {
             get {
-                return ResourceManager.GetString("Config_ShowCommand_Row", resourceCulture);
+                return ResourceManager.GetString("Config_ShowCommand_NoSuchService", resourceCulture);
             }
         }
         
@@ -543,7 +543,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  {0} package source &apos;{1}&apos;: {2}.
+        ///   Looks up a localized string similar to {0} package source &apos;{1}&apos;: {2}.
         /// </summary>
         internal static string EnvCommand_Data_PackageSource {
             get {
@@ -552,7 +552,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  {0} secret store &apos;{1}&apos;: {2}.
+        ///   Looks up a localized string similar to {0} secret store: {1}.
         /// </summary>
         internal static string EnvCommand_Data_SecretStore {
             get {
@@ -1242,6 +1242,15 @@ namespace NuCmd {
         internal static string SecretStoreProviderCommandBase_StoreRootMustBeProvided {
             get {
                 return ResourceManager.GetString("SecretStoreProviderCommandBase_StoreRootMustBeProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown secret store type &apos;{0}&apos;..
+        /// </summary>
+        internal static string SecretStoreProviderCommandBase_UnknownType {
+            get {
+                return ResourceManager.GetString("SecretStoreProviderCommandBase_UnknownType", resourceCulture);
             }
         }
         

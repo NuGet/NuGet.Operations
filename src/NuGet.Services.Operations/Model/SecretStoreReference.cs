@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class SecretStoreReference : EnvironmentComponentBase
+    public class SecretStoreReference : ModelComponentBase
     {
     }
 }

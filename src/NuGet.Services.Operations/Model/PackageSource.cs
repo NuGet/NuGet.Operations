@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class PackageSource : EnvironmentComponentBase
+    public class PackageSource : NamedModelComponentBase
     {
         public PackageSource() : base() { }
     }

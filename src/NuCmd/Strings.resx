@@ -299,15 +299,6 @@ Details:
   <data name="Command_UnknownEnv" xml:space="preserve">
     <value>Unknown Environment '{0}'.</value>
   </data>
-  <data name="Config_GenerateCommand_NoCert" xml:space="preserve">
-    <value>You must have a management certificate for '{0}' installed on this machine to use this command.</value>
-  </data>
-  <data name="Config_ShowCommand_Header" xml:space="preserve">
-    <value>Configuration for {0}:</value>
-  </data>
-  <data name="Config_ShowCommand_Row" xml:space="preserve">
-    <value> {0} = {1}</value>
-  </data>
   <data name="DatacenterCommandBase_NoDC" xml:space="preserve">
     <value>A datacenter must be specified using the -dc argument</value>
   </data>
@@ -396,10 +387,10 @@ Connection String: {3}</value>
     <value>Permissions in the {0} database:</value>
   </data>
   <data name="EnvCommand_Data_PackageSource" xml:space="preserve">
-    <value> {0} package source '{1}': {2}</value>
+    <value>{0} package source '{1}': {2}</value>
   </data>
   <data name="EnvCommand_Data_SecretStore" xml:space="preserve">
-    <value> {0} secret store '{1}': {2}</value>
+    <value>{0} secret store: {1}</value>
   </data>
   <data name="AzureCommandBase_RequiresToken" xml:space="preserve">
     <value>You must log in to Azure using "nucmd azure login" before running this command</value>
@@ -551,6 +542,15 @@ Connection String: {3}</value>
   <data name="Secret_StoresCommand_Stores" xml:space="preserve">
     <value>Stores available in '{0}':</value>
   </data>
+  <data name="Config_ShowCommand_ConfigEntry" xml:space="preserve">
+    <value>* {0} = {1} &lt;{2}&gt;</value>
+  </data>
+  <data name="Config_ShowCommand_DisplayingConfig" xml:space="preserve">
+    <value>Displaying configuration for '{0}' service in '{1}':</value>
+  </data>
+  <data name="Config_ShowCommand_NoSuchService" xml:space="preserve">
+    <value>Service '{0}' does not exist in '{1}'!</value>
+  </data>
   <data name="Group_azure" xml:space="preserve">
     <value>Commands for managing Windows Azure resources</value>
   </data>
@@ -571,5 +571,8 @@ Connection String: {3}</value>
   </data>
   <data name="Group_work" xml:space="preserve">
     <value>Commands for accessing the Work Service</value>
+  </data>
+  <data name="SecretStoreProviderCommandBase_UnknownType" xml:space="preserve">
+    <value>Unknown secret store type '{0}'.</value>
   </data>
 </root>

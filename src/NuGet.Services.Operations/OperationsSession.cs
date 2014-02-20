@@ -94,7 +94,7 @@ namespace NuGet.Services.Operations
                     serviceModel));
             }
 
-            var model = XmlServiceModelDeserializer.LoadServiceModel(serviceModel);
+            var model = XmlServiceModelDeserializer.LoadAppModel(serviceModel);
             var tokens = new AzureTokenManager(azureTokenStore);
             return new OperationsSession(model, tokens);
         }

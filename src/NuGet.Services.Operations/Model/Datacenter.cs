@@ -8,24 +8,22 @@ using NuGet.Services.Operations.Secrets;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class Datacenter
+    public class Datacenter : ConfigurableNode
     {
         public int Id { get; set; }
         public string Region { get; set; }
         public string AffinityGroup { get; set; }
 
-        public IDictionary<string, string> Config { get; private set; }
         public IList<Resource> Resources { get; private set; }
         public IList<Service> Services { get; private set; }
 
         public DeploymentEnvironment Environment { get; private set; }
         public string FullName { get { return Environment.FullName + "-" + Id.ToString(); } }
 
-        public Datacenter(DeploymentEnvironment environment)
+        public Datacenter(DeploymentEnvironment environment) : base(environment)
         {
             Resources = new List<Resource>();
             Services = new List<Service>();
-            Config = new Dictionary<string, string>();
 
             Environment = environment;
         }
@@ -48,16 +46,6 @@ namespace NuGet.Services.Operations.Model
         public Resource GetResource(string resource)
         {
             return Resources.FirstOrDefault(r => String.Equals(r.Name, resource, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public IDictionary<string, string> MergeConfig(DeploymentEnvironment env)
-        {
-            var dict = new Dictionary<string, string>(env.Config);
-            foreach (var setting in Config)
-            {
-                dict[setting.Key] = setting.Value;
-            }
-            return dict;
         }
 
         public Resource FindResource(string type, string name)

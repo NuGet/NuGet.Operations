@@ -25,17 +25,21 @@ namespace NuCmd.Commands
             await Console.WriteInfoLine(Strings.EnvCommand_Data_Cert,
                 environment.Subscription == null ? String.Empty : (
                     environment.Subscription.Certificate == null ? String.Empty : environment.Subscription.Certificate.Thumbprint));
-            await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenters);
-
+            
             foreach (var source in environment.PackageSources)
             {
                 await Console.WriteInfoLine(Strings.EnvCommand_Data_PackageSource, source.Type, source.Name, source.Value);
             }
 
-            foreach (var store in environment.SecretStores)
+            if (environment.SecretStore != null)
             {
-                await Console.WriteInfoLine(Strings.EnvCommand_Data_SecretStore, store.Type, store.Name, store.Value);
+                await Console.WriteInfoLine(
+                    Strings.EnvCommand_Data_SecretStore, 
+                    environment.SecretStore.Type,
+                    environment.SecretStore.Value);
             }
+
+            await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenters);
 
             foreach (var dc in environment.Datacenters)
             {
