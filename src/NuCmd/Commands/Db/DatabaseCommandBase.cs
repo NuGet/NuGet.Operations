@@ -26,7 +26,7 @@ namespace NuCmd.Commands.Db
         [ArgDescription("The Admin Password. DO NOT SPECIFY THIS WHEN RUNNING INTERACTIVELY!")]
         public string AdminPassword { get; set; }
 
-        protected SqlConnectionInfo GetSqlConnectionInfo()
+        protected async Task<SqlConnectionInfo> GetSqlConnectionInfo()
         {
             // Prep the connection string
             EnsureSession();
@@ -90,7 +90,7 @@ namespace NuCmd.Commands.Db
             if (String.IsNullOrEmpty(AdminPassword))
             {
                 // Prompt the user for the admin password and put it in a SecureString.
-                password = Console.PromptForPassword(String.Format(
+                password = await Console.PromptForPassword(String.Format(
                     CultureInfo.CurrentCulture,
                     Strings.Db_CreateUserCommand_EnterAdminPassword,
                     AdminUser));

@@ -107,10 +107,9 @@ namespace NuCmd
             return result.Value;
         }
 
-        public SecureString PromptForPassword(string prompt)
+        public async Task<SecureString> PromptForPassword(string prompt)
         {
-            Console.Write(prompt);
-            Console.Write(" ");
+            await this.WriteInfo(prompt + " ");
             ConsoleKeyInfo key;
             SecureString password = new SecureString();
             do {
@@ -131,8 +130,8 @@ namespace NuCmd
                 }
                 // Exit on Enter
             } while(key.Key != ConsoleKey.Enter);
-            Console.WriteLine();
             password.MakeReadOnly();
+            await this.WriteInfoLine();
             return password;
         }
 

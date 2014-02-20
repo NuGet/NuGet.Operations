@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NuGet.Services.Operations
 {
-    internal static class STAHelper
+    public static class STAHelper
     {
         public static Task InSTAThread(Action act)
         {

@@ -27,7 +27,7 @@ namespace NuCmd.Commands.Db
 
         protected override async Task OnExecute()
         {
-            var connInfo = GetSqlConnectionInfo();
+            var connInfo = await GetSqlConnectionInfo();
 
             // Connect to master to get the login
             SqlLogin login;

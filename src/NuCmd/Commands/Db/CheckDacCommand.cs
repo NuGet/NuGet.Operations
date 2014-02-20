@@ -23,7 +23,7 @@ namespace NuCmd.Commands.Db
 
         protected override async Task OnExecute()
         {
-            var connInfo = GetSqlConnectionInfo();
+            var connInfo = await GetSqlConnectionInfo();
             var package = DacPackage.Load(DacPac);
             var services = ConnectDac(connInfo);
 

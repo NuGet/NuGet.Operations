@@ -21,7 +21,7 @@ namespace NuCmd.Commands
 
         protected virtual Datacenter GetDatacenter(bool required)
         {
-            var env = GetEnvironment();
+            var env = GetEnvironment(required);
             if (!Datacenter.HasValue)
             {
                 if (required)

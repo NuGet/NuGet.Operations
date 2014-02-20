@@ -1030,6 +1030,150 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Secret store &apos;{0}&apos; created..
+        /// </summary>
+        internal static string Secret_CreateStoreCommand_Created {
+            get {
+                return ResourceManager.GetString("Secret_CreateStoreCommand_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret Store for {0}. Allowed users:.
+        /// </summary>
+        internal static string Secret_CreateStoreCommand_StoreHeader {
+            get {
+                return ResourceManager.GetString("Secret_CreateStoreCommand_StoreHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stores available in &apos;{0}&apos;:.
+        /// </summary>
+        internal static string Secret_StoresCommand_Stores {
+            get {
+                return ResourceManager.GetString("Secret_StoresCommand_Stores", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret &apos;{0}&apos; copied to clipboard..
+        /// </summary>
+        internal static string Secrets_GetCommand_SecretCopied {
+            get {
+                return ResourceManager.GetString("Secrets_GetCommand_SecretCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret &apos;{0}&apos; does not exist..
+        /// </summary>
+        internal static string Secrets_GetCommand_SecretDoesNotExist {
+            get {
+                return ResourceManager.GetString("Secrets_GetCommand_SecretDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret &apos;{0}&apos; = &apos;{1}&apos;..
+        /// </summary>
+        internal static string Secrets_GetCommand_SecretValue {
+            get {
+                return ResourceManager.GetString("Secrets_GetCommand_SecretValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secrets available in the store:.
+        /// </summary>
+        internal static string Secrets_ListCommand_Secrets {
+            get {
+                return ResourceManager.GetString("Secrets_ListCommand_Secrets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Audit log for &apos;{0}&apos; secret:.
+        /// </summary>
+        internal static string Secrets_LogCommand_AuditLog {
+            get {
+                return ResourceManager.GetString("Secrets_LogCommand_AuditLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the value for the &apos;{0}&apos; secret:.
+        /// </summary>
+        internal static string Secrets_SetCommand_EnterValue {
+            get {
+                return ResourceManager.GetString("Secrets_SetCommand_EnterValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An expiry time must be provided using either &quot;-ExpiresAt&quot; or &quot;-ExpiresIn&quot;.
+        /// </summary>
+        internal static string Secrets_SetCommand_ExpiryNotSet {
+            get {
+                return ResourceManager.GetString("Secrets_SetCommand_ExpiryNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing value for secret &apos;{0}&apos; that will expire at {1} (local time).
+        /// </summary>
+        internal static string Secrets_SetCommand_Writing {
+            get {
+                return ResourceManager.GetString("Secrets_SetCommand_Writing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret &apos;{0}&apos; saved..
+        /// </summary>
+        internal static string Secrets_SetCommand_Written {
+            get {
+                return ResourceManager.GetString("Secrets_SetCommand_Written", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;Name&apos; argument must be provided, or you must have a current environment specified..
+        /// </summary>
+        internal static string SecretStoreCommandBase_StoreNameRequired {
+            get {
+                return ResourceManager.GetString("SecretStoreCommandBase_StoreNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using datacenter-level default secret store..
+        /// </summary>
+        internal static string SecretStoreCommandBase_UsingDatacenterStore {
+            get {
+                return ResourceManager.GetString("SecretStoreCommandBase_UsingDatacenterStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using environment-level default secret store..
+        /// </summary>
+        internal static string SecretStoreCommandBase_UsingEnvironmentStore {
+            get {
+                return ResourceManager.GetString("SecretStoreCommandBase_UsingEnvironmentStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;StoreRoot&apos; argument must be provided, or there must be a secret store in the current environment..
+        /// </summary>
+        internal static string SecretStoreProviderCommandBase_StoreRootMustBeProvided {
+            get {
+                return ResourceManager.GetString("SecretStoreProviderCommandBase_StoreRootMustBeProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [y/N]:.
         /// </summary>
         internal static string SystemConsole_ConfirmSuffix_DefaultNo {

@@ -88,6 +88,42 @@ namespace NuGet.Services.Operations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This protector can only unprotect because it is missing the protection descriptor..
+        /// </summary>
+        internal static string DpapiNGDataProtector_ProtectorCanOnlyUnprotect {
+            get {
+                return ResourceManager.GetString("DpapiNGDataProtector_ProtectorCanOnlyUnprotect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret store is corrupt. Metadata file &apos;{0}&apos; is missing..
+        /// </summary>
+        internal static string DpapiSecretStoreProvider_MissingMetadata {
+            get {
+                return ResourceManager.GetString("DpapiSecretStoreProvider_MissingMetadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A secret store does not exist for &apos;{0}&apos;..
+        /// </summary>
+        internal static string DpapiSecretStoreProvider_StoreDoesNotExist {
+            get {
+                return ResourceManager.GetString("DpapiSecretStoreProvider_StoreDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A secret store already exists for &apos;{0}&apos;..
+        /// </summary>
+        internal static string DpapiSecretStoreProvider_StoreExists {
+            get {
+                return ResourceManager.GetString("DpapiSecretStoreProvider_StoreExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; environment variable is empty..
         /// </summary>
         internal static string OperationsSession_EnvironmentVariableIsEmpty {

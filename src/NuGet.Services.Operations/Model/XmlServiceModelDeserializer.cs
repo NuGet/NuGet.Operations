@@ -96,7 +96,7 @@ namespace NuGet.Services.Operations.Model
             var secElem = e.Element("secretStores");
             if (secElem != null)
             {
-                env.SecretStores.AddRange(secElem.Elements().Select(el => LoadComponent<SecretStore>(el)));
+                env.SecretStores.AddRange(secElem.Elements().Select(el => LoadComponent<SecretStoreReference>(el)));
             }
 
             return env;

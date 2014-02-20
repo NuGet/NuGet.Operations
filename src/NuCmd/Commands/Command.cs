@@ -84,7 +84,19 @@ namespace NuCmd.Commands
 
         protected virtual DeploymentEnvironment GetEnvironment(string provided)
         {
-            EnsureSession();
+            return GetEnvironment(provided, required: true);
+        }
+
+        protected virtual DeploymentEnvironment GetEnvironment(string provided, bool required)
+        {
+            if (Session == null)
+            {
+                if (required)
+                {
+                    throw new InvalidOperationException(Strings.Command_NoSession);
+                }
+                return null;
+            }
             DeploymentEnvironment env;
             if (String.IsNullOrEmpty(provided))
             {
@@ -101,7 +113,7 @@ namespace NuCmd.Commands
                         provided));
                 }
             }
-            if (env == null)
+            if (env == null && required)
             {
                 throw new InvalidOperationException(Strings.Command_NoEnv);
             }

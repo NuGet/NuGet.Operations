@@ -126,6 +126,18 @@
   <data name="DeploymentEnvironment_UnknownDatacenter" xml:space="preserve">
     <value>Unknown datacenter: {0}.</value>
   </data>
+  <data name="DpapiNGDataProtector_ProtectorCanOnlyUnprotect" xml:space="preserve">
+    <value>This protector can only unprotect because it is missing the protection descriptor.</value>
+  </data>
+  <data name="DpapiSecretStoreProvider_MissingMetadata" xml:space="preserve">
+    <value>Secret store is corrupt. Metadata file '{0}' is missing.</value>
+  </data>
+  <data name="DpapiSecretStoreProvider_StoreDoesNotExist" xml:space="preserve">
+    <value>A secret store does not exist for '{0}'.</value>
+  </data>
+  <data name="DpapiSecretStoreProvider_StoreExists" xml:space="preserve">
+    <value>A secret store already exists for '{0}'.</value>
+  </data>
   <data name="OperationsSession_EnvironmentVariableIsEmpty" xml:space="preserve">
     <value>The '{0}' environment variable is empty.</value>
   </data>

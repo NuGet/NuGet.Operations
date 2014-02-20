@@ -43,7 +43,7 @@ namespace NuCmd.Commands.Db
 
         protected override async Task OnExecute()
         {
-            var connInfo = GetSqlConnectionInfo();
+            var connInfo = await GetSqlConnectionInfo();
             
             // Generate the login name
             string loginName = Service.ToLowerInvariant() + "_" + DateTime.UtcNow.ToString("yyyyMMMdd");

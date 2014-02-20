@@ -225,7 +225,14 @@
     <Compile Include="Commands\Scheduler\DeleteServiceCommand.cs" />
     <Compile Include="Commands\Scheduler\SchedulerServiceCommandBase.cs" />
     <Compile Include="Commands\Scheduler\ServicesCommand.cs" />
-    <Compile Include="Commands\Secret\GetCommand.cs" />
+    <Compile Include="Commands\Secrets\CreateStoreCommand.cs" />
+    <Compile Include="Commands\Secrets\LogCommand.cs" />
+    <Compile Include="Commands\Secrets\ListCommand.cs" />
+    <Compile Include="Commands\Secrets\GetCommand.cs" />
+    <Compile Include="Commands\Secrets\InfoCommand.cs" />
+    <Compile Include="Commands\Secrets\SecretStoreCommandBase.cs" />
+    <Compile Include="Commands\Secrets\SetCommand.cs" />
+    <Compile Include="Commands\Secrets\StoresCommand.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />
     <Compile Include="Commands\Work\PurgeCommand.cs" />
     <Compile Include="Commands\Work\JobsCommand.cs" />

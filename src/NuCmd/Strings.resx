@@ -500,4 +500,52 @@ Connection String: {3}</value>
   <data name="SystemConsole_ConfirmUnknownAnswer" xml:space="preserve">
     <value>Unknown answer: '{0}'.</value>
   </data>
+  <data name="SecretStoreCommandBase_StoreNameRequired" xml:space="preserve">
+    <value>The 'Name' argument must be provided, or you must have a current environment specified.</value>
+  </data>
+  <data name="SecretStoreCommandBase_UsingDatacenterStore" xml:space="preserve">
+    <value>Using datacenter-level default secret store.</value>
+  </data>
+  <data name="SecretStoreCommandBase_UsingEnvironmentStore" xml:space="preserve">
+    <value>Using environment-level default secret store.</value>
+  </data>
+  <data name="SecretStoreProviderCommandBase_StoreRootMustBeProvided" xml:space="preserve">
+    <value>The 'StoreRoot' argument must be provided, or there must be a secret store in the current environment.</value>
+  </data>
+  <data name="Secrets_GetCommand_SecretCopied" xml:space="preserve">
+    <value>Secret '{0}' copied to clipboard.</value>
+  </data>
+  <data name="Secrets_GetCommand_SecretDoesNotExist" xml:space="preserve">
+    <value>Secret '{0}' does not exist.</value>
+  </data>
+  <data name="Secrets_GetCommand_SecretValue" xml:space="preserve">
+    <value>Secret '{0}' = '{1}'.</value>
+  </data>
+  <data name="Secrets_ListCommand_Secrets" xml:space="preserve">
+    <value>Secrets available in the store:</value>
+  </data>
+  <data name="Secrets_LogCommand_AuditLog" xml:space="preserve">
+    <value>Audit log for '{0}' secret:</value>
+  </data>
+  <data name="Secrets_SetCommand_EnterValue" xml:space="preserve">
+    <value>Enter the value for the '{0}' secret:</value>
+  </data>
+  <data name="Secrets_SetCommand_ExpiryNotSet" xml:space="preserve">
+    <value>An expiry time must be provided using either "-ExpiresAt" or "-ExpiresIn"</value>
+  </data>
+  <data name="Secrets_SetCommand_Writing" xml:space="preserve">
+    <value>Writing value for secret '{0}' that will expire at {1} (local time)</value>
+  </data>
+  <data name="Secrets_SetCommand_Written" xml:space="preserve">
+    <value>Secret '{0}' saved.</value>
+  </data>
+  <data name="Secret_CreateStoreCommand_Created" xml:space="preserve">
+    <value>Secret store '{0}' created.</value>
+  </data>
+  <data name="Secret_CreateStoreCommand_StoreHeader" xml:space="preserve">
+    <value>Secret Store for {0}. Allowed users:</value>
+  </data>
+  <data name="Secret_StoresCommand_Stores" xml:space="preserve">
+    <value>Stores available in '{0}':</value>
+  </data>
 </root>

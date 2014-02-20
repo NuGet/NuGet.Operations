@@ -15,7 +15,7 @@ namespace NuGet.Services.Operations.Model
         public Version Version { get; set; }
 
         public IList<PackageSource> PackageSources { get; private set; }
-        public IList<SecretStore> SecretStores { get; private set; }
+        public IList<SecretStoreReference> SecretStores { get; private set; }
         public IDictionary<string, string> Config { get; private set; }
         public IList<Datacenter> Datacenters { get; private set; }
 
@@ -36,7 +36,7 @@ namespace NuGet.Services.Operations.Model
             App = app;
             Datacenters = new List<Datacenter>();
             PackageSources = new List<PackageSource>();
-            SecretStores = new List<SecretStore>();
+            SecretStores = new List<SecretStoreReference>();
             Config = new Dictionary<string, string>();
         }
 
@@ -64,40 +64,6 @@ namespace NuGet.Services.Operations.Model
                     datacenter));
             }
             return dc.GetService(name);
-        }
-
-        public SecretStoreConnection ConnectToSecretStore()
-        {
-            return ConnectToSecretStore(name: null);
-        }
-
-        public SecretStoreConnection ConnectToSecretStore(string name)
-        {
-            // Find the secret store
-            SecretStore store;
-            if (String.IsNullOrEmpty(name))
-            {
-                store = SecretStores.FirstOrDefault();
-                if (store == null)
-                {
-                    throw new KeyNotFoundException(Strings.DeploymentEnvironment_NoSecretStore);
-                }
-            }
-            else
-            {
-                store = SecretStores.FirstOrDefault(s => String.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
-                if (store == null)
-                {
-                    throw new KeyNotFoundException(String.Format(
-                        CultureInfo.CurrentCulture,
-                        Strings.DeploymentEnvironment_NoSecretStoreWithName,
-                        name));
-                }
-            }
-            Debug.Assert(store != null);
-
-            // Try to open the connection
-            return SecretStoreConnection.Open(store);
         }
     }
 }

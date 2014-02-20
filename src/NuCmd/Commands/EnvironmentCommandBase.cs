@@ -13,6 +13,11 @@ namespace NuCmd.Commands
         [ArgDescription("The environment to work in (defaults to the current environment)")]
         public string Environment { get; set; }
 
+        protected virtual DeploymentEnvironment GetEnvironment(bool required)
+        {
+            return GetEnvironment(Environment, required);
+        }
+
         protected virtual DeploymentEnvironment GetEnvironment()
         {
             return GetEnvironment(Environment);
