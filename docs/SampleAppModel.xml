@@ -1,0 +1,28 @@
+<serviceModel>
+	<subscriptions>
+		<subscription id="12384def-1234-1234-1234-1234abcdef12" name="MyNuGet Gallery" />
+	</subscriptions>
+	<environments version="3">
+		<environment name="test" subscription="NuGet Development" version="3.0">
+			<datacenter id="0" region="West US" affinityGroup="mynuget-test-0">
+				<resources>
+					<sqldb name="primary">Data Source=tcp:abcdefghij.database.windows.net;Initial Catalog=mynuget-test-0;</sqldb>
+					<sqldb name="legacy">Data Source=tcp:abcdefghij.database.windows.net;Initial Catalog=MyNuGetGallery_Test;</sqldb>
+					<sqldb name="warehouse">Data Source=tcp:abcdefghij.database.windows.net;Initial Catalog=MyNuGetWarehouse_Test;</sqldb>
+
+					<azureStorage name="primary">mynugettest0</azureStorage>
+					<azureStorage name="legacy">mynugettestlegacy</azureStorage>
+					<azureStorage name="backup">mynugetdev0</azureStorage>
+				</resources>
+				<services>
+					<azureRole name="work" url="https://work.api.test.mynuget.org">mynuget-test-0-work</azureRole>
+				</services>
+			</datacenter>
+			<datacenter id="1" region="North Central US" affinityGroup="mynuget-test-1">
+				<resources>
+					<azureStorage name="primary">nugetdev1</azureStorage>
+				</resources>
+			</datacenter>
+		</environment>
+	</environments>
+</serviceModel>
