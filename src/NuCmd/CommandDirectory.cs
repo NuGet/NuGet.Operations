@@ -11,20 +11,15 @@ namespace NuCmd
 {
     public class CommandDirectory
     {
-        private static readonly IReadOnlyDictionary<string, CommandDefinition> EmptyCommands = 
-            new ReadOnlyDictionary<string, CommandDefinition>(new Dictionary<string, CommandDefinition>());
-        private static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, CommandDefinition>> EmptyGroups = 
-            new ReadOnlyDictionary<string, IReadOnlyDictionary<string, CommandDefinition>>(
-                new Dictionary<string, IReadOnlyDictionary<string, CommandDefinition>>());
-
         private List<CommandDefinition> _commands = new List<CommandDefinition>();
-        private IReadOnlyDictionary<string, IReadOnlyDictionary<string, CommandDefinition>> _groups = EmptyGroups;
-        private IReadOnlyDictionary<string, CommandDefinition> _rootCommands = EmptyCommands;
+        private IReadOnlyDictionary<string, CommandGroup> _groups = new ReadOnlyDictionary<string, CommandGroup>(new Dictionary<string, CommandGroup>());
+        private CommandGroup _rootCommands = 
+            new CommandGroup(String.Empty, String.Empty, new ReadOnlyDictionary<string, CommandDefinition>(new Dictionary<string, CommandDefinition>()));
             
 
-        public IReadOnlyDictionary<string, CommandDefinition> RootCommands { get { return _rootCommands; } }
+        public CommandGroup RootCommands { get { return _rootCommands; } }
         public IReadOnlyList<CommandDefinition> Commands { get { return _commands.AsReadOnly(); } }
-        public IReadOnlyDictionary<string, IReadOnlyDictionary<string, CommandDefinition>> Groups { get { return _groups; } }
+        public IReadOnlyDictionary<string, CommandGroup> Groups { get { return _groups; } }
 
         public CommandDirectory()
         {
@@ -38,31 +33,30 @@ namespace NuCmd
                      .Where(t => !t.IsAbstract && t.Namespace.StartsWith("NuCmd.Commands") && typeof(ICommand).IsAssignableFrom(t))
                      .Select(CommandDefinition.FromType))
                 .ToList();
-            _groups = new ReadOnlyDictionary<string, IReadOnlyDictionary<string, CommandDefinition>>(
+            _groups = new ReadOnlyDictionary<string, CommandGroup>(
                 _commands
                     .GroupBy(c => c.Group ?? String.Empty)
                     .Where(c => !String.IsNullOrEmpty(c.Key))
-                    .ToDictionary(
-                        g => g.Key,
-                        g => (IReadOnlyDictionary<string, CommandDefinition>)new ReadOnlyDictionary<string, CommandDefinition>(
-                            g.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase)),
-                        StringComparer.OrdinalIgnoreCase));
-            _rootCommands = _commands
-                .Where(c => String.IsNullOrEmpty(c.Group))
-                .ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
+                    .Select(cs => CommandGroup.Create(cs))
+                    .ToDictionary(g => g.Name));
+            _rootCommands = new CommandGroup(
+                String.Empty,
+                String.Empty,
+                _commands
+                    .Where(c => String.IsNullOrEmpty(c.Group)));
         }
 
-        public IReadOnlyDictionary<string, CommandDefinition> GetGroup(string group)
+        public CommandGroup GetGroup(string group)
         {
             if (String.IsNullOrEmpty(group))
             {
                 return RootCommands;
             }
 
-            IReadOnlyDictionary<string, CommandDefinition> commands;
+            CommandGroup commands;
             if (!Groups.TryGetValue(group, out commands))
             {
-                return EmptyCommands;
+                return CommandGroup.Empty;
             }
             return commands;
         }

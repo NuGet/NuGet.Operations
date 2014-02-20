@@ -570,6 +570,69 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Commands for managing Windows Azure resources.
+        /// </summary>
+        internal static string Group_azure {
+            get {
+                return ResourceManager.GetString("Group_azure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for managing configuration.
+        /// </summary>
+        internal static string Group_config {
+            get {
+                return ResourceManager.GetString("Group_config", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for managing SQL Databases.
+        /// </summary>
+        internal static string Group_db {
+            get {
+                return ResourceManager.GetString("Group_db", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for managing packages.
+        /// </summary>
+        internal static string Group_package {
+            get {
+                return ResourceManager.GetString("Group_package", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for managing the Windows Azure Scheduler.
+        /// </summary>
+        internal static string Group_scheduler {
+            get {
+                return ResourceManager.GetString("Group_scheduler", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for managing the Secret Store.
+        /// </summary>
+        internal static string Group_secrets {
+            get {
+                return ResourceManager.GetString("Group_secrets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for accessing the Work Service.
+        /// </summary>
+        internal static string Group_work {
+            get {
+                return ResourceManager.GetString("Group_work", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command groups. Type &apos;nucmd help &lt;group&gt;&apos; to see a list of commands available in that group.
         /// </summary>
         internal static string Help_CommandGroupsHeader {

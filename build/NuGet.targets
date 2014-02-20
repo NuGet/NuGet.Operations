@@ -38,4 +38,17 @@
 	<Target Name="Package" Condition="'$(BuildPackage)' == 'true' And '$(NuGetExePath)' != ''">
 		<Exec Command="$(BuildCommand)" />
 	</Target>
+	
+	<Target Name="MarkDependenciesForEmbedding" Condition="'$(Standalone)' == 'true'" AfterTargets="AfterResolveReferences" BeforeTargets="CoreCompile">
+		<ItemGroup>
+			<EmbeddedDependency Include="@(ReferencePath)" Condition="'%(CopyLocal)' == 'true'" />
+		</ItemGroup>
+		<Message Text="Preparing dependencies for freestanding build" Importance="high" />
+		<Message Text="EmbeddedDependency=%(EmbeddedDependency.Identity)" />
+		<ItemGroup>
+			<EmbeddedResource Include="%(EmbeddedDependency.Identity)">
+				<LogicalName>EmbeddedAssemblies.%(Filename).dll</LogicalName>
+			</EmbeddedResource>
+		</ItemGroup>
+	</Target>
 </Project>

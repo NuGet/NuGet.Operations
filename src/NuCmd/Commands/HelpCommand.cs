@@ -47,20 +47,21 @@ namespace NuCmd.Commands
         private async Task HelpFor(string groupName)
         {
             // Get the list of commands
-            IReadOnlyDictionary<string, CommandDefinition> groupCommands = null;
-            if (!String.IsNullOrEmpty(groupName) && !Directory.Groups.TryGetValue(groupName, out groupCommands))
+            CommandGroup group = null;
+            if (!String.IsNullOrEmpty(groupName) && !Directory.Groups.TryGetValue(groupName, out group))
             {
                 await Console.WriteErrorLine(Strings.Help_UnknownGroup, groupName);
             }
             else
             {
-                var commands = groupCommands == null ?
+                var commands = group == null ?
                     Directory.RootCommands.Values.ToList() :
-                    groupCommands.Values.ToList();
+                    group.Values.ToList();
 
                 // Calculate max size of a command or group for alignment purposes
-                var maxLength = commands.Max(
-                    c => Math.Max((c.Group ?? String.Empty).Length, c.Name.Length));
+                var maxLength = Math.Max(
+                    group == null ? Directory.Groups.Max(g => g.Value.Name.Length) : 0,
+                    commands.Max(c => c.Name.Length));
 
                 if (String.IsNullOrEmpty(groupName))
                 {
@@ -69,9 +70,9 @@ namespace NuCmd.Commands
                     {
                         await Console.WriteHelpLine();
                         await Console.WriteHelpLine(Strings.Help_CommandGroupsHeader);
-                        foreach (var group in Directory.Groups)
+                        foreach (var g in Directory.Groups)
                         {
-                            await Console.WriteHelpLine("    {0}  {1}", group.Key.PadRight(maxLength), "TODO: group descriptions");
+                            await Console.WriteHelpLine("    {0}  {1}", g.Value.Name.PadRight(maxLength), g.Value.Description);
                         }
                     }
                 }

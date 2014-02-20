@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +31,9 @@ namespace NuCmd
 
         static void Main(string[] args)
         {
+            // Configure embedded assembly-based resolution
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
 #if DEBUG
             if (args.Length > 0 && args[0] == "dbg")
             {
@@ -82,9 +87,9 @@ namespace NuCmd
             //  NuCmd.Commands.<Group>.<CommandName>Command
 
             // Find the group being referenced
-            IReadOnlyDictionary<string, CommandDefinition> groupMembers;
+            CommandGroup group;
             string commandName;
-            if (_directory.Groups.TryGetValue(groupOrRootCommand, out groupMembers))
+            if (_directory.Groups.TryGetValue(groupOrRootCommand, out group))
             {
                 commandName = _args.FirstOrDefault();
                 _args = _args.Skip(1);
@@ -93,13 +98,13 @@ namespace NuCmd
             {
                 commandName = groupOrRootCommand;
                 groupOrRootCommand = null;
-                groupMembers = _directory.RootCommands;
+                group = _directory.RootCommands;
             }
 
             commandName = commandName ?? String.Empty;
 
             CommandDefinition command;
-            if (!groupMembers.TryGetValue(commandName, out command))
+            if (!group.TryGetValue(commandName, out command))
             {
                 if (String.IsNullOrEmpty(groupOrRootCommand))
                 {
@@ -180,6 +185,26 @@ namespace NuCmd
         private async Task WriteUsage(string error)
         {
             await _console.WriteErrorLine(error);
+        }
+
+        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            // Look for a resource
+            var asmName = new AssemblyName(args.Name);
+            var strm = typeof(Program).Assembly.GetManifestResourceStream(
+                "EmbeddedAssemblies." + asmName.Name + ".dll");
+            if (strm == null)
+            {
+                return null;
+            }
+
+            // Load it and return it
+            using (strm)
+            using (var ms = new MemoryStream())
+            {
+                strm.CopyTo(ms);
+                return Assembly.Load(ms.ToArray());
+            }
         }
     }
 }

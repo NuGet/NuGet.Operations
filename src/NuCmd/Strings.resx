@@ -551,4 +551,25 @@ Connection String: {3}</value>
   <data name="Secret_StoresCommand_Stores" xml:space="preserve">
     <value>Stores available in '{0}':</value>
   </data>
+  <data name="Group_azure" xml:space="preserve">
+    <value>Commands for managing Windows Azure resources</value>
+  </data>
+  <data name="Group_config" xml:space="preserve">
+    <value>Commands for managing configuration</value>
+  </data>
+  <data name="Group_db" xml:space="preserve">
+    <value>Commands for managing SQL Databases</value>
+  </data>
+  <data name="Group_package" xml:space="preserve">
+    <value>Commands for managing packages</value>
+  </data>
+  <data name="Group_scheduler" xml:space="preserve">
+    <value>Commands for managing the Windows Azure Scheduler</value>
+  </data>
+  <data name="Group_secrets" xml:space="preserve">
+    <value>Commands for managing the Secret Store</value>
+  </data>
+  <data name="Group_work" xml:space="preserve">
+    <value>Commands for accessing the Work Service</value>
+  </data>
 </root>
