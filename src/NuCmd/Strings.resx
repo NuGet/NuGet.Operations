@@ -534,7 +534,10 @@ Connection String: {3}</value>
     <value>An expiry time must be provided using either "-ExpiresAt" or "-ExpiresIn"</value>
   </data>
   <data name="Secrets_SetCommand_Writing" xml:space="preserve">
-    <value>Writing value for secret '{0}' that will expire at {1} (local time)</value>
+    <value>Writing value for secret '{0}' that will never expire</value>
+  </data>
+  <data name="Secrets_SetCommand_WritingWithExpiry" xml:space="preserve">
+    <value>Writing value for secret '{0}' that will expire at {0} (local time)</value>
   </data>
   <data name="Secrets_SetCommand_Written" xml:space="preserve">
     <value>Secret '{0}' saved.</value>

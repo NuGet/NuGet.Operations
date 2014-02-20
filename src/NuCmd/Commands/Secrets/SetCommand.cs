@@ -35,6 +35,10 @@ namespace NuCmd.Commands.Secrets
         [ArgDescription("Sets the expiry date of the secret to the provided date, in local time.")]
         public DateTime? ExpiresAt { get; set; }
 
+        [ArgShortcut("t")]
+        [ArgDescription("The type of the secret. Defaults to 'password'")]
+        public SecretType? Type { get; set; }
+
         protected override async Task OnExecute()
         {
             // Open the store
@@ -59,16 +63,28 @@ namespace NuCmd.Commands.Secrets
                     Marshal.ZeroFreeGlobalAllocUnicode(p);
                 }
             }
-            
+
             if (ExpiresIn != null)
             {
                 ExpiresAt = DateTime.Now + ExpiresIn.Value;
             }
+            if (ExpiresAt != null)
+            {
+                ExpiresAt = ExpiresAt.Value.ToUniversalTime();
+            }
 
             // Create the secret to set
-            var secret = new Secret(Key, Value, DateTime.UtcNow, ExpiresAt.Value.ToUniversalTime());
+            var secret = new Secret(Key, Value, DateTime.UtcNow, ExpiresAt, Type ?? SecretType.Password);
 
-            await Console.WriteInfoLine(Strings.Secrets_SetCommand_Writing, Key, ExpiresAt.Value);
+            if (ExpiresAt == null)
+            {
+                await Console.WriteInfoLine(Strings.Secrets_SetCommand_Writing, Key);
+            }
+            else
+            {
+                await Console.WriteInfoLine(Strings.Secrets_SetCommand_WritingWithExpiry, Key, ExpiresAt.Value);
+            }
+
             if (!WhatIf)
             {
                 await store.Write(secret, "nucmd set");

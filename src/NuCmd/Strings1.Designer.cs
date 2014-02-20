@@ -1120,11 +1120,20 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Writing value for secret &apos;{0}&apos; that will expire at {1} (local time).
+        ///   Looks up a localized string similar to Writing value for secret &apos;{0}&apos; that will never expire.
         /// </summary>
         internal static string Secrets_SetCommand_Writing {
             get {
                 return ResourceManager.GetString("Secrets_SetCommand_Writing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing value for secret &apos;{0}&apos; that will expire at {0} (local time).
+        /// </summary>
+        internal static string Secrets_SetCommand_WritingWithExpiry {
+            get {
+                return ResourceManager.GetString("Secrets_SetCommand_WritingWithExpiry", resourceCulture);
             }
         }
         

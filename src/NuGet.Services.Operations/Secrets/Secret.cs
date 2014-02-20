@@ -5,6 +5,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace NuGet.Services.Operations.Secrets
 {
@@ -17,21 +18,26 @@ namespace NuGet.Services.Operations.Secrets
         public DateTime CreatedUtc { get; private set; }
         public DateTime? ExpiryUtc { get; private set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SecretType Type { get; private set; }
+
         public IReadOnlyList<SecretAuditEntry> AuditLog { get; private set; }
 
         [JsonConstructor]
-        internal Secret(string key, string value, DateTime createdUtc, DateTime? expiryUtc, IEnumerable<SecretAuditEntry> auditLog)
+        internal Secret(string key, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type, IEnumerable<SecretAuditEntry> auditLog)
         {
             Key = key;
             Value = value;
             CreatedUtc = createdUtc;
             ExpiryUtc = expiryUtc;
+            Type = type;
 
             _auditLog = auditLog.ToList();
             AuditLog = _auditLog.AsReadOnly();
         }
-        
-        public Secret(string key, string value, DateTime createdUtc, DateTime? expiryUtc) : this(key, value, createdUtc, expiryUtc, Enumerable.Empty<SecretAuditEntry>())
+
+        public Secret(string key, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type)
+            : this(key, value, createdUtc, expiryUtc, type, Enumerable.Empty<SecretAuditEntry>())
         {
         }
 
@@ -43,7 +49,13 @@ namespace NuGet.Services.Operations.Secrets
         internal void Update(Secret secret)
         {
             Value = secret.Value;
+            Type = secret.Type;
             ExpiryUtc = secret.ExpiryUtc;
         }
+    }
+
+    public enum SecretType
+    {
+        Password
     }
 }
