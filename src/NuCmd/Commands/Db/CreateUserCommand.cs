@@ -139,7 +139,10 @@ namespace NuCmd.Commands.Db
                 var loginConnStr = new SqlConnectionStringBuilder(connInfo.ConnectionString.ConnectionString)
                 {
                     UserID = loginName,
-                    Password = loginPassword
+                    Password = loginPassword,
+                    ConnectTimeout = 30,
+                    Encrypt = true,
+                    IntegratedSecurity = false
                 };
 
                 if (Clip)
