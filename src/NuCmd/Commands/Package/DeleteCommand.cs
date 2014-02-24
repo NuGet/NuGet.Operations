@@ -471,7 +471,7 @@ namespace NuCmd.Commands.Package
             }
 
             byte[] data = Encoding.UTF8.GetBytes(
-                await JsonFormat.SerializeAsync(entry));
+                JsonFormat.Serialize(entry));
             await blob.UploadFromByteArrayAsync(data, 0, data.Length);
         }
     }

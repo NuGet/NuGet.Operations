@@ -88,7 +88,7 @@
     </Reference>
     <Reference Include="NuGet.Services.Platform.Client, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-alpha-8\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-rel\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

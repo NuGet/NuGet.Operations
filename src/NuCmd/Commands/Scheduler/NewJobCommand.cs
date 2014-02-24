@@ -101,7 +101,7 @@ namespace NuCmd.Commands.Scheduler
                         JobInstanceName = InstanceName,
                         UnlessAlreadyRunning = Singleton
                     };
-                var body = await JsonFormat.SerializeAsync(bodyValue);
+                var body = JsonFormat.Serialize(bodyValue);
 
                 var request = new JobCreateOrUpdateParameters()
                 {

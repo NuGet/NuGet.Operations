@@ -78,7 +78,7 @@ namespace NuGet.Services.Operations
             }
             string path = Path.Combine(dir, token.SubscriptionId + ".dat");
 
-            string content = await JsonFormat.SerializeAsync(token);
+            string content = JsonFormat.Serialize(token);
             var protectedData = Convert.ToBase64String(
                 ProtectedData.Protect(
                     Encoding.UTF8.GetBytes(content),
