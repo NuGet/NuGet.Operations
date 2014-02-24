@@ -14,6 +14,7 @@ using Dapper;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Management.Compute.Models;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using NuCmd.Models;
 using NuGet;
 using NuGet.Services;
@@ -65,9 +66,11 @@ namespace NuCmd.Commands.Package
             }
 
             // Get Datacenter 0
-            var dc = GetDatacenter(0);
-
-            await LoadDefaultsFromAzure(dc);
+            var dc = GetDatacenter(0, required: false);
+            if (dc != null)
+            {
+                await LoadDefaultsFromAzure(dc);
+            }
 
             StorageAccount = CloudStorageAccount.Parse(StorageConnectionString);
 
@@ -398,6 +401,7 @@ namespace NuCmd.Commands.Package
                 id + "." + version + ".nupkg");
             
             var backupContainer = client.GetContainerReference("ng-backups");
+            await backupContainer.CreateIfNotExistsAsync();
             var backupBlob = backupContainer.GetBlockBlobReference(
                 "packages/" + id + "/" + version + "/" + hash + ".nupkg");
 
@@ -438,7 +442,10 @@ namespace NuCmd.Commands.Package
             await Console.WriteInfoLine(Strings.Package_DeleteCommand_DeletingPackageBlob, blob.Uri.AbsoluteUri);
             if (!WhatIf)
             {
-                await blob.DeleteIfExistsAsync();
+                await blob.DeleteIfExistsAsync(
+                    DeleteSnapshotsOption.IncludeSnapshots, 
+                    AccessCondition.GenerateEmptyCondition(), 
+                    new BlobRequestOptions(), new OperationContext());
             }
         }
 

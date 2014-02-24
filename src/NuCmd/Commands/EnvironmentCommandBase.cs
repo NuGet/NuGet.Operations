@@ -25,7 +25,17 @@ namespace NuCmd.Commands
 
         protected virtual Datacenter GetDatacenter(int datacenter)
         {
-            return GetDatacenter(GetEnvironment(), datacenter);
+            return GetDatacenter(datacenter, required: true);
+        }
+
+        protected virtual Datacenter GetDatacenter(int datacenter, bool required)
+        {
+            var env = GetEnvironment(required);
+            if (env == null)
+            {
+                return null;
+            }
+            return GetDatacenter(env, datacenter, required);
         }
     }
 }

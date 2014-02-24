@@ -122,8 +122,13 @@ namespace NuCmd.Commands
 
         protected virtual Datacenter GetDatacenter(DeploymentEnvironment environment, int datacenter)
         {
+            return GetDatacenter(environment, datacenter, required: true);
+        }
+
+        protected virtual Datacenter GetDatacenter(DeploymentEnvironment environment, int datacenter, bool required)
+        {
             var dc = environment.Datacenters.FirstOrDefault(d => d.Id == datacenter);
-            if (dc == null)
+            if (dc == null && required)
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
