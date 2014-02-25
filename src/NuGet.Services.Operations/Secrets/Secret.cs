@@ -13,20 +13,20 @@ namespace NuGet.Services.Operations.Secrets
     {
         private List<SecretAuditEntry> _auditLog;
 
-        public string Key { get; private set; }
+        public SecretName Name { get; private set; }
         public string Value { get; private set; }
         public DateTime CreatedUtc { get; private set; }
         public DateTime? ExpiryUtc { get; private set; }
-
+        
         [JsonConverter(typeof(StringEnumConverter))]
         public SecretType Type { get; private set; }
 
         public IReadOnlyList<SecretAuditEntry> AuditLog { get; private set; }
 
         [JsonConstructor]
-        internal Secret(string key, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type, IEnumerable<SecretAuditEntry> auditLog)
+        internal Secret(SecretName name, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type, IEnumerable<SecretAuditEntry> auditLog)
         {
-            Key = key;
+            Name = name;
             Value = value;
             CreatedUtc = createdUtc;
             ExpiryUtc = expiryUtc;
@@ -36,8 +36,8 @@ namespace NuGet.Services.Operations.Secrets
             AuditLog = _auditLog.AsReadOnly();
         }
 
-        public Secret(string key, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type)
-            : this(key, value, createdUtc, expiryUtc, type, Enumerable.Empty<SecretAuditEntry>())
+        public Secret(SecretName name, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type)
+            : this(name, value, createdUtc, expiryUtc, type, Enumerable.Empty<SecretAuditEntry>())
         {
         }
 

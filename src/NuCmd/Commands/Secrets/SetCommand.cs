@@ -74,7 +74,7 @@ namespace NuCmd.Commands.Secrets
             }
 
             // Create the secret to set
-            var secret = new Secret(Key, Value, DateTime.UtcNow, ExpiresAt, Type ?? SecretType.Password);
+            var secret = new Secret(new SecretName(Key, Datacenter), Value, DateTime.UtcNow, ExpiresAt, Type ?? SecretType.Password);
 
             if (ExpiresAt == null)
             {

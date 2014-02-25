@@ -19,8 +19,9 @@ namespace NuGet.Services.Operations.Secrets
         public string MachineIP { get; private set; }
         public DateTime TimestampUtc { get; private set; }
         public SecretAuditAction Action { get; private set; }
+        public string OldValue { get; private set; }
 
-        public SecretAuditEntry(string user, string clientOperation, string processName, string machineName, string machineIP, DateTime timestampUtc, SecretAuditAction action)
+        public SecretAuditEntry(string user, string clientOperation, string processName, string machineName, string machineIP, DateTime timestampUtc, SecretAuditAction action, string oldValue)
         {
             TimestampUtc = timestampUtc;
             ClientOperation = clientOperation;
@@ -29,10 +30,22 @@ namespace NuGet.Services.Operations.Secrets
             Action = action;
             MachineName = machineName;
             MachineIP = machineIP;
+            OldValue = oldValue;
         }
 
-        public static async Task<SecretAuditEntry> CreateForLocalUser(string clientOperation, SecretAuditAction action)
+        public static Task<SecretAuditEntry> CreateForLocalUser(string clientOperation, SecretAuditAction action)
         {
+            return CreateForLocalUser(clientOperation, action, oldValue: null);
+        }
+
+        public static async Task<SecretAuditEntry> CreateForLocalUser(string clientOperation, SecretAuditAction action, string oldValue)
+        {
+            Debug.Assert(action != SecretAuditAction.Changed || !String.IsNullOrEmpty(oldValue), Strings.SecretAuditEntry_OldValueRequired);
+            if (action == SecretAuditAction.Changed && String.IsNullOrEmpty(oldValue))
+            {
+                throw new ArgumentException(Strings.SecretAuditEntry_OldValueRequired, "oldValue");
+            }
+
             // Get the current IP address
             string ipAddress = null;
             if (NetworkInterface.GetIsNetworkAvailable())
@@ -54,7 +67,8 @@ namespace NuGet.Services.Operations.Secrets
                 Environment.MachineName,
                 ipAddress,
                 DateTime.UtcNow,
-                action);
+                action,
+                oldValue);
         }
 
         private static string TryGetAddress(IEnumerable<IPAddress> addrs, AddressFamily family)
@@ -67,6 +81,8 @@ namespace NuGet.Services.Operations.Secrets
     {
         Created,
         Changed,
-        Retrieved
+        Retrieved,
+        Deleted,
+        Restored
     }
 }

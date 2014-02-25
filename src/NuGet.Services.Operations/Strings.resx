@@ -150,6 +150,12 @@
   <data name="OperationsSession_UnknownEnvironment" xml:space="preserve">
     <value>Unknown environment: '{0}'.</value>
   </data>
+  <data name="SecretAuditEntry_OldValueRequired" xml:space="preserve">
+    <value>'oldValue' must be specified when recording a change.</value>
+  </data>
+  <data name="SecretKey_Invalid" xml:space="preserve">
+    <value>Invalid key. Expected "&lt;datacenter&gt;:&lt;base64-encoded-name&gt;"</value>
+  </data>
   <data name="SecretStoreConnection_UnknownSecretStoreType" xml:space="preserve">
     <value>Unknown secret store type: '{0}'.</value>
   </data>

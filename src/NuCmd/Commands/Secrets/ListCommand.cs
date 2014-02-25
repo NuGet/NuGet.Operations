@@ -13,6 +13,10 @@ namespace NuCmd.Commands.Secrets
     [Description("Retrieves a list of available secrets in the store")]
     public class ListCommand : SecretStoreCommandBase
     {
+        [ArgShortcut("a")]
+        [ArgDescription("Set this switch to include deleted secrets in the list")]
+        public bool IncludeDeleted { get; set; }
+
         protected override async Task OnExecute()
         {
             // Open the store
@@ -20,10 +24,18 @@ namespace NuCmd.Commands.Secrets
 
             // Read the secret
             await Console.WriteInfoLine(Strings.Secrets_ListCommand_Secrets);
-            foreach (var name in store.List())
-            {
-                await Console.WriteInfoLine("* " + name);
-            }
+            await Console.WriteTable(store.List(IncludeDeleted), i => 
+                IncludeDeleted ?
+                (object)new
+                {
+                    Name = i.Name.Name,
+                    Datacenter = i.Name.Datacenter,
+                    Deleted = i.Deleted
+                } : (object)new
+                {
+                    Name = i.Name.Name,
+                    Datacenter = i.Name.Datacenter
+                });
         }
     }
 }

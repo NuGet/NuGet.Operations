@@ -17,31 +17,87 @@ namespace NuGet.Services.Operations.Secrets
         private string _protectionDescriptor;
 
         public string StoreDirectory { get; private set; }
-        
-        public DpapiSecretStore(string storeDirectory, SecretStoreMetadata metadata) : base(metadata)
+
+        public DpapiSecretStore(string storeDirectory, SecretStoreMetadata metadata)
+            : base(metadata)
         {
             StoreDirectory = storeDirectory;
 
             _protectionDescriptor = DpapiSecretStoreProvider.GetProtectionDescriptorString(metadata.AllowedUsers);
         }
 
-        public override IEnumerable<string> List()
+        public override IEnumerable<SecretListItem> List(bool includeDeleted)
         {
-            return Directory.EnumerateFiles(StoreDirectory, "*.pjson")
-                .Select(s => Path.GetFileNameWithoutExtension(s))
-                .Where(s => !String.Equals(s, "metadata.v1", StringComparison.OrdinalIgnoreCase))
-                .Select(s => Encoding.UTF8.GetString(Convert.FromBase64String(s)));
+            var files = Directory.EnumerateFiles(StoreDirectory, "*.pjson").Select(s => Tuple.Create(s, false));
+            if (includeDeleted)
+            {
+                files = Enumerable.Concat(
+                    files,
+                    Directory.EnumerateFiles(StoreDirectory, "*.del").Select(s => Tuple.Create(s, true)));
+            }
+
+            return files
+                .Select(t => Tuple.Create(Path.GetFileNameWithoutExtension(t.Item1), t.Item2))
+                .Where(t => !String.Equals(t.Item1, "metadata.v1", StringComparison.OrdinalIgnoreCase))
+                .Select(t => new SecretListItem() {
+                    Name = SecretName.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(t.Item1))),
+                    Deleted = t.Item2
+                });
+        }
+
+        public override async Task<bool> Delete(SecretName name, string clientOperation)
+        {
+            // Write an audit record
+            var fileName = GetFileName(name);
+            var existingSecret = await UnauditedReadSecret(name, fileName);
+            if (existingSecret == null)
+            {
+                return false;
+            }
+            existingSecret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Deleted));
+            await UnauditedWriteSecret(existingSecret);
+
+            // Change the file extension
+            File.Move(fileName, Path.ChangeExtension(fileName, ".del"));
+            return true;
+        }
+
+        public override async Task<bool> Undelete(SecretName name, string clientOperation)
+        {
+            // Locate the deleted file
+            var fileName = GetFileName(name);
+            var deletedName = Path.ChangeExtension(fileName, ".del");
+            var deletedSecret = await UnauditedReadSecret(name, deletedName);
+            if (deletedSecret == null)
+            {
+                return false;
+            }
+
+            // Write it back to a normal secret file
+            deletedSecret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Restored));
+            await UnauditedWriteSecret(deletedSecret);
+
+            // Delete the deleted secret :)
+            File.Delete(deletedName);
+            return true;
         }
 
         public override async Task Write(Secret secret, string clientOperation)
         {
             // Try to read the secret
-            var existingSecret = await UnauditedReadSecret(secret.Key);
+            var existingSecret = await UnauditedReadSecret(secret.Name, GetFileName(secret.Name));
+            
+            // Try to undelete the secret, in case a deleted form exists
+            if (existingSecret == null && await Undelete(secret.Name, clientOperation))
+            {
+                existingSecret = await UnauditedReadSecret(secret.Name, GetFileName(secret.Name));
+            }
+
             if (existingSecret != null)
             {
                 // Copy the new data and add audit records
+                existingSecret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Changed, existingSecret.Value));
                 existingSecret.Update(secret);
-                existingSecret.AddAuditEntry(await SecretAuditEntry.CreateForLocalUser(clientOperation, SecretAuditAction.Changed));
 
                 // Now resave the existing secret instead
                 secret = existingSecret;
@@ -56,10 +112,18 @@ namespace NuGet.Services.Operations.Secrets
             await UnauditedWriteSecret(secret);
         }
 
-        public override async Task<IEnumerable<SecretAuditEntry>> ReadAuditLog(string key)
+        public override async Task<IEnumerable<SecretAuditEntry>> ReadAuditLog(SecretName name)
         {
             // Read the secret
-            var secret = await UnauditedReadSecret(key);
+            var fileName = GetFileName(name);
+            var secret = await UnauditedReadSecret(name, fileName);
+            if (secret == null)
+            {
+                // Try to read the deleted log
+                secret = await UnauditedReadSecret(name, Path.ChangeExtension(fileName, ".del"));
+            }
+
+            // Still null?
             if (secret == null)
             {
                 return Enumerable.Empty<SecretAuditEntry>();
@@ -69,10 +133,10 @@ namespace NuGet.Services.Operations.Secrets
             return new List<SecretAuditEntry>(secret.AuditLog);
         }
 
-        public override async Task<Secret> Read(string key, string clientOperation)
+        public override async Task<Secret> Read(SecretName name, string clientOperation)
         {
             // Read the secret
-            var secret = await UnauditedReadSecret(key);
+            var secret = await UnauditedReadSecret(name, GetFileName(name));
             if (secret == null)
             {
                 return null;
@@ -86,45 +150,42 @@ namespace NuGet.Services.Operations.Secrets
             return secret;
         }
 
-        private async Task<Secret> UnauditedReadSecret(string key)
+        private async Task<Secret> UnauditedReadSecret(SecretName name, string fileName)
         {
-            // Get the name of the file
-            var secretFile = GetFileName(key);
-
-            if (!File.Exists(secretFile))
+            if (!File.Exists(fileName))
             {
                 return null;
             }
 
             // Read the file
-            var protector = CreateProtector(key);
-            return JsonFormat.Deserialize<Secret>(await DpapiSecretStoreProvider.ReadSecretFile(secretFile, protector));
+            var protector = CreateProtector(name);
+            return JsonFormat.Deserialize<Secret>(await DpapiSecretStoreProvider.ReadSecretFile(fileName, protector));
         }
 
         private Task UnauditedWriteSecret(Secret secret)
         {
             // Generate the name of the file
-            string secretFile = GetFileName(secret.Key);
-            
+            string secretFile = GetFileName(secret.Name);
+
             // Write the file
-            var protector = CreateProtector(secret.Key);
+            var protector = CreateProtector(secret.Name);
             return DpapiSecretStoreProvider.WriteSecretFile(secretFile, JsonFormat.Serialize(secret), protector);
         }
 
-        private string GetFileName(string key)
+        private string GetFileName(SecretName name)
         {
-            string fileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(key)) + ".pjson";
+            string fileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(name.ToString())) + ".pjson";
             string secretFile = Path.Combine(StoreDirectory, fileName);
             return secretFile;
         }
 
-        private DataProtector CreateProtector(string key)
+        private DataProtector CreateProtector(SecretName name)
         {
             return new DpapiNGDataProtector(
                 _protectionDescriptor,
                 DpapiSecretStoreProvider.ApplicationName,
                 SecretStorePurpose,
-                new[] { key });
+                new[] { name.ToString() });
         }
     }
 }

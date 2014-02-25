@@ -144,6 +144,8 @@
     <Compile Include="Secrets\DpapiSecretStoreProvider.cs" />
     <Compile Include="Secrets\Secret.cs" />
     <Compile Include="Secrets\SecretAuditEntry.cs" />
+    <Compile Include="Secrets\SecretListItem.cs" />
+    <Compile Include="Secrets\SecretName.cs" />
     <Compile Include="Secrets\SecretStore.cs" />
     <Compile Include="Secrets\SecretStoreMetadata.cs" />
     <Compile Include="Secrets\SecretStoreProvider.cs" />

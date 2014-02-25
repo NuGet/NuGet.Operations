@@ -58,24 +58,20 @@ namespace NuCmd.Commands.Secrets
 
             if (String.IsNullOrEmpty(Name))
             {
-                if (Datacenter.HasValue)
-                {
-                    await Console.WriteInfoLine(Strings.SecretStoreCommandBase_UsingDatacenterStore);
-                    var dc = GetDatacenter();
-                    Name = SecretStoreProvider.GetDatacenterStoreName(dc.FullName);
-                }
-                else
-                {
-                    await Console.WriteInfoLine(Strings.SecretStoreCommandBase_UsingEnvironmentStore);
-                    var env = GetEnvironment();
-                    Name = SecretStoreProvider.GetEnvironmentStoreName(env.FullName);
-                }
+                await Console.WriteInfoLine(Strings.SecretStoreCommandBase_UsingEnvironmentStore);
+                var env = GetEnvironment();
+                Name = SecretStoreProvider.GetEnvironmentStoreName(env.FullName);
             }
 
             if (String.IsNullOrEmpty(Name))
             {
                 await Console.WriteErrorLine(Strings.SecretStoreCommandBase_StoreNameRequired);
                 throw new OperationCanceledException();
+            }
+
+            if (Datacenter.HasValue)
+            {
+                await Console.WriteInfoLine(Strings.SecretStoreCommandBase_DatacenterScope, Datacenter.Value);
             }
         }
 

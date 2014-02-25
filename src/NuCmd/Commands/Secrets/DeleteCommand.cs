@@ -10,13 +10,13 @@ using PowerArgs;
 
 namespace NuCmd.Commands.Secrets
 {
-    [Description("Retrieves the audit log for a secret from the secret store")]
-    public class LogCommand : SecretStoreCommandBase
+    [Description("Deletes a value from the secret store")]
+    public class DeleteCommand : SecretStoreCommandBase
     {
         [ArgRequired]
         [ArgPosition(0)]
         [ArgShortcut("k")]
-        [ArgDescription("The name of the key to get")]
+        [ArgDescription("The name of the key to delete")]
         public string Key { get; set; }
 
         protected override async Task OnExecute()
@@ -24,12 +24,15 @@ namespace NuCmd.Commands.Secrets
             // Open the store
             var store = await OpenSecretStore();
 
-            // Read the secret
-            var log = await store.ReadAuditLog(Key, Datacenter);
-
-            // Write the log
-            await Console.WriteInfoLine(Strings.Secrets_LogCommand_AuditLog, Key);
-            await Console.WriteTable(log.OrderByDescending(e => e.TimestampUtc));
+            // Delete the secret
+            if (await store.Delete(Key, Datacenter, "nucmd delete"))
+            {
+                await Console.WriteInfoLine(Strings.Secrets_DeleteCommand_Deleted, Key);
+            }
+            else
+            {
+                await Console.WriteInfoLine(Strings.Secrets_DeleteCommand_NoSecret, Key);
+            }
         }
     }
 }

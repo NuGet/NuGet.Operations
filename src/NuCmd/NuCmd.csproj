@@ -223,6 +223,8 @@
     <Compile Include="Commands\Scheduler\SchedulerServiceCommandBase.cs" />
     <Compile Include="Commands\Scheduler\ServicesCommand.cs" />
     <Compile Include="Commands\Secrets\CreateStoreCommand.cs" />
+    <Compile Include="Commands\Secrets\UndeleteCommand.cs" />
+    <Compile Include="Commands\Secrets\DeleteCommand.cs" />
     <Compile Include="Commands\Secrets\LogCommand.cs" />
     <Compile Include="Commands\Secrets\ListCommand.cs" />
     <Compile Include="Commands\Secrets\GetCommand.cs" />

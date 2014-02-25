@@ -494,8 +494,8 @@ Connection String: {3}</value>
   <data name="SecretStoreCommandBase_StoreNameRequired" xml:space="preserve">
     <value>The 'Name' argument must be provided, or you must have a current environment specified.</value>
   </data>
-  <data name="SecretStoreCommandBase_UsingDatacenterStore" xml:space="preserve">
-    <value>Using datacenter-level default secret store.</value>
+  <data name="SecretStoreCommandBase_DatacenterScope" xml:space="preserve">
+    <value>Scoping to datacenter {0}</value>
   </data>
   <data name="SecretStoreCommandBase_UsingEnvironmentStore" xml:space="preserve">
     <value>Using environment-level default secret store.</value>
@@ -574,5 +574,17 @@ Connection String: {3}</value>
   </data>
   <data name="SecretStoreProviderCommandBase_UnknownType" xml:space="preserve">
     <value>Unknown secret store type '{0}'.</value>
+  </data>
+  <data name="Secrets_DeleteCommand_Deleted" xml:space="preserve">
+    <value>Deleted secret '{0}'</value>
+  </data>
+  <data name="Secrets_DeleteCommand_NoSecret" xml:space="preserve">
+    <value>Could not find secret '{0}'</value>
+  </data>
+  <data name="Secrets_UndeleteCommand_NoSecret" xml:space="preserve">
+    <value>Could not find secret '{0}'</value>
+  </data>
+  <data name="Secrets_UndeleteCommand_Restored" xml:space="preserve">
+    <value>Restored secret '{0}'</value>
   </data>
 </root>

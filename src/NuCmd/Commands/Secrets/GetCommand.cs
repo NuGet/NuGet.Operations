@@ -29,7 +29,7 @@ namespace NuCmd.Commands.Secrets
             var store = await OpenSecretStore();
 
             // Read the secret
-            var secret = await store.Read(Key, "nucmd get");
+            var secret = await store.Read(Key, Datacenter, "nucmd get");
 
             // Write the value
             if (secret == null)

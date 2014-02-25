@@ -160,6 +160,24 @@ namespace NuGet.Services.Operations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;oldValue&apos; must be specified when recording a change..
+        /// </summary>
+        internal static string SecretAuditEntry_OldValueRequired {
+            get {
+                return ResourceManager.GetString("SecretAuditEntry_OldValueRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid key. Expected &quot;&lt;datacenter&gt;:&lt;base64-encoded-name&gt;&quot;.
+        /// </summary>
+        internal static string SecretKey_Invalid {
+            get {
+                return ResourceManager.GetString("SecretKey_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown secret store type: &apos;{0}&apos;..
         /// </summary>
         internal static string SecretStoreConnection_UnknownSecretStoreType {

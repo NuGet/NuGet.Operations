@@ -1120,6 +1120,24 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleted secret &apos;{0}&apos;.
+        /// </summary>
+        internal static string Secrets_DeleteCommand_Deleted {
+            get {
+                return ResourceManager.GetString("Secrets_DeleteCommand_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find secret &apos;{0}&apos;.
+        /// </summary>
+        internal static string Secrets_DeleteCommand_NoSecret {
+            get {
+                return ResourceManager.GetString("Secrets_DeleteCommand_NoSecret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Secret &apos;{0}&apos; copied to clipboard..
         /// </summary>
         internal static string Secrets_GetCommand_SecretCopied {
@@ -1210,20 +1228,38 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find secret &apos;{0}&apos;.
+        /// </summary>
+        internal static string Secrets_UndeleteCommand_NoSecret {
+            get {
+                return ResourceManager.GetString("Secrets_UndeleteCommand_NoSecret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restored secret &apos;{0}&apos;.
+        /// </summary>
+        internal static string Secrets_UndeleteCommand_Restored {
+            get {
+                return ResourceManager.GetString("Secrets_UndeleteCommand_Restored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scoping to datacenter {0}.
+        /// </summary>
+        internal static string SecretStoreCommandBase_DatacenterScope {
+            get {
+                return ResourceManager.GetString("SecretStoreCommandBase_DatacenterScope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;Name&apos; argument must be provided, or you must have a current environment specified..
         /// </summary>
         internal static string SecretStoreCommandBase_StoreNameRequired {
             get {
                 return ResourceManager.GetString("SecretStoreCommandBase_StoreNameRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Using datacenter-level default secret store..
-        /// </summary>
-        internal static string SecretStoreCommandBase_UsingDatacenterStore {
-            get {
-                return ResourceManager.GetString("SecretStoreCommandBase_UsingDatacenterStore", resourceCulture);
             }
         }
         
