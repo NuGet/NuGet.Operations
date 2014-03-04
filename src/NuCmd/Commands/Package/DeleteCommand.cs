@@ -106,7 +106,7 @@ namespace NuCmd.Commands.Package
                         Version
                     });
 
-                await Console.WriteInfoLine(Strings.Package_DeleteCommand_DeleteList_Header, dc.FullName);
+                await Console.WriteInfoLine(Strings.Package_DeleteCommand_DeleteList_Header, (dc == null ? "<unknown>" : dc.FullName));
                 foreach (var package in packages)
                 {
                     await Console.WriteInfoLine(
