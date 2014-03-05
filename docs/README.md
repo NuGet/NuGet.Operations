@@ -19,11 +19,11 @@ _NOTE: For engineers working on the NuGet.org Service there is a script which ca
 
 1. (Optional, but recommended) Set up a folder to hold your repositories, for example: `C:\Code\Git\NuGet` (replace `C:\Code\Git\NuGet` in later steps with the folder you used if it is different)
 
-2. Clone/Copy/whatever Deployment Settings Repository to `C:\Code\Git\NuGet\Deployment` - If your environment uses a Git repository for this, clone it, otherwise get it on disk somewhere.
+2. Clone/Copy/whatever Deployment Settings Repository to `C:\Code\Git\NuGet\Api\Deployment` - If your environment uses a Git repository for this, clone it, otherwise get it on disk somewhere.
 
-3. Clone this repository to `C:\Code\Git\NuGet\Api`
+3. Clone this repository to `C:\Code\Git\NuGet\Api\NuGet.Operations`
 
-4. Open a Console/PowerShell window to `C:\Code\Git\NuGet\Api` and run `.\ops` to enter the NuOps console
+4. Open a Console/PowerShell window to `C:\Code\Git\NuGet\Api\NuGet.Operations` and run `.\ops` to enter the NuOps console
 
 ## Using your own folder structure
 
