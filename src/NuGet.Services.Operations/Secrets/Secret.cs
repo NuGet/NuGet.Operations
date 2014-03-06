@@ -6,31 +6,35 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace NuGet.Services.Operations.Secrets
 {
-    public class Secret
+    public abstract class Secret
     {
         private List<SecretAuditEntry> _auditLog;
 
         public SecretName Name { get; private set; }
-        public string Value { get; private set; }
         public DateTime CreatedUtc { get; private set; }
         public DateTime? ExpiryUtc { get; private set; }
+
+        public SecretValue Value { get; set; }
         
         [JsonConverter(typeof(StringEnumConverter))]
         public SecretType Type { get; private set; }
 
         public IReadOnlyList<SecretAuditEntry> AuditLog { get; private set; }
 
+        protected JToken RawValue { get; set; }
+
         [JsonConstructor]
-        internal Secret(SecretName name, string value, DateTime createdUtc, DateTime? expiryUtc, SecretType type, IEnumerable<SecretAuditEntry> auditLog)
+        internal Secret(SecretName name, JToken value, DateTime createdUtc, DateTime? expiryUtc, SecretType type, IEnumerable<SecretAuditEntry> auditLog)
         {
             Name = name;
-            Value = value;
             CreatedUtc = createdUtc;
             ExpiryUtc = expiryUtc;
             Type = type;
+            RawValue = value;
 
             _auditLog = auditLog.ToList();
             AuditLog = _auditLog.AsReadOnly();
@@ -52,10 +56,5 @@ namespace NuGet.Services.Operations.Secrets
             Type = secret.Type;
             ExpiryUtc = secret.ExpiryUtc;
         }
-    }
-
-    public enum SecretType
-    {
-        Password
     }
 }

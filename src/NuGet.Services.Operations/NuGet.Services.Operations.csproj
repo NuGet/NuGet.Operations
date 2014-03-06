@@ -149,6 +149,7 @@
     <Compile Include="Secrets\SecretStore.cs" />
     <Compile Include="Secrets\SecretStoreMetadata.cs" />
     <Compile Include="Secrets\SecretStoreProvider.cs" />
+    <Compile Include="Secrets\SecretValue.cs" />
     <Compile Include="STAHelper.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
