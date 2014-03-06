@@ -7,6 +7,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using NuGet.Services;
+using NuGet.Services.Operations.Model;
 using PowerArgs;
 
 namespace NuCmd.Commands.Db
@@ -32,11 +33,6 @@ namespace NuCmd.Commands.Db
             EnsureSession();
             var dc = GetDatacenter();
 
-            AdminUser = AdminUser ?? String.Format(
-                "nuget-{0}-{1}-admin",
-                Session.CurrentEnvironment.Name.ToLowerInvariant(),
-                dc.Id);
-            
             // Find the server
             var server = dc.FindResource(ResourceTypes.SqlDb, Database.ToString());
             if (server == null)
@@ -48,6 +44,9 @@ namespace NuCmd.Commands.Db
                     ResourceTypes.SqlDb,
                     Database.ToString()));
             }
+
+            AdminUser = AdminUser ?? GetDefaultName(server, dc);
+
             var connStr = new SqlConnectionStringBuilder(server.Value);
             if (String.IsNullOrEmpty(connStr.InitialCatalog))
             {
@@ -109,6 +108,19 @@ namespace NuCmd.Commands.Db
 
             // Create a SQL Credential and return the connection info
             return new SqlConnectionInfo(connStr, new SqlCredential(AdminUser, password));
+        }
+
+        private string GetDefaultName(Resource server, NuGet.Services.Operations.Model.Datacenter dc)
+        {
+            string user;
+            if (!server.Attributes.TryGetValue("adminUser", out user) || String.IsNullOrEmpty(user))
+            {
+                user = String.Format(
+                    "nuget-{0}-{1}-admin",
+                    Session.CurrentEnvironment.Name.ToLowerInvariant(),
+                    dc.Id);
+            }
+            return user;
         }
     }
 
