@@ -587,4 +587,10 @@ Connection String: {3}</value>
   <data name="Secrets_UndeleteCommand_Restored" xml:space="preserve">
     <value>Restored secret '{0}'</value>
   </data>
+  <data name="DefaultConsoleFormatter_AnonymousType" xml:space="preserve">
+    <value>&lt;Anonymous Type&gt;</value>
+  </data>
+  <data name="Search_QueryCommand_Hits" xml:space="preserve">
+    <value>{0} hits.</value>
+  </data>
 </root>

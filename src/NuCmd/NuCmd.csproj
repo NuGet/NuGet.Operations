@@ -137,8 +137,12 @@
     <Reference Include="NuGet.Services.Platform">
       <HintPath>..\..\packages\NuGet.Services.Platform.3.0.1-rel\lib\net45\NuGet.Services.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Platform.Client">
-      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-rel\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
+    <Reference Include="NuGet.Services.Platform.Client, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.2-alpha-9\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Services.Search.Client">
+      <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.2-alpha-17\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Work">
       <HintPath>..\..\packages\NuGet.Services.Work.3.0.1-rel-4\lib\net45\NuGet.Services.Work.dll</HintPath>
@@ -222,6 +226,11 @@
     <Compile Include="Commands\Scheduler\DeleteServiceCommand.cs" />
     <Compile Include="Commands\Scheduler\SchedulerServiceCommandBase.cs" />
     <Compile Include="Commands\Scheduler\ServicesCommand.cs" />
+    <Compile Include="Commands\Search\DiagCommand.cs" />
+    <Compile Include="Commands\Search\FieldsCommand.cs" />
+    <Compile Include="Commands\Search\ChecksumsCommand.cs" />
+    <Compile Include="Commands\Search\QueryCommand.cs" />
+    <Compile Include="Commands\Search\SearchServiceCommandBase.cs" />
     <Compile Include="Commands\Secrets\CreateStoreCommand.cs" />
     <Compile Include="Commands\Secrets\UndeleteCommand.cs" />
     <Compile Include="Commands\Secrets\DeleteCommand.cs" />
@@ -232,6 +241,7 @@
     <Compile Include="Commands\Secrets\SecretStoreCommandBase.cs" />
     <Compile Include="Commands\Secrets\SetCommand.cs" />
     <Compile Include="Commands\Secrets\StoresCommand.cs" />
+    <Compile Include="Commands\ServiceCommandBase.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />
     <Compile Include="Commands\Work\PurgeCommand.cs" />
     <Compile Include="Commands\Work\JobsCommand.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -23,7 +24,7 @@ namespace NuCmd
             return String.Join(
                 Environment.NewLine,
                 Enumerable.Concat(
-                    new [] { target.GetType().FullName },
+                    new [] { FormatTypeName(target.GetType()) },
                     SelectProperties(target)
                         .Select(p => {
                             var val = GetValue(target, p);
@@ -50,6 +51,21 @@ namespace NuCmd
         public virtual IEnumerable<PropertyInfo> SelectProperties(object target)
         {
             return target.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        }
+
+        private string FormatTypeName(Type type)
+        {
+            bool isAnonymous =
+                Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), inherit: false) &&
+                type.IsGenericType &&
+                type.Name.Contains("AnonymousType") &&
+                (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$")) &&
+                ((type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic);
+            if (isAnonymous)
+            {
+                return Strings.DefaultConsoleFormatter_AnonymousType;
+            }
+            return type.FullName;
         }
     }
 }
