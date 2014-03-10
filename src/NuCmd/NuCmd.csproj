@@ -41,6 +41,48 @@
     <Reference Include="Dapper">
       <HintPath>..\..\packages\Dapper.1.13\lib\net45\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Analyzers">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Analyzers.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Core">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.FastVectorHighlighter">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.FastVectorHighlighter.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Highlighter">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Highlighter.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Memory">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Queries">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Queries.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Regex">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Regex.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.SimpleFacetedSearch">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.SimpleFacetedSearch.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.Snowball">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.Snowball.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Contrib.SpellChecker">
+      <HintPath>..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.SpellChecker.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Store.Azure">
+      <HintPath>..\..\packages\Lucene.Net.Store.Azure.2.0.4937.26631\lib\net40\Lucene.Net.Store.Azure.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
@@ -134,27 +176,33 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Nuget.Core.2.8.0\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Platform">
-      <HintPath>..\..\packages\NuGet.Services.Platform.3.0.1-rel\lib\net45\NuGet.Services.Platform.dll</HintPath>
+    <Reference Include="NuGet.Indexing">
+      <HintPath>..\..\packages\NuGet.Indexing.3.0.2-alpha-9\lib\net45\NuGet.Indexing.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Services.Platform, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NuGet.Services.Platform.3.0.1-rel-3\lib\net45\NuGet.Services.Platform.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Platform.Client, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.2-alpha-9\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-rel-3\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Search.Client">
       <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.2-alpha-17\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Work">
-      <HintPath>..\..\packages\NuGet.Services.Work.3.0.1-rel-4\lib\net45\NuGet.Services.Work.dll</HintPath>
-    </Reference>
     <Reference Include="NuGet.Services.Work.Client">
       <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.1-rel-4\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGetGallery.Core">
+      <HintPath>..\..\packages\NuGetGallery.Core.2.0.0-alpha-118\lib\net45\NuGetGallery.Core.dll</HintPath>
     </Reference>
     <Reference Include="PowerArgs">
       <HintPath>..\..\packages\PowerArgs.2.0.4.0-preview\lib\net40\PowerArgs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -293,7 +341,10 @@
       <Name>NuGet.Services.Operations</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Eula.htm" />
+    <Content Include="Readme.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(BuildToolsDirectory)\NuGet.targets" />
 </Project>
