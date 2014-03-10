@@ -118,10 +118,12 @@
     </Compile>
     <Compile Include="Azure\AzureToken.cs" />
     <Compile Include="Azure\AzureTokenManager.cs" />
+    <Compile Include="Config\ConfigTemplateSource.cs" />
+    <Compile Include="Config\FileSystemConfigTemplateSource.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\XLinqExtensions.cs" />
     <Compile Include="Model\AzureSubscription.cs" />
-    <Compile Include="Model\ConfigurableNode.cs" />
+    <Compile Include="Model\ConfigTemplateReference.cs" />
     <Compile Include="Model\Datacenter.cs" />
     <Compile Include="Model\ModelComponentBase.cs" />
     <Compile Include="Model\PackageSource.cs" />
@@ -165,7 +167,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Compile Include="Model\ConfigSetting.cs" />
     <None Include="NuGet.Services.Operations.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>

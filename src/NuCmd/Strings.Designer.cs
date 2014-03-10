@@ -588,6 +588,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} config templates: {1}.
+        /// </summary>
+        internal static string EnvCommand_Data_ConfigTemplates {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_ConfigTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  {0} - {1}.
         /// </summary>
         internal static string EnvCommand_Data_Datacenter {

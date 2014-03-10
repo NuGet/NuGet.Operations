@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class DeploymentEnvironment : ConfigurableNode
+    public class DeploymentEnvironment
     {
         public string Name { get; set; }
         public AzureSubscription Subscription { get; set; }
         public Version Version { get; set; }
         public SecretStoreReference SecretStore { get; set; }
+        public ConfigTemplateReference ConfigTemplates { get; set; }
         
         public IList<PackageSource> PackageSources { get; private set; }
         public IList<Datacenter> Datacenters { get; private set; }
@@ -30,7 +31,7 @@ namespace NuGet.Services.Operations.Model
             }
         }
 
-        public DeploymentEnvironment(AppModel app) : base(app)
+        public DeploymentEnvironment(AppModel app)
         {
             App = app;
             Datacenters = new List<Datacenter>();

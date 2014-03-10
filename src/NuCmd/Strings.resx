@@ -620,6 +620,9 @@ Connection String: {3}</value>
   <data name="Db_GenerateAdminPasswordCommand_PasswordGenerated" xml:space="preserve">
     <value>The admin password for '{0}' in the secret store has been updated and stored in '{1}'. NOTE: The password has NOT YET BEEN CHANGED on the database server itself. Use 'nucmd db applyadminpassword' to set it.</value>
   </data>
+  <data name="EnvCommand_Data_ConfigTemplates" xml:space="preserve">
+    <value>{0} config templates: {1}</value>
+  </data>
   <data name="Secrets_LogCommand_WroteEntries" xml:space="preserve">
     <value>Fetched {0} of {1} audit log entries</value>
   </data>

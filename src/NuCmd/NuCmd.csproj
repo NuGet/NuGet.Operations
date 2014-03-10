@@ -247,7 +247,6 @@
     <Compile Include="CommandGroup.cs" />
     <Compile Include="Commands\AzureCommandBase.cs" />
     <Compile Include="Commands\Azure\LoginCommand.cs" />
-    <Compile Include="Commands\Config\ShowCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />
     <Compile Include="Commands\Db\DacCommandBase.cs" />
     <Compile Include="Commands\Db\DeleteDacCommand.cs" />
@@ -342,6 +341,9 @@
       <Project>{fdfe3b54-1587-4ad2-bed6-7f2a38f906ba}</Project>
       <Name>NuGet.Services.Operations</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\Config\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(BuildToolsDirectory)\NuGet.targets" />

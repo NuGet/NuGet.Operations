@@ -8,7 +8,7 @@ using NuGet.Services.Operations.Secrets;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class Datacenter : ConfigurableNode
+    public class Datacenter
     {
         public int Id { get; set; }
         public string Region { get; set; }
@@ -20,7 +20,7 @@ namespace NuGet.Services.Operations.Model
         public DeploymentEnvironment Environment { get; private set; }
         public string FullName { get { return Environment.FullName + "-" + Id.ToString(); } }
 
-        public Datacenter(DeploymentEnvironment environment) : base(environment)
+        public Datacenter(DeploymentEnvironment environment)
         {
             Resources = new List<Resource>();
             Services = new List<Service>();

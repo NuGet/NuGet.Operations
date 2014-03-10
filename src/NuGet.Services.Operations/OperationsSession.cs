@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NuGet.Services.Operations.Config;
 using NuGet.Services.Operations.Model;
 
 namespace NuGet.Services.Operations
@@ -96,6 +97,20 @@ namespace NuGet.Services.Operations
 
             var model = XmlServiceModelDeserializer.LoadAppModel(serviceModel);
             var tokens = new AzureTokenManager(azureTokenStore);
+
+            // Resolve relative paths
+            var configTemplateRefs = model
+                .Environments
+                .Select(e => e.ConfigTemplates)
+                .Where(t => t != null && String.Equals(t.Type, FileSystemConfigTemplateSource.RelativeAppModelType));
+            foreach (var configTemplateRef in configTemplateRefs)
+            {
+                configTemplateRef.Value = Path.Combine(
+                    Path.GetDirectoryName(serviceModel),
+                    configTemplateRef.Value);
+                configTemplateRef.Type = FileSystemConfigTemplateSource.AbsoluteAppModelType;
+            }
+
             return new OperationsSession(model, tokens);
         }
 
