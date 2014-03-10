@@ -10,6 +10,6 @@ namespace NuGet.Services.Operations.Config
 {
     public abstract class ConfigTemplateSource
     {
-        public abstract XDocument ReadConfigTemplate(Service service);
+        public abstract string ReadConfigTemplate(Service service);
     }
 }

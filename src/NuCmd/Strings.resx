@@ -602,6 +602,15 @@ Connection String: {3}</value>
   <data name="Command_UnknownSecretStoreType" xml:space="preserve">
     <value>Unknown secret store type: '{0}'</value>
   </data>
+  <data name="Config_GenerateCommand_GeneratedConfig" xml:space="preserve">
+    <value>Generated config file to '{0}'.</value>
+  </data>
+  <data name="Config_GenerateCommand_NoSuchService" xml:space="preserve">
+    <value>Unable to find service '{0}' in the '{1}' datacenter. Check the AppModel.xml file.</value>
+  </data>
+  <data name="Config_GenerateCommand_UnknownConfigTemplateSourceType" xml:space="preserve">
+    <value>Unknown config template source type: '{0}'.</value>
+  </data>
   <data name="Db_ApplyAdminPasswordCommand_AppliedPassword" xml:space="preserve">
     <value>Password applied!</value>
   </data>

@@ -21,7 +21,7 @@ namespace NuGet.Services.Operations.Config
             RootDirectory = rootDirectory;
         }
 
-        public override XDocument ReadConfigTemplate(Service service)
+        public override string ReadConfigTemplate(Service service)
         {
             // Generate file name
             string fileName = Path.Combine(
@@ -29,7 +29,7 @@ namespace NuGet.Services.Operations.Config
                 service.FullName + ".cscfg.template");
             if (File.Exists(fileName))
             {
-                return XDocument.Load(fileName);
+                return File.ReadAllText(fileName);
             }
             else
             {

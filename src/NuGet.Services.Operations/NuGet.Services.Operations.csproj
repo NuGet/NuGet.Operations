@@ -90,6 +90,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-rel\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Nustache.Core">
+      <HintPath>..\..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -120,6 +123,7 @@
     <Compile Include="Azure\AzureTokenManager.cs" />
     <Compile Include="Config\ConfigTemplateSource.cs" />
     <Compile Include="Config\FileSystemConfigTemplateSource.cs" />
+    <Compile Include="DelegateWrappingValueGetterFactory.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\XLinqExtensions.cs" />
     <Compile Include="Model\AzureSubscription.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="Model\XmlServiceModelDeserializer.cs" />
     <Compile Include="OperationsSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceResolver.cs" />
     <Compile Include="Secrets\DataProtectorExtensions.cs" />
     <Compile Include="Secrets\DpapiNg\DpapiNgDataProtector.cs" />
     <Compile Include="Secrets\DpapiNg\DpapiNgUtil.cs" />

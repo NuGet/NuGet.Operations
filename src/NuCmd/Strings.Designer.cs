@@ -225,6 +225,33 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generated config file to &apos;{0}&apos;..
+        /// </summary>
+        internal static string Config_GenerateCommand_GeneratedConfig {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_GeneratedConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find service &apos;{0}&apos; in the &apos;{1}&apos; datacenter. Check the AppModel.xml file..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoSuchService {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoSuchService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown config template source type: &apos;{0}&apos;..
+        /// </summary>
+        internal static string Config_GenerateCommand_UnknownConfigTemplateSourceType {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_UnknownConfigTemplateSourceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to * {0} = {1} &lt;{2}&gt;.
         /// </summary>
         internal static string Config_ShowCommand_ConfigEntry {

@@ -17,6 +17,11 @@ namespace NuGet.Services.Operations.Model
         {
             Attributes = new Dictionary<string, string>();
         }
+
+        protected virtual object ResolveValue(string content)
+        {
+            return null;
+        }
     }
 
     public abstract class NamedModelComponentBase : ModelComponentBase
