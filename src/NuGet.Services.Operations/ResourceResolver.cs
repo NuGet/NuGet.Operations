@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using NuGet.Services.Operations.Model;
@@ -23,18 +24,24 @@ namespace NuGet.Services.Operations
             Func<ResourceResolutionContext, object> resolver;
             if (!Resolvers.TryGetValue(resource.Type, out resolver))
             {
-                return null;
+                return String.Empty;
             }
-            return resolver(new ResourceResolutionContext(secrets, service, resource));
+            return resolver(new ResourceResolutionContext(secrets, service, resource)) ?? String.Empty;
         }
 
         private static object ResolveUri(ResourceResolutionContext context)
         {
+            Func<string> userNameThunk = () => context.GetSecretValueOrDefault("uri." + context.Resource.Name + ":username");
+            Func<string> passwordThunk = () => context.GetSecretValueOrDefault("uri." + context.Resource.Name + ":password");
             return new Dictionary<string, object>() 
             {
                 {"value", context.Resource.Value},
-                {"username", new DeferredString(() => context.GetSecretValueOrDefault("uri." + context.Resource.Name + ":username"))},
-                {"password", new DeferredString(() => context.GetSecretValueOrDefault("uri." + context.Resource.Name + ":password"))}
+                {"username", new DeferredString(userNameThunk)},
+                {"password", new DeferredString(passwordThunk)},
+                {"absoluteUri", new DeferredString(() => new UriBuilder(context.Resource.Value) {
+                    UserName = WebUtility.UrlEncode(userNameThunk()),
+                    Password = passwordThunk()
+                }.Uri.AbsoluteUri)}
             };
         }
 

@@ -40,7 +40,6 @@ namespace NuGet.Services.Operations.Config
 
         private static object ConvertValue(object input)
         {
-            object value;
             IDictionary<string, object> nested = input as IDictionary<string, object>;
             if (nested != null)
             {
