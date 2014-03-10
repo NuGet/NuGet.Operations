@@ -53,6 +53,6 @@ exec git checkout -b $branch
 exec git push origin $branch
 
 if($latestRelease) {
-    $completed = "Iteration $($latestRelease.ToString()) completed. "
+    $completed = "Iteration $($latestRelease.ToString()) Released. "
 }
-Write-Host "$($completed)Started Iteration $($nextRelease.ToString())."
+Write-Host "$($completed)Moved Iteration $($nextRelease.ToString()) to testing."
