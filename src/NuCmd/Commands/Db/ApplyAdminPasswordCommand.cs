@@ -45,7 +45,7 @@ namespace NuCmd.Commands.Db
                 return;
             }
             var connStr = new SqlConnectionStringBuilder(server.Value);
-            string serverName = SqlConnectionInfo.GetServerName(connStr.DataSource);
+            string serverName = Utils.GetServerName(connStr.DataSource);
             
             // Get the secret value
             var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);

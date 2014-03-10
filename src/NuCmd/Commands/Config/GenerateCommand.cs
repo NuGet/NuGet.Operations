@@ -10,6 +10,9 @@ using NuGet.Services.Operations.Config;
 using NuGet.Services.Operations.Model;
 using NuGet.Services.Operations.Secrets;
 using PowerArgs;
+using RazorEngine;
+using RazorEngine.Configuration;
+using RazorEngine.Templating;
 
 namespace NuCmd.Commands.Config
 {
@@ -22,7 +25,6 @@ namespace NuCmd.Commands.Config
         [ArgDescription("The service to generate configuration for")]
         public string Service { get; set; }
 
-        [ArgRequired]
         [ArgPosition(1)]
         [ArgShortcut("o")]
         [ArgDescription("The output file to generate")]
@@ -44,37 +46,37 @@ namespace NuCmd.Commands.Config
             }
             var configSource = new FileSystemConfigTemplateSource(dc.Environment.ConfigTemplates.Value);
             var configTemplate = configSource.ReadConfigTemplate(service);
-            
-            // Build the model
-            var model = await BuildModel(service);
-
-            // Render the template
-            string result = Utils.RenderNustacheTemplate(configTemplate, model);
-
-            // Write the template
-            File.WriteAllText(OutputFile, result);
-            await Console.WriteInfoLine(Strings.Config_GenerateCommand_GeneratedConfig, OutputFile);
-        }
-
-        private async Task<object> BuildModel(Service service)
-        {
-            // Open the secret store
-            var secrets = await GetEnvironmentSecretStore(service.Datacenter.Environment);
-
-            return new
+            if (String.IsNullOrEmpty(configTemplate))
             {
-                resources = service
-                    .Datacenter
-                    .Resources
-                    .GroupBy(r => r.Type)
-                    .ToDictionary(g => g.Key, g => g.ToDictionary(r => r.Name, r => ResolveValue(secrets, service, r)))
-            };
-        }
+                await Console.WriteErrorLine(Strings.Config_GenerateCommand_NoTemplate, service.FullName);
+            }
+            else
+            {
+                var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
+                
+                // Render the template
+                var engine = new TemplateService(new TemplateServiceConfiguration()
+                {
+                    BaseTemplateType = typeof(ConfigTemplateBase),
+                    Language = Language.CSharp
+                });
+                await Console.WriteInfoLine(Strings.Config_GenerateCommand_CompilingConfigTemplate, service.FullName);
+                engine.Compile(configTemplate, typeof(object), "configTemplate");
 
-        private Func<object> ResolveValue(SecretStore secrets, Service service, Resource r)
-        {
-            // Simpler to just to sync here.
-            return () => ResourceResolver.Resolve(secrets, service, r).Result;
+                await Console.WriteInfoLine(Strings.Config_GenerateCommand_ExecutingTemplate, service.FullName);
+                string result = engine.Run("configTemplate", new ConfigTemplateModel(secrets, service), null);
+
+                // Write the template
+                if (String.IsNullOrEmpty(OutputFile))
+                {
+                    await Console.WriteDataLine(result);
+                }
+                else
+                {
+                    File.WriteAllText(OutputFile, result);
+                    await Console.WriteInfoLine(Strings.Config_GenerateCommand_GeneratedConfig, OutputFile);
+                }
+            }
         }
     }
 }

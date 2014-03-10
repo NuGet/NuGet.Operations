@@ -19,6 +19,7 @@ namespace NuCmd
         TextWriter Info { get; }
         TextWriter Help { get; }
         TextWriter Http { get; }
+        TextWriter Data { get; }
 
         Task WriteObject(object obj, IConsoleFormatter formatter);
         Task WriteObjects(IEnumerable<object> objs, IConsoleFormatter formatter);
@@ -160,6 +161,13 @@ namespace NuCmd
         public static Task WriteHttpLine(this IConsole self, string format, params object[] args)
         {
             return self.Http.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+        }
+
+        public static Task WriteDataLine(this IConsole self) { return WriteDataLine(self, String.Empty); }
+        public static Task WriteDataLine(this IConsole self, string message) { return self.Data.WriteLineAsync(message); }
+        public static Task WriteDataLine(this IConsole self, string format, params object[] args)
+        {
+            return self.Data.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
         }
 
         public static Task WriteTable<T>(this IConsole self, IEnumerable<T> objs)

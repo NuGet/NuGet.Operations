@@ -30,6 +30,7 @@ namespace NuCmd
         public TextWriter Info { get { return _info; } }
         public TextWriter Help { get { return _help; } }
         public TextWriter Http { get { return _http; } }
+        public TextWriter Data { get { return _data; } }
 
         public Task WriteObject(object obj, IConsoleFormatter formatter)
         {

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NuGet.Services;
+using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
 using PowerArgs;
 
@@ -46,7 +47,7 @@ namespace NuCmd.Commands.Db
                     Database.ToString()));
             }
 
-            AdminUser = AdminUser ?? GetDefaultName(server, dc);
+            AdminUser = AdminUser ?? Utils.GetAdminUserName(server, dc);
 
             var connStr = new SqlConnectionStringBuilder(server.Value);
             if (String.IsNullOrEmpty(connStr.InitialCatalog))
@@ -110,19 +111,6 @@ namespace NuCmd.Commands.Db
             // Create a SQL Credential and return the connection info
             return new SqlConnectionInfo(connStr, new SqlCredential(AdminUser, password));
         }
-
-        private string GetDefaultName(Resource server, NuGet.Services.Operations.Model.Datacenter dc)
-        {
-            string user;
-            if (!server.Attributes.TryGetValue("adminUser", out user) || String.IsNullOrEmpty(user))
-            {
-                user = String.Format(
-                    "nuget-{0}-{1}-admin",
-                    Session.CurrentEnvironment.Name.ToLowerInvariant(),
-                    dc.Id);
-            }
-            return user;
-        }
     }
 
     public class SqlConnectionInfo
@@ -152,22 +140,7 @@ namespace NuCmd.Commands.Db
 
         public string GetServerName()
         {
-            return GetServerName(ConnectionString.DataSource);
-        }
-
-        public static string GetServerName(string dataSource)
-        {
-            string server = dataSource;
-            if (server.StartsWith("tcp:", StringComparison.OrdinalIgnoreCase))
-            {
-                server = server.Substring(4);
-            }
-            if (server.EndsWith(".database.windows.net", StringComparison.OrdinalIgnoreCase))
-            {
-                // ".database.windows.net" is 21 characters long
-                server = server.Substring(0, server.Length - 21);
-            }
-            return server;
+            return Utils.GetServerName(ConnectionString.DataSource);
         }
 
         private async Task<SqlConnection> ConnectCore(SqlConnectionStringBuilder connStr)

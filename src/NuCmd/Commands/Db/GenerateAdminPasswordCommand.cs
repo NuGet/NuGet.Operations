@@ -62,7 +62,7 @@ namespace NuCmd.Commands.Db
             var connStr = new SqlConnectionStringBuilder(server.Value);
             
             // Generate a secret and store it
-            string serverName = SqlConnectionInfo.GetServerName(connStr.DataSource);
+            string serverName = Utils.GetServerName(connStr.DataSource);
             string secretName = "sqldb." + serverName + ":admin";
             var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
             if (!WhatIf)

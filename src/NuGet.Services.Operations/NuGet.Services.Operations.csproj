@@ -90,8 +90,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-rel\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Nustache.Core">
-      <HintPath>..\..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
+    <Reference Include="RazorEngine">
+      <HintPath>..\..\packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -109,6 +109,10 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -121,9 +125,10 @@
     </Compile>
     <Compile Include="Azure\AzureToken.cs" />
     <Compile Include="Azure\AzureTokenManager.cs" />
+    <Compile Include="Config\ConfigTemplateBase.cs" />
+    <Compile Include="Config\ConfigTemplateModel.cs" />
     <Compile Include="Config\ConfigTemplateSource.cs" />
     <Compile Include="Config\FileSystemConfigTemplateSource.cs" />
-    <Compile Include="DelegateWrappingValueGetterFactory.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\XLinqExtensions.cs" />
     <Compile Include="Model\AzureSubscription.cs" />

@@ -225,6 +225,24 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compiling config template for &apos;{0}&apos;....
+        /// </summary>
+        internal static string Config_GenerateCommand_CompilingConfigTemplate {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_CompilingConfigTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executing config template &apos;{0}&apos;.
+        /// </summary>
+        internal static string Config_GenerateCommand_ExecutingTemplate {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_ExecutingTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generated config file to &apos;{0}&apos;..
         /// </summary>
         internal static string Config_GenerateCommand_GeneratedConfig {
@@ -239,6 +257,15 @@ namespace NuCmd {
         internal static string Config_GenerateCommand_NoSuchService {
             get {
                 return ResourceManager.GetString("Config_GenerateCommand_NoSuchService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No config template found for &apos;{0}&apos;..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoTemplate {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoTemplate", resourceCulture);
             }
         }
         
