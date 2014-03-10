@@ -44,6 +44,11 @@ namespace NuGet.Services.Operations.Secrets
         public void AddAuditEntry(SecretAuditEntry entry)
         {
             _auditLog.Add(entry);
+            if (_auditLog.Count > 100)
+            {
+                // Truncate the log
+                _auditLog = _auditLog.OrderByDescending(a => a.TimestampUtc).Take(100).ToList();
+            }
         }
 
         internal void Update(Secret secret)

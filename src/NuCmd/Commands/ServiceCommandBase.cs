@@ -48,6 +48,7 @@ namespace NuCmd.Commands
             if (Session != null && Session.CurrentEnvironment != null && ServiceUri == null)
             {
                 ServiceUri = Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: ServiceName);
+                
             }
 
             if (ServiceUri == null)

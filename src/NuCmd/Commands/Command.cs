@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NuGet.Services.Client;
 using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands
@@ -80,6 +81,33 @@ namespace NuCmd.Commands
             {
                 throw new InvalidOperationException(Strings.Command_NoSession);
             }
+        }
+
+        protected virtual async Task<SecretStore> GetEnvironmentSecretStore(DeploymentEnvironment env)
+        {
+            if (env.SecretStore == null || String.IsNullOrEmpty(env.SecretStore.Value))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_EnvironmentHasNoSecretStore,
+                    env.Name));
+            }
+            if (!String.Equals(env.SecretStore.Type, DpapiSecretStoreProvider.AppModelTypeName, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_UnknownSecretStoreType,
+                    env.SecretStore.Type));
+            }
+            var store = await (new DpapiSecretStoreProvider(env.SecretStore.Value).Open(env));
+            if (!store.Exists())
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_SecretStoreNotCreated,
+                    env.Name));
+            }
+            return store;
         }
 
         protected virtual DeploymentEnvironment GetEnvironment(string provided)

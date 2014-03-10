@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NuGet.Services;
 using NuGet.Services.Operations.Model;
@@ -39,7 +40,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_NoDatabaseInDatacenter,
+                    Strings.Db_DatabaseCommandBase_NoDatabaseInDatacenter,
                     Datacenter.Value,
                     ResourceTypes.SqlDb,
                     Database.ToString()));
@@ -52,7 +53,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "InitialCatalog"));
@@ -61,7 +62,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "DataSource"));
@@ -70,7 +71,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "User ID"));
@@ -79,7 +80,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "Password"));
@@ -91,7 +92,7 @@ namespace NuCmd.Commands.Db
                 // Prompt the user for the admin password and put it in a SecureString.
                 password = await Console.PromptForPassword(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_EnterAdminPassword,
+                    Strings.Db_DatabaseCommandBase_EnterAdminPassword,
                     AdminUser));
             }
             else
@@ -147,6 +148,26 @@ namespace NuCmd.Commands.Db
                 InitialCatalog = alternateDatabase
             };
             return ConnectCore(connStr);
+        }
+
+        public string GetServerName()
+        {
+            return GetServerName(ConnectionString.DataSource);
+        }
+
+        public static string GetServerName(string dataSource)
+        {
+            string server = dataSource;
+            if (server.StartsWith("tcp:", StringComparison.OrdinalIgnoreCase))
+            {
+                server = server.Substring(4);
+            }
+            if (server.EndsWith(".database.windows.net", StringComparison.OrdinalIgnoreCase))
+            {
+                // ".database.windows.net" is 21 characters long
+                server = server.Substring(0, server.Length - 21);
+            }
+            return server;
         }
 
         private async Task<SqlConnection> ConnectCore(SqlConnectionStringBuilder connStr)

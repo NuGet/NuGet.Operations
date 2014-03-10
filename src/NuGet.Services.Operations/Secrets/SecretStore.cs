@@ -51,5 +51,7 @@ namespace NuGet.Services.Operations.Secrets
         }
 
         public abstract Task<IEnumerable<SecretAuditEntry>> ReadAuditLog(SecretName key);
+
+        public abstract bool Exists();
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using NuGet.Services.Operations.Secrets.DpapiNg;
 using NuGet.Services.Client;
+using NuGet.Services.Operations.Model;
 
 namespace NuGet.Services.Operations.Secrets
 {

@@ -323,8 +323,8 @@ Details:
   <data name="Db_CreateUserCommand_Connected" xml:space="preserve">
     <value>Connected to '{1}' database on '{0}'</value>
   </data>
-  <data name="Db_CreateUserCommand_CopiedToClipboard" xml:space="preserve">
-    <value>The connection string has been placed in the clipboard. PLEASE PASTE IT IMMEDIATELY AS IT WILL NOT BE RECOVERABLE ONCE OVERWRITTEN!</value>
+  <data name="Db_CreateUserCommand_SavedToSecretStore" xml:space="preserve">
+    <value>The connection string data has been saved to the secret store</value>
   </data>
   <data name="Db_CreateUserCommand_CreatedUser" xml:space="preserve">
     <value>Created Login: {0}
@@ -338,19 +338,19 @@ Connection String: {3}</value>
   <data name="Db_CreateUserCommand_CreatingUser" xml:space="preserve">
     <value>Creating user {0} on {1} database.</value>
   </data>
-  <data name="Db_CreateUserCommand_EnterAdminPassword" xml:space="preserve">
+  <data name="Db_DatabaseCommandBase_EnterAdminPassword" xml:space="preserve">
     <value>Enter the password for the '{0}' account:</value>
   </data>
   <data name="Db_CreateUserCommand_GrantingUser" xml:space="preserve">
     <value>Granting {0} access to the {1} schema on {2} database.</value>
   </data>
-  <data name="Db_CreateUserCommand_NoDatabaseInDatacenter" xml:space="preserve">
+  <data name="Db_DatabaseCommandBase_NoDatabaseInDatacenter" xml:space="preserve">
     <value>Datacenter {0} does not have a {1} resource named '{2}'.</value>
   </data>
-  <data name="Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField" xml:space="preserve">
+  <data name="Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField" xml:space="preserve">
     <value>The {0} resource '{1}' has an unexpected Connection String field: '{2}'</value>
   </data>
-  <data name="Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField" xml:space="preserve">
+  <data name="Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField" xml:space="preserve">
     <value>The {0} resource '{1}' is missing a required Connection String field: '{2}'</value>
   </data>
   <data name="Db_CreateUserCommand_UsingConnectionString" xml:space="preserve">
@@ -592,5 +592,35 @@ Connection String: {3}</value>
   </data>
   <data name="Search_QueryCommand_Hits" xml:space="preserve">
     <value>{0} hits.</value>
+  </data>
+  <data name="Command_EnvironmentHasNoSecretStore" xml:space="preserve">
+    <value>Environment '{0}' has no secret store</value>
+  </data>
+  <data name="Command_SecretStoreNotCreated" xml:space="preserve">
+    <value>Secret store for environment '{0}' has not been created. Use 'nucmd secrets createstore to' create it</value>
+  </data>
+  <data name="Command_UnknownSecretStoreType" xml:space="preserve">
+    <value>Unknown secret store type: '{0}'</value>
+  </data>
+  <data name="Db_ApplyAdminPasswordCommand_AppliedPassword" xml:space="preserve">
+    <value>Password applied!</value>
+  </data>
+  <data name="Db_ApplyAdminPasswordCommand_ApplyingPassword" xml:space="preserve">
+    <value>Applying admin password from secret store key '{0}' to '{1}'.</value>
+  </data>
+  <data name="Db_ApplyAdminPasswordCommand_NoPasswordInStore" xml:space="preserve">
+    <value>There is no password for '{0}' in the secret store.</value>
+  </data>
+  <data name="Db_CreateUserCommand_SavingConnectionString" xml:space="preserve">
+    <value>Saving connection string to secret store key '{0}'</value>
+  </data>
+  <data name="Db_CreateUserCommand_SavingServiceUser" xml:space="preserve">
+    <value>Saving service username to secret store key '{0}'</value>
+  </data>
+  <data name="Db_GenerateAdminPasswordCommand_PasswordGenerated" xml:space="preserve">
+    <value>The admin password for '{0}' in the secret store has been updated and stored in '{1}'. NOTE: The password has NOT YET BEEN CHANGED on the database server itself. Use 'nucmd db applyadminpassword' to set it.</value>
+  </data>
+  <data name="Secrets_LogCommand_WroteEntries" xml:space="preserve">
+    <value>Fetched {0} of {1} audit log entries</value>
   </data>
 </root>
