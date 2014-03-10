@@ -34,7 +34,7 @@ if(!$latestRelease) {
         exec git tag $tag
         exec git push origin $tag
     }
-    $nextRelease = New-Object System.Version @($latestRelease.Major, $latestRelease.Minor, $latestRelease.Build + 1)
+    $nextRelease = New-Object System.Version @($latestRelease.Major, $latestRelease.Minor, ($latestRelease.Build + 1))
 }
 
 if(!$nextRelease) {
