@@ -489,6 +489,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;Anonymous Type&gt;.
+        /// </summary>
+        internal static string DefaultConsoleFormatter_AnonymousType {
+            get {
+                return ResourceManager.GetString("DefaultConsoleFormatter_AnonymousType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Azure Certificate: {0}.
         /// </summary>
         internal static string EnvCommand_Data_Cert {
@@ -1089,6 +1098,15 @@ namespace NuCmd {
         internal static string Scheduler_RefreshJobCommand_UpdatingUrl {
             get {
                 return ResourceManager.GetString("Scheduler_RefreshJobCommand_UpdatingUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} hits..
+        /// </summary>
+        internal static string Search_QueryCommand_Hits {
+            get {
+                return ResourceManager.GetString("Search_QueryCommand_Hits", resourceCulture);
             }
         }
         
