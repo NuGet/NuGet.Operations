@@ -257,7 +257,6 @@
     <Compile Include="CommandDirectory.cs" />
     <Compile Include="CommandGroup.cs" />
     <Compile Include="Commands\AzureCommandBase.cs" />
-    <Compile Include="Commands\Azure\CycleStorageKeyCommand.cs" />
     <Compile Include="Commands\Azure\LoginCommand.cs" />
     <Compile Include="Commands\Config\GenerateCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />

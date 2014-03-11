@@ -18,7 +18,7 @@ namespace NuGet.Services.Operations.Config
         {
             values = values.Select(val => new AttributeValue(
                 val.Prefix,
-                new PositionTagged<object>(FilterNull(val.Value.Value), val.Value.Position),
+                new PositionTagged<object>(FilterValue(val.Value.Value), val.Value.Position),
                 val.Literal)).ToArray();
 
             base.WriteAttribute(name, prefix, suffix, values);
@@ -26,12 +26,17 @@ namespace NuGet.Services.Operations.Config
 
         public override void Write(object value)
         {
-            base.Write(FilterNull(value));
+            base.Write(FilterValue(value));
         }
 
-        private object FilterNull(object p)
+        private object FilterValue(object p)
         {
-            return ConfigObject.IsNullObject(p) ? String.Empty : p;
+            return 
+                (p is bool) ?
+                    p.ToString() :
+                    (ConfigObject.IsNullObject(p) ? 
+                        String.Empty : 
+                        p);
         }
     }
 }
