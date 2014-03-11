@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands
@@ -23,6 +24,10 @@ namespace NuCmd.Commands
         [ArgShortcut("ice")]
         [ArgDescription("Ignore certificate errors")]
         public bool IgnoreCertErrors { get; set; }
+
+        [ArgShortcut("dc")]
+        [ArgDescription("The datacenter to scope this request to (defaults to 0)")]
+        public int? Datacenter { get; set; }
 
         protected string ServiceName { get; set; }
 
@@ -47,7 +52,11 @@ namespace NuCmd.Commands
             // Prefill values that come from the environment
             if (Session != null && Session.CurrentEnvironment != null && ServiceUri == null)
             {
-                ServiceUri = Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: ServiceName);
+                var dc = GetDatacenter(Session.CurrentEnvironment, Datacenter ?? 0, required: true);
+                ServiceUri = dc.GetServiceUri(ServiceName);
+                
+                // Try to get the admin key from the secret store if not specified on command line
+                Password = Password ?? (await GetSecretOrDefault("http.admin:" + ServiceName, Datacenter ?? 0));
             }
 
             if (ServiceUri == null)

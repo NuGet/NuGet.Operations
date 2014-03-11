@@ -1,39 +1,33 @@
 <#
 .SYNOPSIS
-Regenerates the Storage Account key NOT currently in use and generates a new connection string
-
-.PARAMETER Service
-The service to generate a new connection string for
+Regenerates the Storage Account key NOT currently in use and generates a new connection string. The string is placed
+in the secret store.
 
 .PARAMETER Datacenter
 The datacenter in which that service runs
 
 .PARAMETER AccountKind
 The type of storage account to regenerate the key for (Primary, Legacy, Backup)
-
-.PARAMETER Clip
-Use this switch to put the key in the clipboard
 #>
 function New-StorageConnectionString {
     param(
-        [Parameter(Mandatory=$true,Position=0)][string]$Service,
         [Parameter(Mandatory=$true,Position=1)][int]$Datacenter,
-        [Parameter(Mandatory=$false,Position=2)][string]$AccountKind = "Primary",
-        [Parameter(Mandatory=$false)][switch]$Clip)
+        [Parameter(Mandatory=$false,Position=2)][string]$AccountKind = "Primary")
     if(!(Get-AzureSubscription -Current)) {
         throw "This operation requires a selected Azure Subscription. Select an environment to ensure a subscription is selected or use Select-AzureSubscription."
     }
     if(!$NuOps -or !$NuOps.CurrentEnvironment) {
         throw "This operation requires a current environment. Use 'env' to set one."
     }
+    if(!(Get-Command nucmd -ErrorAction SilentlyContinue)) {
+        throw "This operation requires that nucmd is in the path."
+    }
 
     # Get the service
-    $svc = $NuOps.CurrentEnvironment.GetService($Datacenter, $Service)
+    $svc = $NuOps.CurrentEnvironment[$Datacenter].GetService("work")
+
     if(!$svc) {
-        throw "Unknown service $Service."
-    }
-    if(![String]::Equals($svc.Type, "azureRole", "OrdinalIgnoreCase")) {
-        throw "Non-Azure Service: $($svc.Name)."
+        throw "No Azure Role services in the current environment!"
     }
     $azureService = Get-AzureService $svc.Value
     if(!$azureService) {
@@ -92,10 +86,10 @@ function New-StorageConnectionString {
     $keyStr = $newKey.$genKey
 
     $str = "DefaultEndpointsProtocol=https;AccountName=$account;AccountKey=$keyStr";
-    Write-Host "New Storage Connection String value for 'Storage.$AccountKind': "
-    Write-Host $str
-    if($Clip) {
-        $str | clip
-        Write-Host "Copied connection string to clipboard."
-    }
-}
+
+    # Store the secret
+    $key = "azureStorage.$account"
+    $secretName = nucmd secrets set -k $key -v $str -xin "14.00:00:00"
+
+    Write-Host "New Storage Connection String value for 'Storage.$AccountKind' has been stored in Secret Store key '$key'"
+ }

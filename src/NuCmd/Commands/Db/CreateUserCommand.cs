@@ -13,6 +13,9 @@ using Dapper;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Threading;
+using NuGet.Services.Operations.Secrets;
+using System.Text.RegularExpressions;
+using NuGet.Services.Operations;
 
 namespace NuCmd.Commands.Db
 {
@@ -37,12 +40,29 @@ namespace NuCmd.Commands.Db
         [ArgDescription("If set, the user will be an administrator on the database server")]
         public bool ServerAdmin { get; set; }
 
-        [ArgShortcut("c")]
-        [ArgDescription("If set, the connection string for the service will be put in the clipboard")]
-        public bool Clip { get; set; }
+        [ArgShortcut("xin")]
+        [ArgDescription("Sets the expiry date of the secret to the current date, plus this time")]
+        public TimeSpan? ExpiresIn { get; set; }
+
+        [ArgShortcut("xat")]
+        [ArgDescription("Sets the expiry date of the secret to the provided date, in local time.")]
+        public DateTime? ExpiresAt { get; set; }
 
         protected override async Task OnExecute()
         {
+            if (ExpiresIn != null)
+            {
+                ExpiresAt = DateTime.Now + ExpiresIn.Value;
+            }
+            if (ExpiresAt != null)
+            {
+                ExpiresAt = ExpiresAt.Value.ToUniversalTime();
+            }
+            else 
+            {
+                ExpiresAt = DateTime.UtcNow.AddDays(14); // Two week expiration by default
+            }
+
             var connInfo = await GetSqlConnectionInfo();
             
             // Generate the login name
@@ -53,10 +73,12 @@ namespace NuCmd.Commands.Db
             }
 
             // Generate a password
-            string loginPassword =
-                Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes(
-                        Guid.NewGuid().ToString("N"))).Replace("=", "");
+            string loginPassword = Utils.GeneratePassword(timestamped: false);
+
+            // Test connection to Secret Store
+            //  We have a current environment because GetSqlConnectionInfo ensures that one exists
+            //  GetEnvironmentSecretStore will throw if the store does not exist
+            var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
 
             // Connect to master
             if (!WhatIf)
@@ -122,6 +144,12 @@ namespace NuCmd.Commands.Db
                     await connection.QueryAsync<int>(
                         "CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
 
+                    if (Schemas == null)
+                    {
+                        await Console.WriteWarningLine(Strings.Db_CreateUserCommand_NoSchemasSpecified);
+                        Schemas = new [] { "dbo" };
+                    }
+
                     foreach (var schema in Schemas)
                     {
                         await Console.WriteInfoLine(String.Format(
@@ -145,28 +173,32 @@ namespace NuCmd.Commands.Db
                     IntegratedSecurity = false
                 };
 
-                if (Clip)
+                // Save the connection string
+                string serverBaseName = "sqldb." + connInfo.GetServerName();
+                string secretName = serverBaseName + ":logins." + loginName;
+                await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingConnectionString, secretName);
+                await secrets.Write(new Secret(
+                    new SecretName(secretName),
+                    loginConnStr.ConnectionString,
+                    DateTime.UtcNow,
+                    ExpiresAt,
+                    SecretType.Password),
+                    "nucmd db createuser");
+
+                // Save the user name as the new active account for this service
+                string latestUserSecretName = serverBaseName + ":serviceUsers." + Service;
+                if (!String.IsNullOrEmpty(Distinguisher))
                 {
-                    // Need to be in an STAThread to use the clipboard.
-                    var t = new Thread(() =>
-                    {
-                        Clipboard.SetText(loginConnStr.ConnectionString);
-                    });
-                    t.SetApartmentState(ApartmentState.STA);
-                    t.Start();
-                    t.Join();
-                    await Console.WriteInfoLine(Strings.Db_CreateUserCommand_CopiedToClipboard);
+                    latestUserSecretName += "_" + Distinguisher;
                 }
-                else
-                {
-                    await Console.WriteInfoLine(String.Format(
-                        CultureInfo.CurrentCulture,
-                        Strings.Db_CreateUserCommand_CreatedUser,
-                        loginName,
-                        loginPassword,
-                        Service,
-                        loginConnStr.ConnectionString));
-                }
+                await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingServiceUser, latestUserSecretName);
+                await secrets.Write(new Secret(
+                    new SecretName(latestUserSecretName),
+                    loginConnStr.UserID,
+                    DateTime.UtcNow,
+                    ExpiresAt,
+                    SecretType.Password),
+                    "nucmd db createuser");
             }
             else
             {

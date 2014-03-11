@@ -61,6 +61,24 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetching configuration for {0} service to determine current storage account use..
+        /// </summary>
+        internal static string Azure_CycleStorageKeyCommand_FetchingConfig {
+            get {
+                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_FetchingConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Azure Role Services were found in the app model!.
+        /// </summary>
+        internal static string Azure_CycleStorageKeyCommand_NoAzureRoles {
+            get {
+                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_NoAzureRoles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authenticated. Verifying subscription access....
         /// </summary>
         internal static string Azure_LoginCommand_AuthenticatedGettingSubscription {
@@ -133,6 +151,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Environment &apos;{0}&apos; has no secret store.
+        /// </summary>
+        internal static string Command_EnvironmentHasNoSecretStore {
+            get {
+                return ResourceManager.GetString("Command_EnvironmentHasNoSecretStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No current environment. This command requires an environment..
         /// </summary>
         internal static string Command_NoEnv {
@@ -151,6 +178,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Secret store for environment &apos;{0}&apos; has not been created. Use &apos;nucmd secrets createstore to&apos; create it.
+        /// </summary>
+        internal static string Command_SecretStoreNotCreated {
+            get {
+                return ResourceManager.GetString("Command_SecretStoreNotCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Environment &apos;{0}&apos; has no datacenter &apos;{1}&apos;..
         /// </summary>
         internal static string Command_UnknownDc {
@@ -165,6 +201,15 @@ namespace NuCmd {
         internal static string Command_UnknownEnv {
             get {
                 return ResourceManager.GetString("Command_UnknownEnv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown secret store type: &apos;{0}&apos;.
+        /// </summary>
+        internal static string Command_UnknownSecretStoreType {
+            get {
+                return ResourceManager.GetString("Command_UnknownSecretStoreType", resourceCulture);
             }
         }
         
@@ -194,6 +239,60 @@ namespace NuCmd {
         internal static string Commands_UsingServiceUri {
             get {
                 return ResourceManager.GetString("Commands_UsingServiceUri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compiling config template for &apos;{0}&apos;....
+        /// </summary>
+        internal static string Config_GenerateCommand_CompilingConfigTemplate {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_CompilingConfigTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executing config template &apos;{0}&apos;.
+        /// </summary>
+        internal static string Config_GenerateCommand_ExecutingTemplate {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_ExecutingTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generated config file to &apos;{0}&apos;..
+        /// </summary>
+        internal static string Config_GenerateCommand_GeneratedConfig {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_GeneratedConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find service &apos;{0}&apos; in the &apos;{1}&apos; datacenter. Check the AppModel.xml file..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoSuchService {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoSuchService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No config template found for &apos;{0}&apos;..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoTemplate {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown config template source type: &apos;{0}&apos;..
+        /// </summary>
+        internal static string Config_GenerateCommand_UnknownConfigTemplateSourceType {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_UnknownConfigTemplateSourceType", resourceCulture);
             }
         }
         
@@ -239,6 +338,33 @@ namespace NuCmd {
         internal static string DatacenterCommandBase_NoDC {
             get {
                 return ResourceManager.GetString("DatacenterCommandBase_NoDC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password applied!.
+        /// </summary>
+        internal static string Db_ApplyAdminPasswordCommand_AppliedPassword {
+            get {
+                return ResourceManager.GetString("Db_ApplyAdminPasswordCommand_AppliedPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Applying admin password from secret store key &apos;{0}&apos; to &apos;{1}&apos;..
+        /// </summary>
+        internal static string Db_ApplyAdminPasswordCommand_ApplyingPassword {
+            get {
+                return ResourceManager.GetString("Db_ApplyAdminPasswordCommand_ApplyingPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no password for &apos;{0}&apos; in the secret store..
+        /// </summary>
+        internal static string Db_ApplyAdminPasswordCommand_NoPasswordInStore {
+            get {
+                return ResourceManager.GetString("Db_ApplyAdminPasswordCommand_NoPasswordInStore", resourceCulture);
             }
         }
         
@@ -306,15 +432,6 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The connection string has been placed in the clipboard. PLEASE PASTE IT IMMEDIATELY AS IT WILL NOT BE RECOVERABLE ONCE OVERWRITTEN!.
-        /// </summary>
-        internal static string Db_CreateUserCommand_CopiedToClipboard {
-            get {
-                return ResourceManager.GetString("Db_CreateUserCommand_CopiedToClipboard", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Created Login: {0}
         ///With Password: {1}
         ///For use by the {2} service
@@ -345,15 +462,6 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the password for the &apos;{0}&apos; account:.
-        /// </summary>
-        internal static string Db_CreateUserCommand_EnterAdminPassword {
-            get {
-                return ResourceManager.GetString("Db_CreateUserCommand_EnterAdminPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Granting {0} access to the {1} schema on {2} database..
         /// </summary>
         internal static string Db_CreateUserCommand_GrantingUser {
@@ -363,29 +471,38 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Datacenter {0} does not have a {1} resource named &apos;{2}&apos;..
+        ///   Looks up a localized string similar to No schemas specified to filter access for this user. Using &quot;dbo&quot;..
         /// </summary>
-        internal static string Db_CreateUserCommand_NoDatabaseInDatacenter {
+        internal static string Db_CreateUserCommand_NoSchemasSpecified {
             get {
-                return ResourceManager.GetString("Db_CreateUserCommand_NoDatabaseInDatacenter", resourceCulture);
+                return ResourceManager.GetString("Db_CreateUserCommand_NoSchemasSpecified", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} resource &apos;{1}&apos; has an unexpected Connection String field: &apos;{2}&apos;.
+        ///   Looks up a localized string similar to The connection string data has been saved to the secret store.
         /// </summary>
-        internal static string Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField {
+        internal static string Db_CreateUserCommand_SavedToSecretStore {
             get {
-                return ResourceManager.GetString("Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField", resourceCulture);
+                return ResourceManager.GetString("Db_CreateUserCommand_SavedToSecretStore", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} resource &apos;{1}&apos; is missing a required Connection String field: &apos;{2}&apos;.
+        ///   Looks up a localized string similar to Saving connection string to secret store key &apos;{0}&apos;.
         /// </summary>
-        internal static string Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField {
+        internal static string Db_CreateUserCommand_SavingConnectionString {
             get {
-                return ResourceManager.GetString("Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField", resourceCulture);
+                return ResourceManager.GetString("Db_CreateUserCommand_SavingConnectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving service username to secret store key &apos;{0}&apos;.
+        /// </summary>
+        internal static string Db_CreateUserCommand_SavingServiceUser {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_SavingServiceUser", resourceCulture);
             }
         }
         
@@ -404,6 +521,51 @@ namespace NuCmd {
         internal static string Db_CreateUserCommand_WouldCreateUser {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_WouldCreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the password for the &apos;{0}&apos; account:.
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_EnterAdminPassword {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_EnterAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datacenter {0} does not have a {1} resource named &apos;{2}&apos;..
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_NoDatabaseInDatacenter {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_NoDatabaseInDatacenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} resource &apos;{1}&apos; has an unexpected Connection String field: &apos;{2}&apos;.
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} resource &apos;{1}&apos; is missing a required Connection String field: &apos;{2}&apos;.
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Admin password from secret store..
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_UsingSecretStore {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_UsingSecretStore", resourceCulture);
             }
         }
         
@@ -480,6 +642,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The admin password for &apos;{0}&apos; in the secret store has been updated and stored in &apos;{1}&apos;. NOTE: The password has NOT YET BEEN CHANGED on the database server itself. Use &apos;nucmd db applyadminpassword&apos; to set it..
+        /// </summary>
+        internal static string Db_GenerateAdminPasswordCommand_PasswordGenerated {
+            get {
+                return ResourceManager.GetString("Db_GenerateAdminPasswordCommand_PasswordGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Permissions in the {0} database:.
         /// </summary>
         internal static string Db_UsersCommand_DisplayingPermissions {
@@ -503,6 +674,15 @@ namespace NuCmd {
         internal static string EnvCommand_Data_Cert {
             get {
                 return ResourceManager.GetString("EnvCommand_Data_Cert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} config templates: {1}.
+        /// </summary>
+        internal static string EnvCommand_Data_ConfigTemplates {
+            get {
+                return ResourceManager.GetString("EnvCommand_Data_ConfigTemplates", resourceCulture);
             }
         }
         
@@ -1201,6 +1381,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetched {0} of {1} audit log entries.
+        /// </summary>
+        internal static string Secrets_LogCommand_WroteEntries {
+            get {
+                return ResourceManager.GetString("Secrets_LogCommand_WroteEntries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter the value for the &apos;{0}&apos; secret:.
         /// </summary>
         internal static string Secrets_SetCommand_EnterValue {
@@ -1305,6 +1494,15 @@ namespace NuCmd {
         internal static string SecretStoreProviderCommandBase_UnknownType {
             get {
                 return ResourceManager.GetString("SecretStoreProviderCommandBase_UnknownType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Admin Key from secret store..
+        /// </summary>
+        internal static string ServiceCommandBase_UsingAdminKeyFromSecretStore {
+            get {
+                return ResourceManager.GetString("ServiceCommandBase_UsingAdminKeyFromSecretStore", resourceCulture);
             }
         }
         

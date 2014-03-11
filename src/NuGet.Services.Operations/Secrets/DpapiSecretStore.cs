@@ -45,6 +45,11 @@ namespace NuGet.Services.Operations.Secrets
                 });
         }
 
+        public override bool Exists()
+        {
+            return Directory.Exists(StoreDirectory) && File.Exists(Path.Combine(StoreDirectory, "metadata.v1.pjson"));
+        }
+
         public override async Task<bool> Delete(SecretName name, string clientOperation)
         {
             // Write an audit record

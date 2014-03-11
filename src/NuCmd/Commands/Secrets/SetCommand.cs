@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Services.Operations;
 using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
@@ -39,6 +40,10 @@ namespace NuCmd.Commands.Secrets
         [ArgDescription("The type of the secret. Defaults to 'password'")]
         public SecretType? Type { get; set; }
 
+        [ArgShortcut("gen")]
+        [ArgDescription("Generates a new password as the value for the key.")]
+        public bool Generate { get; set; }
+
         protected override async Task OnExecute()
         {
             // Open the store
@@ -46,21 +51,28 @@ namespace NuCmd.Commands.Secrets
 
             if (String.IsNullOrEmpty(Value))
             {
-                var secureValue = await Console.PromptForPassword(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Secrets_SetCommand_EnterValue,
-                    Key));
-
-                // PromptForPassword returns a SecureString, but we need it to be unsecure for serialization unfortunately :(
-                IntPtr p = IntPtr.Zero;
-                try
+                if (Generate)
                 {
-                    p = Marshal.SecureStringToGlobalAllocUnicode(secureValue);
-                    Value = Marshal.PtrToStringUni(p);
+                    Value = Utils.GeneratePassword(timestamped: true);
                 }
-                finally
+                else
                 {
-                    Marshal.ZeroFreeGlobalAllocUnicode(p);
+                    var secureValue = await Console.PromptForPassword(String.Format(
+                        CultureInfo.CurrentCulture,
+                        Strings.Secrets_SetCommand_EnterValue,
+                        Key));
+
+                    // PromptForPassword returns a SecureString, but we need it to be unsecure for serialization unfortunately :(
+                    IntPtr p = IntPtr.Zero;
+                    try
+                    {
+                        p = Marshal.SecureStringToGlobalAllocUnicode(secureValue);
+                        Value = Marshal.PtrToStringUni(p);
+                    }
+                    finally
+                    {
+                        Marshal.ZeroFreeGlobalAllocUnicode(p);
+                    }
                 }
             }
 

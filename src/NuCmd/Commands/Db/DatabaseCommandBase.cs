@@ -5,9 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NuGet.Services;
+using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands.Db
@@ -39,20 +42,20 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_NoDatabaseInDatacenter,
+                    Strings.Db_DatabaseCommandBase_NoDatabaseInDatacenter,
                     Datacenter.Value,
                     ResourceTypes.SqlDb,
                     Database.ToString()));
             }
 
-            AdminUser = AdminUser ?? GetDefaultName(server, dc);
+            AdminUser = AdminUser ?? Utils.GetAdminUserName(server, dc);
 
             var connStr = new SqlConnectionStringBuilder(server.Value);
             if (String.IsNullOrEmpty(connStr.InitialCatalog))
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "InitialCatalog"));
@@ -61,7 +64,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceMissingRequiredConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "DataSource"));
@@ -70,7 +73,7 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "User ID"));
@@ -79,19 +82,34 @@ namespace NuCmd.Commands.Db
             {
                 throw new InvalidOperationException(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_ResourceHasUnexpectedConnectionStringField,
+                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
                     ResourceTypes.SqlDb,
                     server.Name,
                     "Password"));
             }
 
-            SecureString password;
             if (String.IsNullOrEmpty(AdminPassword))
+            {
+                // Try getting it from the secret store
+                var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
+                if (secrets != null)
+                {
+                    var secret = await secrets.Read(new SecretName("sqldb." + Utils.GetServerName(connStr.DataSource) + ":admin"), Definition.FullName);
+                    if (secret != null)
+                    {
+                        await Console.WriteInfoLine(Strings.Db_DatabaseCommandBase_UsingSecretStore);
+                        AdminPassword = secret.Value;
+                    }
+                }
+            }
+
+            SecureString password;
+            if(String.IsNullOrEmpty(AdminPassword)) 
             {
                 // Prompt the user for the admin password and put it in a SecureString.
                 password = await Console.PromptForPassword(String.Format(
                     CultureInfo.CurrentCulture,
-                    Strings.Db_CreateUserCommand_EnterAdminPassword,
+                    Strings.Db_DatabaseCommandBase_EnterAdminPassword,
                     AdminUser));
             }
             else
@@ -108,19 +126,6 @@ namespace NuCmd.Commands.Db
 
             // Create a SQL Credential and return the connection info
             return new SqlConnectionInfo(connStr, new SqlCredential(AdminUser, password));
-        }
-
-        private string GetDefaultName(Resource server, NuGet.Services.Operations.Model.Datacenter dc)
-        {
-            string user;
-            if (!server.Attributes.TryGetValue("adminUser", out user) || String.IsNullOrEmpty(user))
-            {
-                user = String.Format(
-                    "nuget-{0}-{1}-admin",
-                    Session.CurrentEnvironment.Name.ToLowerInvariant(),
-                    dc.Id);
-            }
-            return user;
         }
     }
 
@@ -147,6 +152,11 @@ namespace NuCmd.Commands.Db
                 InitialCatalog = alternateDatabase
             };
             return ConnectCore(connStr);
+        }
+
+        public string GetServerName()
+        {
+            return Utils.GetServerName(ConnectionString.DataSource);
         }
 
         private async Task<SqlConnection> ConnectCore(SqlConnectionStringBuilder connStr)

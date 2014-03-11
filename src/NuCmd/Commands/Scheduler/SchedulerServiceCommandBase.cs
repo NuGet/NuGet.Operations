@@ -13,6 +13,10 @@ namespace NuCmd.Commands.Scheduler
         [ArgDescription("Specifies the scheduler service to work with. Defaults to the standard one for this environment (nuget-[environment]-scheduler)")]
         public string CloudService { get; set; }
 
+        [ArgShortcut("dc")]
+        [ArgDescription("Specifies the datacenter of the work service to interact with.")]
+        public int? Datacenter { get; set; }
+
         protected override async Task LoadDefaultsFromContext()
         {
             await base.LoadDefaultsFromContext();

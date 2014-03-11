@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NuGet.Services.Client;
 using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands
@@ -82,6 +83,33 @@ namespace NuCmd.Commands
             }
         }
 
+        protected virtual async Task<SecretStore> GetEnvironmentSecretStore(DeploymentEnvironment env)
+        {
+            if (env.SecretStore == null || String.IsNullOrEmpty(env.SecretStore.Value))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_EnvironmentHasNoSecretStore,
+                    env.Name));
+            }
+            if (!String.Equals(env.SecretStore.Type, DpapiSecretStoreProvider.AppModelTypeName, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_UnknownSecretStoreType,
+                    env.SecretStore.Type));
+            }
+            var store = await (new DpapiSecretStoreProvider(env.SecretStore.Value).Open(env));
+            if (!store.Exists())
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Command_SecretStoreNotCreated,
+                    env.Name));
+            }
+            return store;
+        }
+
         protected virtual DeploymentEnvironment GetEnvironment(string provided)
         {
             return GetEnvironment(provided, required: true);
@@ -137,6 +165,32 @@ namespace NuCmd.Commands
                     datacenter));
             }
             return dc;
+        }
+
+        protected virtual Task<string> GetSecretOrDefault(string secretName)
+        {
+            return GetSecretOrDefault(Session.CurrentEnvironment, secretName, datacenter: null, clientOperation: Definition.FullName);
+        }
+
+        protected virtual Task<string> GetSecretOrDefault(string secretName, int datacenter)
+        {
+            return GetSecretOrDefault(Session.CurrentEnvironment, secretName, datacenter, clientOperation: Definition.FullName);
+        }
+
+        protected virtual async Task<string> GetSecretOrDefault(DeploymentEnvironment env, string secretName, int? datacenter, string clientOperation)
+        {
+            var secrets = await GetEnvironmentSecretStore(env);
+            if (secrets == null)
+            {
+                return null;
+            }
+
+            var secret = await secrets.Read(new SecretName(secretName, datacenter), clientOperation);
+            if (secret == null)
+            {
+                return null;
+            }
+            return secret.Value;
         }
     }
 }

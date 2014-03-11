@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NuGet.Services.Operations.Model
 {
-    public class AppModel : ConfigurableNode
+    public class AppModel
     {
         public static readonly Version DefaultVersion = new Version(3, 0);
 
@@ -21,7 +21,7 @@ namespace NuGet.Services.Operations.Model
         {
         }
 
-        public AppModel(string name, Version version) : base(null)
+        public AppModel(string name, Version version)
         {
             Name = name;
             Version = Version;

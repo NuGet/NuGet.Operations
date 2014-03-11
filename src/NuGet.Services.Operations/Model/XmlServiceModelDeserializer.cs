@@ -27,7 +27,6 @@ namespace NuGet.Services.Operations.Model
                 root.AttributeValueOrDefault("name"),
                 root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion));
 
-            LoadConfig(app.Configuration, root.Element("config"));
             app.Resources.AddRange(LoadComponents<Resource>(root.Element("resources")));
 
             app.Environments.AddRange(LoadEnvironments(root.Element("environments"), app, subs));
@@ -85,8 +84,6 @@ namespace NuGet.Services.Operations.Model
                 }
             }
 
-            LoadConfig(env.Configuration, e.Element("config"));
-
             env.Datacenters.AddRange(e.Elements("datacenter").Select(el => LoadDatacenter(el, env)));
             env.PackageSources.AddRange(LoadComponents<PackageSource>(e.Element("packageSources")));
 
@@ -94,6 +91,12 @@ namespace NuGet.Services.Operations.Model
             if (secElem != null)
             {
                 env.SecretStore = LoadComponent<SecretStoreReference>(secElem, typeFromAttribute: true);
+            }
+
+            var tmplElem = e.Element("configTemplates");
+            if (tmplElem != null)
+            {
+                env.ConfigTemplates = LoadComponent<ConfigTemplateReference>(tmplElem, typeFromAttribute: true);
             }
 
             return env;
@@ -111,8 +114,6 @@ namespace NuGet.Services.Operations.Model
             dc.Resources.AddRange(LoadComponents<Resource>(e.Element("resources")));
             dc.Services.AddRange(LoadServices(dc, e.Element("services")));
 
-            LoadConfig(dc.Configuration, e.Element("config"));
-
             return dc;
         }
 
@@ -124,14 +125,9 @@ namespace NuGet.Services.Operations.Model
             }
             return root.Elements().Select(e =>
             {
-                var svc = new Service(dc)
-                {
-                    Name = e.AttributeValueOrDefault("name"),
-                    Type = e.Name.LocalName,
-                    Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s)),
-                    Value = e.AttributeValueOrDefault("service")
-                };
-                LoadConfig(svc.Configuration, e.Element("config"));
+                var svc = new Service(dc);
+                LoadComponent(e, typeFromAttribute: false, instance: svc);
+                svc.Uri = e.AttributeValueOrDefault<Uri>("url", s => new Uri(s));
                 return svc;
             });
         }
@@ -190,24 +186,6 @@ namespace NuGet.Services.Operations.Model
             }
 
             return instance;
-        }
-
-        private static void LoadConfig(IList<ConfigSetting> settings, XElement configElement)
-        {
-            if (configElement != null)
-            {
-                foreach (var e in configElement.Elements("setting"))
-                {
-                    var setting = new ConfigSetting()
-                    {
-                        Name = e.AttributeValueOrDefault("name"),
-                        Service = e.AttributeValueOrDefault("service"),
-                        Type = e.AttributeValueOrDefault<ConfigSettingType>("type", s => (ConfigSettingType)Enum.Parse(typeof(ConfigSettingType), s, ignoreCase: true), ConfigSettingType.Literal),
-                        Value = e.Value
-                    };
-                    settings.Add(setting);
-                }
-            }
         }
     }
 }

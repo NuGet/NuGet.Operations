@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace NuGet.Services.Operations.Secrets
 {
@@ -12,6 +13,9 @@ namespace NuGet.Services.Operations.Secrets
         public int? Datacenter { get; private set; }
         public string Name { get; private set; }
 
+        public SecretName(string name) : this(name, datacenter: null) { }
+
+        [JsonConstructor]
         public SecretName(string name, int? datacenter)
         {
             Name = name;

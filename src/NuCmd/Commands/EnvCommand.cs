@@ -39,6 +39,14 @@ namespace NuCmd.Commands
                     environment.SecretStore.Value);
             }
 
+            if (environment.ConfigTemplates != null)
+            {
+                await Console.WriteInfoLine(
+                    Strings.EnvCommand_Data_ConfigTemplates,
+                    environment.ConfigTemplates.Type,
+                    environment.ConfigTemplates.Value);
+            }
+
             await Console.WriteInfoLine(Strings.EnvCommand_Data_Datacenters);
 
             foreach (var dc in environment.Datacenters)
