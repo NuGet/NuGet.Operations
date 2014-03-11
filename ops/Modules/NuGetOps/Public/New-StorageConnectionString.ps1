@@ -24,9 +24,7 @@ function New-StorageConnectionString {
     }
 
     # Get the service
-    $svc = $NuOps.CurrentEnvironment[$Datacenter].Services | 
-        where { [String]::Equals($_.Type, "azureRole", "OrdinalIgnoreCase") } |
-        select -first 1
+    $svc = $NuOps.CurrentEnvironment[$Datacenter].GetService("work")
 
     if(!$svc) {
         throw "No Azure Role services in the current environment!"
