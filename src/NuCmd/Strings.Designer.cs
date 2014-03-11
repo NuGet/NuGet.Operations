@@ -61,6 +61,24 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetching configuration for {0} service to determine current storage account use..
+        /// </summary>
+        internal static string Azure_CycleStorageKeyCommand_FetchingConfig {
+            get {
+                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_FetchingConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Azure Role Services were found in the app model!.
+        /// </summary>
+        internal static string Azure_CycleStorageKeyCommand_NoAzureRoles {
+            get {
+                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_NoAzureRoles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authenticated. Verifying subscription access....
         /// </summary>
         internal static string Azure_LoginCommand_AuthenticatedGettingSubscription {
@@ -453,6 +471,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No schemas specified to filter access for this user. Using &quot;dbo&quot;..
+        /// </summary>
+        internal static string Db_CreateUserCommand_NoSchemasSpecified {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_NoSchemasSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The connection string data has been saved to the secret store.
         /// </summary>
         internal static string Db_CreateUserCommand_SavedToSecretStore {
@@ -530,6 +557,15 @@ namespace NuCmd {
         internal static string Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField {
             get {
                 return ResourceManager.GetString("Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Admin password from secret store..
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_UsingSecretStore {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_UsingSecretStore", resourceCulture);
             }
         }
         
@@ -1458,6 +1494,15 @@ namespace NuCmd {
         internal static string SecretStoreProviderCommandBase_UnknownType {
             get {
                 return ResourceManager.GetString("SecretStoreProviderCommandBase_UnknownType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Admin Key from secret store..
+        /// </summary>
+        internal static string ServiceCommandBase_UsingAdminKeyFromSecretStore {
+            get {
+                return ResourceManager.GetString("ServiceCommandBase_UsingAdminKeyFromSecretStore", resourceCulture);
             }
         }
         

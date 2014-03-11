@@ -50,7 +50,8 @@ namespace NuCmd.Commands
                 var parsed = XDocument.Parse(result.Configuration);
                 return parsed.Descendants(ns + "Setting").ToDictionary(
                     x => x.Attribute("name").Value,
-                    x => x.Attribute("value").Value);
+                    x => x.Attribute("value").Value,
+                    StringComparer.OrdinalIgnoreCase);
             }
         }
     }

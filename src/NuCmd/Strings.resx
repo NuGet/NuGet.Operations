@@ -593,6 +593,15 @@ Connection String: {3}</value>
   <data name="Search_QueryCommand_Hits" xml:space="preserve">
     <value>{0} hits.</value>
   </data>
+  <data name="Azure_CycleStorageKeyCommand_FetchingConfig" xml:space="preserve">
+    <value>Fetching configuration for {0} service...</value>
+  </data>
+  <data name="Azure_CycleStorageKeyCommand_MissingConfigKey" xml:space="preserve">
+    <value>The {0} service does not use the {1} storage account!</value>
+  </data>
+  <data name="Azure_CycleStorageKeyCommand_NoAzureRoles" xml:space="preserve">
+    <value>No Azure Role Services were found in the app model!</value>
+  </data>
   <data name="Command_EnvironmentHasNoSecretStore" xml:space="preserve">
     <value>Environment '{0}' has no secret store</value>
   </data>
@@ -629,11 +638,17 @@ Connection String: {3}</value>
   <data name="Db_ApplyAdminPasswordCommand_NoPasswordInStore" xml:space="preserve">
     <value>There is no password for '{0}' in the secret store.</value>
   </data>
+  <data name="Db_CreateUserCommand_NoSchemasSpecified" xml:space="preserve">
+    <value>No schemas specified to filter access for this user. Using "dbo".</value>
+  </data>
   <data name="Db_CreateUserCommand_SavingConnectionString" xml:space="preserve">
     <value>Saving connection string to secret store key '{0}'</value>
   </data>
   <data name="Db_CreateUserCommand_SavingServiceUser" xml:space="preserve">
     <value>Saving service username to secret store key '{0}'</value>
+  </data>
+  <data name="Db_DatabaseCommandBase_UsingSecretStore" xml:space="preserve">
+    <value>Using Admin password from secret store.</value>
   </data>
   <data name="Db_GenerateAdminPasswordCommand_PasswordGenerated" xml:space="preserve">
     <value>The admin password for '{0}' in the secret store has been updated and stored in '{1}'. NOTE: The password has NOT YET BEEN CHANGED on the database server itself. Use 'nucmd db applyadminpassword' to set it.</value>
@@ -643,5 +658,8 @@ Connection String: {3}</value>
   </data>
   <data name="Secrets_LogCommand_WroteEntries" xml:space="preserve">
     <value>Fetched {0} of {1} audit log entries</value>
+  </data>
+  <data name="ServiceCommandBase_UsingAdminKeyFromSecretStore" xml:space="preserve">
+    <value>Using Admin Key from secret store.</value>
   </data>
 </root>

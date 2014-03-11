@@ -166,5 +166,31 @@ namespace NuCmd.Commands
             }
             return dc;
         }
+
+        protected virtual Task<string> GetSecretOrDefault(string secretName)
+        {
+            return GetSecretOrDefault(Session.CurrentEnvironment, secretName, datacenter: null, clientOperation: Definition.FullName);
+        }
+
+        protected virtual Task<string> GetSecretOrDefault(string secretName, int datacenter)
+        {
+            return GetSecretOrDefault(Session.CurrentEnvironment, secretName, datacenter, clientOperation: Definition.FullName);
+        }
+
+        protected virtual async Task<string> GetSecretOrDefault(DeploymentEnvironment env, string secretName, int? datacenter, string clientOperation)
+        {
+            var secrets = await GetEnvironmentSecretStore(env);
+            if (secrets == null)
+            {
+                return null;
+            }
+
+            var secret = await secrets.Read(new SecretName(secretName, datacenter), clientOperation);
+            if (secret == null)
+            {
+                return null;
+            }
+            return secret.Value;
+        }
     }
 }

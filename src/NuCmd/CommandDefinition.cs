@@ -53,5 +53,15 @@ namespace NuCmd
 
             return new CommandDefinition(group, name, descAttr == null ? null : descAttr.Description, type);
         }
+
+        public string FullName
+        {
+            get
+            {
+                return String.IsNullOrEmpty(Group) ?
+                    ("nucmd " + Name) :
+                    ("nucmd " + Group + " " + Name);
+            }
+        }
     }
 }

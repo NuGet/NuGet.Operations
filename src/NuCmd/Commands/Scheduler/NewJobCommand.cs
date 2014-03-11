@@ -161,13 +161,14 @@ namespace NuCmd.Commands.Scheduler
                         String.Concat("admin:", password))));
         }
 
-        protected override Task LoadDefaultsFromContext()
+        protected override async Task LoadDefaultsFromContext()
         {
             if (Session != null && Session.CurrentEnvironment != null)
             {
-                ServiceUri = ServiceUri ?? Session.CurrentEnvironment.GetServiceUri(datacenter: 0, service: "work");
+                ServiceUri = ServiceUri ?? Session.CurrentEnvironment.GetServiceUri(datacenter: (Datacenter ?? 0), service: "work");
+                Password = Password ?? (await GetSecretOrDefault("http.admin:work", Datacenter ?? 0));
             }
-            return base.LoadDefaultsFromContext();
+            await base.LoadDefaultsFromContext();
         }
     }
 }

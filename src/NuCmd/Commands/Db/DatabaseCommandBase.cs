@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NuGet.Services;
 using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands.Db
@@ -87,8 +88,23 @@ namespace NuCmd.Commands.Db
                     "Password"));
             }
 
-            SecureString password;
             if (String.IsNullOrEmpty(AdminPassword))
+            {
+                // Try getting it from the secret store
+                var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
+                if (secrets != null)
+                {
+                    var secret = await secrets.Read(new SecretName("sqldb." + Utils.GetServerName(connStr.DataSource) + ":admin"), Definition.FullName);
+                    if (secret != null)
+                    {
+                        await Console.WriteInfoLine(Strings.Db_DatabaseCommandBase_UsingSecretStore);
+                        AdminPassword = secret.Value;
+                    }
+                }
+            }
+
+            SecureString password;
+            if(String.IsNullOrEmpty(AdminPassword)) 
             {
                 // Prompt the user for the admin password and put it in a SecureString.
                 password = await Console.PromptForPassword(String.Format(

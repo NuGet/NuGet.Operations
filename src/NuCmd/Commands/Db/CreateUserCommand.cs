@@ -144,6 +144,12 @@ namespace NuCmd.Commands.Db
                     await connection.QueryAsync<int>(
                         "CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
 
+                    if (Schemas == null)
+                    {
+                        await Console.WriteWarningLine(Strings.Db_CreateUserCommand_NoSchemasSpecified);
+                        Schemas = new [] { "dbo" };
+                    }
+
                     foreach (var schema in Schemas)
                     {
                         await Console.WriteInfoLine(String.Format(
@@ -181,6 +187,10 @@ namespace NuCmd.Commands.Db
 
                 // Save the user name as the new active account for this service
                 string latestUserSecretName = serverBaseName + ":serviceUsers." + Service;
+                if (!String.IsNullOrEmpty(Distinguisher))
+                {
+                    latestUserSecretName += "_" + Distinguisher;
+                }
                 await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingServiceUser, latestUserSecretName);
                 await secrets.Write(new Secret(
                     new SecretName(latestUserSecretName),

@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="Azure\AzureToken.cs" />
     <Compile Include="Azure\AzureTokenManager.cs" />
+    <Compile Include="Config\ConfigObject.cs" />
     <Compile Include="Config\ConfigTemplateBase.cs" />
     <Compile Include="Config\ConfigTemplateModel.cs" />
     <Compile Include="Config\ConfigTemplateSource.cs" />
