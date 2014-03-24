@@ -127,6 +127,7 @@
     <Compile Include="Config\ConfigTemplateModel.cs" />
     <Compile Include="Config\ConfigTemplateSource.cs" />
     <Compile Include="Config\FileSystemConfigTemplateSource.cs" />
+    <Compile Include="Config\ServiceModel.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\XLinqExtensions.cs" />
     <Compile Include="Model\AzureSubscription.cs" />

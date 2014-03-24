@@ -13,6 +13,7 @@ namespace NuGet.Services.Operations.Config
     {
         public dynamic Resources { get; set; }
         public Service Service { get; set; }
+        public dynamic Services { get; set; }
 
         public ConfigTemplateModel(SecretStore secrets, Service service)
         {
@@ -23,6 +24,11 @@ namespace NuGet.Services.Operations.Config
                     .GroupBy(r => r.Type)
                     .ToDictionary(g => g.Key, g => (object)g.ToDictionary(r => r.Name, r => ResolveValue(secrets, service, r))));
             Service = service;
+            Services = new ConfigObject(
+                service
+                    .Datacenter
+                    .Services
+                    .ToDictionary(s => s.Name, s => (object)new ServiceModel(s, secrets)));
         }
 
         private object ResolveValue(SecretStore secrets, Service service, Resource r)
