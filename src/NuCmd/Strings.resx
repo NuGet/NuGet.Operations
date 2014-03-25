@@ -662,4 +662,7 @@ Connection String: {3}</value>
   <data name="ServiceCommandBase_UsingAdminKeyFromSecretStore" xml:space="preserve">
     <value>Using Admin Key from secret store.</value>
   </data>
+  <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
+    <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
+  </data>
 </root>

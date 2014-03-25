@@ -61,11 +61,20 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fetching configuration for {0} service to determine current storage account use..
+        ///   Looks up a localized string similar to Fetching configuration for {0} service....
         /// </summary>
         internal static string Azure_CycleStorageKeyCommand_FetchingConfig {
             get {
                 return ResourceManager.GetString("Azure_CycleStorageKeyCommand_FetchingConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} service does not use the {1} storage account!.
+        /// </summary>
+        internal static string Azure_CycleStorageKeyCommand_MissingConfigKey {
+            get {
+                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_MissingConfigKey", resourceCulture);
             }
         }
         
@@ -284,6 +293,15 @@ namespace NuCmd {
         internal static string Config_GenerateCommand_NoTemplate {
             get {
                 return ResourceManager.GetString("Config_GenerateCommand_NoTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no configTemplates element in the AppModel for the &apos;{0}&apos; environment..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoTemplateSource {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoTemplateSource", resourceCulture);
             }
         }
         
