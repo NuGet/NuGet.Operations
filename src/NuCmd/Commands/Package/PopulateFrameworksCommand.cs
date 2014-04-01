@@ -144,6 +144,16 @@ namespace NuCmd.Commands.Package
 
         private void ProcessPackage(dynamic package, SqlConnection conn, int thisPackageId, int totalCount)
         {
+            string countPad = new string('0', totalCount.ToString().Length);
+
+            Console.WriteInfoLine("[{2}/{3} ~{4}%] Processing Package: {0}@{1} (created {5})",
+                (string)package.Id,
+                (string)package.Version,
+                thisPackageId.ToString(countPad),
+                totalCount.ToString(countPad),
+                (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
+                (DateTime)package.Created).Wait();
+
             try
             {
                 var reportPath = Path.Combine(WorkDirectory, package.Id + "_" + package.Version + ".json");
@@ -155,7 +165,7 @@ namespace NuCmd.Commands.Package
                     Version = package.Version,
                     Key = package.Key,
                     Hash = package.Hash,
-                    Created = package.Created.Value,
+                    Created = package.Created,
                     State = PackageReportState.Unresolved
                 };
 
@@ -164,17 +174,24 @@ namespace NuCmd.Commands.Package
                     File.Move(bustedReportPath, reportPath);
                 }
 
+                bool resolved = false;
+
                 if (File.Exists(reportPath))
                 {
                     using (var reader = File.OpenText(reportPath))
                     {
-                        report = (PackageFrameworkReport)_serializer.Deserialize(
+                        var savedReport = (PackageFrameworkReport)_serializer.Deserialize(
                             reader, typeof(PackageFrameworkReport));
 
-                        ResolveReport(report, conn);
+                        if (savedReport != null)
+                        {
+                            report = savedReport;
+                            resolved = ResolveReport(report, conn) && report.State == PackageReportState.Resolved;
+                        }
                     }
                 }
-                else
+
+                if (!resolved)                
                 {
                     try
                     {
@@ -183,7 +200,8 @@ namespace NuCmd.Commands.Package
 
                         var supportedFrameworks = GetSupportedFrameworks(nugetPackage);
                         report.PackageFrameworks = supportedFrameworks.ToArray();
-                        PopulateFrameworks(report, package, conn);
+                        
+                        GetExistingFrameworks((int)(package.Key), report, conn);
 
                         File.Delete(downloadPath);
 
@@ -201,30 +219,42 @@ namespace NuCmd.Commands.Package
                     _serializer.Serialize(writer, report);
                 }
 
-                Console.WriteInfoLine("[{2}/{3} {4}%] {6} Package: {0}@{1} (created {5})",
+                Console.WriteInfoLine("[{2}/{3} ~{4}%] {6} Package: {0}@{1} (created {5})",
                     (string)package.Id,
                     (string)package.Version,
-                    thisPackageId.ToString("0000000"),
-                    totalCount.ToString("0000000"),
+                    thisPackageId.ToString(countPad),
+                    totalCount.ToString(countPad),
                     (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
-                    (DateTime)package.Created.Value,
+                    (DateTime)package.Created,
                     report.State.ToString().PadRight(_padLength, ' ')).Wait();
+
+                if (report.State == PackageReportState.Error)
+                {
+                    Console.WriteErrorLine("Previous error recorded in report: {0}", report.Error).Wait();
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteErrorLine("[{2}/{3} {4}%] Error for Package: {0}@{1}: {5}",
+                Console.WriteErrorLine("[{2}/{3} ~{4}%] Error for Package: {0}@{1}: {5}",
                     (string)package.Id,
                     (string)package.Version,
-                    thisPackageId.ToString("0000000"),
-                    totalCount.ToString("0000000"),
+                    thisPackageId.ToString(countPad),
+                    totalCount.ToString(countPad),
                     (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
                     ex.ToString()).Wait();
             }
         }
 
-        private void ResolveReport(PackageFrameworkReport report, SqlConnection conn)
+        private bool ResolveReport(PackageFrameworkReport report, SqlConnection conn)
         {
-            bool error = false;
+            report.State = PackageReportState.Unresolved;
+
+            if (report.Operations == null)
+            {
+                return false;
+            }
+
+            Console.WriteInfoLine(" {0}@{1} Operations to complete: {2}", report.Id, report.Version, report.Operations.Count()).Wait();
 
             foreach (var operation in report.Operations)
             {
@@ -247,9 +277,11 @@ namespace NuCmd.Commands.Package
                         }
                         catch (Exception ex)
                         {
-                            error = true;
+                            report.State = PackageReportState.Error;
                             operation.Applied = false;
                             operation.Error = ex.ToString();
+
+                            Console.WriteErrorLine(" {0}@{1} '{2}' Error: {3}", report.Id, report.Version, operation.Framework, operation.Error).Wait();
                         }
                     }
                     else if (operation.Type == PackageFrameworkOperationType.Remove)
@@ -270,25 +302,25 @@ namespace NuCmd.Commands.Package
                         }
                         catch (Exception ex)
                         {
-                            error = true;
+                            report.State = PackageReportState.Error;
                             operation.Applied = false;
                             operation.Error = ex.ToString();
+
+                            Console.WriteErrorLine(" {0}@{1} '{2}' Error: {3}", report.Id, report.Version, operation.Framework, operation.Error).Wait();
                         }
                     }
                 }
-
-                if (error)
-                {
-                    report.State = PackageReportState.Error;
-                }
-                else if (report.Operations.All(o => o.Applied))
-                {
-                    report.State = PackageReportState.Resolved;
-                }
             }
+
+            if (report.Operations.All(o => o.Applied))
+            {
+                report.State = PackageReportState.Resolved;
+            }
+
+            return report.State != PackageReportState.Error;
         }
 
-        private string DownloadPackage(Package package)
+        private string DownloadPackage(dynamic package)
         {
             string id = ((string)package.Id).ToLowerInvariant();
             string version = ((string)package.Version).ToLowerInvariant();
@@ -307,10 +339,7 @@ namespace NuCmd.Commands.Package
             }
 
             Console.WriteInfoLine(Strings.Package_DownloadingBlob).Wait();
-            if (!WhatIf)
-            {
-                blob.DownloadToFile(localFile, FileMode.CreateNew);
-            }
+            blob.DownloadToFile(localFile, FileMode.CreateNew);
 
             return localFile;
         }
@@ -321,7 +350,7 @@ namespace NuCmd.Commands.Package
                 fn == null ? null : VersionUtility.GetShortFrameworkName(fn)).ToArray();                
         }
 
-        private void PopulateFrameworks(PackageFrameworkReport report, Package package, SqlConnection conn)
+        private void GetExistingFrameworks(int packageKey, PackageFrameworkReport report, SqlConnection conn)
         {
             // Get all target frameworks in the db for this package
             report.DatabaseFrameworks = new HashSet<string>(conn.Query<string>(@"
@@ -329,7 +358,7 @@ namespace NuCmd.Commands.Package
                     FROM    PackageFrameworks
                     WHERE   Package_Key = @packageKey", new
             {
-                packageKey = package.Key
+                packageKey = packageKey
             })).ToArray();
 
             var adds = report.PackageFrameworks.Except(report.DatabaseFrameworks).Select(targetFramework =>
@@ -415,7 +444,7 @@ namespace NuCmd.Commands.Package
             public int Key { get; set; }
             public string Version { get; set; }
             public string NormalizedVersion { get; set; }
-            public DateTime? Created { get; set; }
+            public DateTime Created { get; set; }
         }
 
         public class PackageFrameworkReport
