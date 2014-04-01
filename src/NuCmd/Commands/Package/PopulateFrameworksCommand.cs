@@ -91,11 +91,13 @@ namespace NuCmd.Commands.Package
                 return;
             }
 
+            IEnumerable<dynamic> packages;
+
             // Get all of the packages to be processed
             using (var conn = new SqlConnection(DatabaseConnectionString))
             {
                 await conn.OpenAsync();
-                var packages = conn.Query(@"
+                packages = conn.Query(@"
                     SELECT      p.[Key], pr.Id, p.Version, p.Hash, p.Created
                     FROM        Packages p
                     INNER JOIN  PackageRegistrations pr
@@ -108,41 +110,42 @@ namespace NuCmd.Commands.Package
                         All,
                         Version
                     });
-
-                if (!WhatIf)
-                {
-                    bool confirmed = await Console.Confirm(
-                        String.Format(
-                            Strings.Package_PopulatePackageFrameworksCommand_Confirm,
-                            packages.Count(),
-                            (dc == null ? "<unknown>" : dc.FullName)),
-                        defaultValue: true);
-
-                    if (!confirmed)
-                    {
-                        await Console.WriteErrorLine(Strings.SystemConsole_ConfirmDenied);
-                        return;
-                    }
-                }
-
-                int totalCount = packages.Count();
-                int processedCount = 0;
-
-                packages
-                    .AsParallel()
-                    .AsOrdered()
-                    // Use 2 threads per processor, because we might find ourselves
-                    // waiting on SQL
-                    .WithDegreeOfParallelism(System.Environment.ProcessorCount * 2)
-                    .ForAll(package =>
-                    {
-                        var thisPackageId = Interlocked.Increment(ref processedCount);
-                        ProcessPackage(package, conn, thisPackageId, totalCount);
-                    });
             }
+
+            if (!WhatIf)
+            {
+                bool confirmed = await Console.Confirm(
+                    String.Format(
+                        Strings.Package_PopulatePackageFrameworksCommand_Confirm,
+                        packages.Count(),
+                        (dc == null ? "<unknown>" : dc.FullName)),
+                    defaultValue: true);
+
+                if (!confirmed)
+                {
+                    await Console.WriteErrorLine(Strings.SystemConsole_ConfirmDenied);
+                    return;
+                }
+            }
+
+            int totalCount = packages.Count();
+            int processedCount = 0;
+
+            packages
+                .AsParallel()
+                .AsOrdered()
+                // Use 2 threads per processor, because we might find ourselves
+                // waiting on SQL
+                .WithDegreeOfParallelism(1)
+                .ForAll(package =>
+                {
+                    var thisPackageId = Interlocked.Increment(ref processedCount);
+                    ProcessPackage(package, thisPackageId, totalCount);
+                });
+
         }
 
-        private void ProcessPackage(dynamic package, SqlConnection conn, int thisPackageId, int totalCount)
+        private void ProcessPackage(dynamic package, int thisPackageId, int totalCount)
         {
             string countPad = new string('0', totalCount.ToString().Length);
 
@@ -174,43 +177,46 @@ namespace NuCmd.Commands.Package
                     File.Move(bustedReportPath, reportPath);
                 }
 
-                bool resolved = false;
-
-                if (File.Exists(reportPath))
+                using (var conn = new SqlConnection(DatabaseConnectionString))
                 {
-                    using (var reader = File.OpenText(reportPath))
-                    {
-                        var savedReport = (PackageFrameworkReport)_serializer.Deserialize(
-                            reader, typeof(PackageFrameworkReport));
+                    bool resolved = false;
 
-                        if (savedReport != null)
+                    if (File.Exists(reportPath))
+                    {
+                        using (var reader = File.OpenText(reportPath))
                         {
-                            report = savedReport;
-                            resolved = ResolveReport(report, conn) && report.State == PackageReportState.Resolved;
+                            var savedReport = (PackageFrameworkReport)_serializer.Deserialize(
+                                reader, typeof(PackageFrameworkReport));
+
+                            if (savedReport != null)
+                            {
+                                report = savedReport;
+                                resolved = ResolveReport(report, conn) && report.State == PackageReportState.Resolved;
+                            }
                         }
                     }
-                }
 
-                if (!resolved)                
-                {
-                    try
+                    if (!resolved)
                     {
-                        var downloadPath = DownloadPackage(package);
-                        var nugetPackage = new ZipPackage(downloadPath);
+                        try
+                        {
+                            var downloadPath = DownloadPackage(package);
+                            var nugetPackage = new ZipPackage(downloadPath);
 
-                        var supportedFrameworks = GetSupportedFrameworks(nugetPackage);
-                        report.PackageFrameworks = supportedFrameworks.ToArray();
-                        
-                        GetExistingFrameworks((int)(package.Key), report, conn);
+                            var supportedFrameworks = GetSupportedFrameworks(nugetPackage);
+                            report.PackageFrameworks = supportedFrameworks.ToArray();
 
-                        File.Delete(downloadPath);
+                            GetExistingFrameworks((int)(package.Key), report, conn);
 
-                        ResolveReport(report, conn);
-                    }
-                    catch (Exception ex)
-                    {
-                        report.State = PackageReportState.Error;
-                        report.Error = ex.ToString();
+                            File.Delete(downloadPath);
+
+                            ResolveReport(report, conn);
+                        }
+                        catch (Exception ex)
+                        {
+                            report.State = PackageReportState.Error;
+                            report.Error = ex.ToString();
+                        }
                     }
                 }
 
