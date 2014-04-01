@@ -275,6 +275,7 @@
     <Compile Include="Commands\EnvCommand.cs" />
     <Compile Include="Commands\EnvironmentCommandBase.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="Commands\Package\PopulatePackageFrameworksCommand.cs" />
     <Compile Include="Commands\Package\DeleteCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
     <Compile Include="Commands\Scheduler\JobCollectionCommandBase.cs" />
@@ -345,7 +346,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -61,7 +61,7 @@ namespace NuCmd.Commands.Package
         {
             if (String.IsNullOrWhiteSpace(Version) && !AllVersions)
             {
-                await Console.WriteErrorLine(Strings.Package_DeleteCommand_AllVersionsRequiredIfVersionNull);
+                await Console.WriteErrorLine(Strings.Package_AllVersionsRequiredIfVersionNull);
                 return;
             }
 
@@ -82,7 +82,7 @@ namespace NuCmd.Commands.Package
 
             if (!String.IsNullOrWhiteSpace(Version) && AllVersions)
             {
-                await Console.WriteErrorLine(Strings.Package_DeleteCommand_VersionAndAllVersionsSpecified);
+                await Console.WriteErrorLine(Strings.Package_VersionAndAllVersionsSpecified);
                 return;
             }
             
@@ -158,11 +158,11 @@ namespace NuCmd.Commands.Package
                 if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
                     String.IsNullOrWhiteSpace(StorageConnectionString))
                 {
-                    throw new InvalidOperationException(Strings.Package_DeleteCommand_MissingData);
+                    throw new InvalidOperationException(Strings.Command_MissingEnvironmentArguments);
                 }
 
                 await Console.WriteInfoLine(
-                    Strings.Package_DeleteCommand_ConnectionInfo,
+                    Strings.Command_ConnectionInfo,
                     new SqlConnectionStringBuilder(DatabaseConnectionString).DataSource,
                     CloudStorageAccount.Parse(StorageConnectionString).Credentials.AccountName);
             }
@@ -424,7 +424,7 @@ namespace NuCmd.Commands.Package
                 {
                     File.Delete(localFile);
                 }
-                await Console.WriteInfoLine(Strings.Package_DeleteCommand_DownloadingBlob);
+                await Console.WriteInfoLine(Strings.Package_DownloadingBlob);
                 if (!WhatIf)
                 {
                     await blob.DownloadToFileAsync(localFile, FileMode.CreateNew);
