@@ -20,7 +20,7 @@ using PowerArgs;
 namespace NuCmd.Commands.Package
 {
     [Description("Populate the Package Frameworks index in the database from the data in the package itself")]
-    public class PopulatePackageFrameworksCommand : AzureCommandBase
+    public class PopulateFrameworksCommand : AzureCommandBase
     {
         [ArgPosition(0)]
         [ArgShortcut("i")]
