@@ -1,28 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Dapper;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Management.Compute.Models;
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using NuCmd.Models;
 using NuGet;
-using NuGet.Services;
-using NuGet.Services.Client;
 using NuGet.Services.Operations.Model;
 using PowerArgs;
 
@@ -140,156 +131,157 @@ namespace NuCmd.Commands.Package
                     .AsParallel()
                     .AsOrdered()
                     .WithDegreeOfParallelism(10)
-                    .ForAll(package => 
+                    .ForAll(package =>
                     {
                         var thisPackageId = Interlocked.Increment(ref processedCount);
-
-                        try
-                        {
-                            var reportPath = Path.Combine(WorkDirectory, package.Id + "_" + package.Version + ".json");
-                            var bustedReportPath = Path.Combine(WorkDirectory, package.Id + "_" + package.Version + "_" + package.Hash + ".json");
-
-                            var report = new PackageFrameworkReport()
-                            {
-                                Id = package.Id,
-                                Version = package.Version,
-                                Key = package.Key,
-                                Hash = package.Hash,
-                                Created = package.Created.Value,
-                                State = PackageReportState.Unresolved
-                            };
-
-                            if (File.Exists(bustedReportPath))
-                            {
-                                File.Move(bustedReportPath, reportPath);
-                            }
-
-                            if (File.Exists(reportPath))
-                            {
-                                using (var reader = File.OpenText(reportPath))
-                                {
-                                    report = (PackageFrameworkReport)_serializer.Deserialize(
-                                        reader, typeof(PackageFrameworkReport));
-                                    
-                                    ResolveReport(report);
-                                }
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    var downloadPath = DownloadPackage(package);
-                                    var nugetPackage = new ZipPackage(downloadPath);
-
-                                    var supportedFrameworks = GetSupportedFrameworks(nugetPackage);
-                                    report.PackageFrameworks = supportedFrameworks.ToArray();
-                                    PopulateFrameworks(report, package);
-
-                                    File.Delete(downloadPath);
-
-                                    ResolveReport(report);
-                                }
-                                catch (Exception ex)
-                                {
-                                    report.State = PackageReportState.Error;
-                                    report.Error = ex.ToString();
-                                }
-                            }
-
-                            using (var writer = File.CreateText(reportPath))
-                            {
-                                _serializer.Serialize(writer, report);
-                            }
-
-                            Console.WriteInfoLine("[{2}/{3} {4}%] {6} Package: {0}@{1} (created {5})",
-                                (string)package.Id,
-                                (string)package.Version,
-                                thisPackageId.ToString("0000000"),
-                                totalCount.ToString("0000000"),
-                                (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
-                                (DateTime)package.Created.Value,
-                                report.State.ToString().PadRight(_padLength, ' '));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteErrorLine("[{2}/{3} {4}%] Error for Package: {0}@{1}: {5}",
-                                (string)package.Id,
-                                (string)package.Version,
-                                thisPackageId.ToString("0000000"),
-                                totalCount.ToString("0000000"),
-                                (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
-                                ex.ToString());
-                        }
+                        ProcessPackage(package, conn, thisPackageId, totalCount);
                     });
             }
         }
 
-        private void ResolveReport(PackageFrameworkReport report)
+        private async Task ProcessPackage(dynamic package, SqlConnection conn, int thisPackageId, int totalCount)
+        {
+            try
+            {
+                var reportPath = Path.Combine(WorkDirectory, package.Id + "_" + package.Version + ".json");
+                var bustedReportPath = Path.Combine(WorkDirectory, package.Id + "_" + package.Version + "_" + package.Hash + ".json");
+
+                var report = new PackageFrameworkReport()
+                {
+                    Id = package.Id,
+                    Version = package.Version,
+                    Key = package.Key,
+                    Hash = package.Hash,
+                    Created = package.Created.Value,
+                    State = PackageReportState.Unresolved
+                };
+
+                if (File.Exists(bustedReportPath))
+                {
+                    File.Move(bustedReportPath, reportPath);
+                }
+
+                if (File.Exists(reportPath))
+                {
+                    using (var reader = File.OpenText(reportPath))
+                    {
+                        report = (PackageFrameworkReport)_serializer.Deserialize(
+                            reader, typeof(PackageFrameworkReport));
+
+                        await ResolveReport(report, conn);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        var downloadPath = DownloadPackage(package);
+                        var nugetPackage = new ZipPackage(downloadPath);
+
+                        var supportedFrameworks = GetSupportedFrameworks(nugetPackage);
+                        report.PackageFrameworks = supportedFrameworks.ToArray();
+                        PopulateFrameworks(report, package, conn);
+
+                        File.Delete(downloadPath);
+
+                        await ResolveReport(report, conn);
+                    }
+                    catch (Exception ex)
+                    {
+                        report.State = PackageReportState.Error;
+                        report.Error = ex.ToString();
+                    }
+                }
+
+                using (var writer = File.CreateText(reportPath))
+                {
+                    _serializer.Serialize(writer, report);
+                }
+
+                await Console.WriteInfoLine("[{2}/{3} {4}%] {6} Package: {0}@{1} (created {5})",
+                    (string)package.Id,
+                    (string)package.Version,
+                    thisPackageId.ToString("0000000"),
+                    totalCount.ToString("0000000"),
+                    (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
+                    (DateTime)package.Created.Value,
+                    report.State.ToString().PadRight(_padLength, ' '));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteErrorLine("[{2}/{3} {4}%] Error for Package: {0}@{1}: {5}",
+                    (string)package.Id,
+                    (string)package.Version,
+                    thisPackageId.ToString("0000000"),
+                    totalCount.ToString("0000000"),
+                    (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
+                    ex.ToString()).Wait();
+            }
+        }
+
+        private async Task ResolveReport(PackageFrameworkReport report, SqlConnection conn)
         {
             bool error = false;
-            using (var sqlConnection = new SqlConnection(ConnectionString.ConnectionString))
-            using (var dbExecutor = new SqlExecutor(sqlConnection))
+
+            foreach (var operation in report.Operations)
             {
-                sqlConnection.Open();
-                foreach (var operation in report.Operations)
+                if (!WhatIf)
                 {
-                    if (!WhatIf)
+                    if (operation.Type == PackageFrameworkOperationType.Add)
                     {
-                        if (operation.Type == PackageFrameworkOperationType.Add)
+                        try
                         {
-                            try
-                            {
-                                dbExecutor.Execute(@"
-                                    INSERT INTO PackageFrameworks(TargetFramework, Package_Key)
-                                    VALUES (@targetFramework, @packageKey)",
-                                        new
-                                        {
-                                            targetFramework = operation.Framework,
-                                            packageKey = report.Key
-                                        });
-                                Log.Info(" + Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework);
-                                operation.Applied = true;
-                            }
-                            catch (Exception ex)
-                            {
-                                error = true;
-                                operation.Applied = false;
-                                operation.Error = ex.ToString();
-                            }
+                            conn.Execute(@"
+                                INSERT  PackageFrameworks(TargetFramework, Package_Key)
+                                VALUES  (@targetFramework, @packageKey)", new
+                                {
+                                    targetFramework = operation.Framework,
+                                    packageKey = report.Key
+                                });
+
+                            await Console.WriteInfoLine(" + Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework);
+                            operation.Applied = true;
                         }
-                        else if (operation.Type == PackageFrameworkOperationType.Remove)
+                        catch (Exception ex)
                         {
-                            try
-                            {
-                                dbExecutor.Execute(@"
-                                    DELETE FROM PackageFrameworks
-                                    WHERE TargetFramework = @targetFramework AND Package_Key = @packageKey",
-                                        new
-                                        {
-                                            targetFramework = operation.Framework,
-                                            packageKey = report.Key
-                                        });
-                                Log.Info(" - Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework);
-                                operation.Applied = true;
-                            }
-                            catch (Exception ex)
-                            {
-                                error = true;
-                                operation.Applied = false;
-                                operation.Error = ex.ToString();
-                            }
+                            error = true;
+                            operation.Applied = false;
+                            operation.Error = ex.ToString();
+                        }
+                    }
+                    else if (operation.Type == PackageFrameworkOperationType.Remove)
+                    {
+                        try
+                        {
+                            conn.Execute(@"
+                                DELETE  PackageFrameworks
+                                WHERE   TargetFramework = @targetFramework
+                                    AND Package_Key = @packageKey", new
+                                {
+                                    targetFramework = operation.Framework,
+                                    packageKey = report.Key
+                                });
+
+                            await Console.WriteInfoLine(" - Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework);
+                            operation.Applied = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            error = true;
+                            operation.Applied = false;
+                            operation.Error = ex.ToString();
                         }
                     }
                 }
-            }
 
-            if (error)
-            {
-                report.State = PackageReportState.Error;
-            }
-            else if (report.Operations.All(o => o.Applied))
-            {
-                report.State = PackageReportState.Resolved;
+                if (error)
+                {
+                    report.State = PackageReportState.Error;
+                }
+                else if (report.Operations.All(o => o.Applied))
+                {
+                    report.State = PackageReportState.Resolved;
+                }
             }
         }
 
@@ -326,44 +318,35 @@ namespace NuCmd.Commands.Package
                 fn == null ? null : VersionUtility.GetShortFrameworkName(fn)).ToArray();                
         }
 
-        private void PopulateFrameworks(PackageFrameworkReport report, Package package)
+        private void PopulateFrameworks(PackageFrameworkReport report, Package package, SqlConnection conn)
         {
-            using (var sqlConnection = new SqlConnection(ConnectionString.ConnectionString))
-            using (var dbExecutor = new SqlExecutor(sqlConnection))
+            // Get all target frameworks in the db for this package
+            report.DatabaseFrameworks = new HashSet<string>(conn.Query<string>(@"
+                    SELECT  TargetFramework
+                    FROM    PackageFrameworks
+                    WHERE   Package_Key = @packageKey", new
             {
-                sqlConnection.Open();
+                packageKey = package.Key
+            })).ToArray();
 
-                // Get all target frameworks in the db for this package
-                report.DatabaseFrameworks = new HashSet<string>(dbExecutor.Query<string>(@"
-                    SELECT TargetFramework
-                    FROM PackageFrameworks
-                    WHERE Package_Key = @packageKey",
-                    new
-                    {
-                        packageKey = package.Key
-                    })).ToArray();
+            var adds = report.PackageFrameworks.Except(report.DatabaseFrameworks).Select(targetFramework =>
+                new PackageFrameworkOperation()
+                {
+                    Type = PackageFrameworkOperationType.Add,
+                    Framework = targetFramework,
+                    Applied = false,
+                    Error = "Not Started"
+                });
+            var rems = report.DatabaseFrameworks.Except(report.PackageFrameworks).Select(targetFramework =>
+                new PackageFrameworkOperation()
+                {
+                    Type = PackageFrameworkOperationType.Remove,
+                    Framework = targetFramework,
+                    Applied = false,
+                    Error = "Not Started"
+                });
 
-                var adds = report.PackageFrameworks.Except(report.DatabaseFrameworks).Select(targetFramework =>
-                    new PackageFrameworkOperation()
-                    {
-                        Type = PackageFrameworkOperationType.Add,
-                        Framework = targetFramework,
-                        Applied = false,
-                        Error = "Not Started"
-                    });
-                var rems = report.DatabaseFrameworks.Except(report.PackageFrameworks).Select(targetFramework =>
-                    new PackageFrameworkOperation()
-                    {
-                        Type = PackageFrameworkOperationType.Remove,
-                        Framework = targetFramework,
-                        Applied = false,
-                        Error = "Not Started"
-                    });
-
-                report.Operations = Enumerable.Concat(adds, rems).ToArray();
-            }
-
-            return report;
+            report.Operations = Enumerable.Concat(adds, rems).ToArray();
         }
 
         private async Task LoadDefaultsFromAzure(Datacenter dc)
@@ -420,32 +403,6 @@ namespace NuCmd.Commands.Package
                 return null;
             }
             return val;
-        }
-
-        private void WriteAuditRecord(AuditRecord auditRecord, string resourceType)
-        {
-            var entry = new AuditEntry(
-                auditRecord,
-                AuditActor.GetCurrentMachineActor());
-
-            // Write the blob to the storage account
-            var client = StorageAccount.CreateCloudBlobClient();
-            var container = client.GetContainerReference("auditing");
-            await container.CreateIfNotExistsAsync();
-            var blob = container.GetBlockBlobReference(
-                resourceType + "/" + auditRecord.GetPath() + "/" + DateTime.UtcNow.ToString("s") + "-" + auditRecord.GetAction().ToLowerInvariant() + ".audit.v1.json");
-
-            if (await blob.ExistsAsync())
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Package_DeleteCommand_AuditBlobExists,
-                    blob.Uri.AbsoluteUri));
-            }
-
-            byte[] data = Encoding.UTF8.GetBytes(
-                JsonFormat.Serialize(entry));
-            await blob.UploadFromByteArrayAsync(data, 0, data.Length);
         }
 
         public class Package
