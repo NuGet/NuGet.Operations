@@ -44,6 +44,7 @@ namespace NuCmd.Commands.Package
         [ArgDescription("Azure Storage Connection string for the package storage.")]
         public string StorageConnectionString { get; set; }
 
+        [ArgRequired]
         [ArgShortcut("work")]
         [ArgDescription("Directory in which to put resume data and other work")]
         public string WorkDirectory { get; set; }
@@ -99,7 +100,7 @@ namespace NuCmd.Commands.Package
                     FROM        Packages p
                     INNER JOIN  PackageRegistrations pr
                             ON  pr.[Key] = p.PackageRegistrationKey
-                    WHERE       (NullIf('', @Id) IS NULL OR pr.Id = @Id)
+                    WHERE       (NullIf(@Id, '') IS NULL OR pr.Id = @Id)
                             AND (@All = 1 OR p.NormalizedVersion = @Version)
                     ORDER BY    p.Created DESC", new
                     {
@@ -130,7 +131,9 @@ namespace NuCmd.Commands.Package
                 packages
                     .AsParallel()
                     .AsOrdered()
-                    .WithDegreeOfParallelism(10)
+                    // Use 2 threads per processor, because we might find ourselves
+                    // waiting on SQL
+                    .WithDegreeOfParallelism(System.Environment.ProcessorCount * 2)
                     .ForAll(package =>
                     {
                         var thisPackageId = Interlocked.Increment(ref processedCount);
@@ -139,7 +142,7 @@ namespace NuCmd.Commands.Package
             }
         }
 
-        private async Task ProcessPackage(dynamic package, SqlConnection conn, int thisPackageId, int totalCount)
+        private void ProcessPackage(dynamic package, SqlConnection conn, int thisPackageId, int totalCount)
         {
             try
             {
@@ -168,7 +171,7 @@ namespace NuCmd.Commands.Package
                         report = (PackageFrameworkReport)_serializer.Deserialize(
                             reader, typeof(PackageFrameworkReport));
 
-                        await ResolveReport(report, conn);
+                        ResolveReport(report, conn);
                     }
                 }
                 else
@@ -184,7 +187,7 @@ namespace NuCmd.Commands.Package
 
                         File.Delete(downloadPath);
 
-                        await ResolveReport(report, conn);
+                        ResolveReport(report, conn);
                     }
                     catch (Exception ex)
                     {
@@ -198,14 +201,14 @@ namespace NuCmd.Commands.Package
                     _serializer.Serialize(writer, report);
                 }
 
-                await Console.WriteInfoLine("[{2}/{3} {4}%] {6} Package: {0}@{1} (created {5})",
+                Console.WriteInfoLine("[{2}/{3} {4}%] {6} Package: {0}@{1} (created {5})",
                     (string)package.Id,
                     (string)package.Version,
                     thisPackageId.ToString("0000000"),
                     totalCount.ToString("0000000"),
                     (((double)thisPackageId / (double)totalCount) * 100).ToString("000.00"),
                     (DateTime)package.Created.Value,
-                    report.State.ToString().PadRight(_padLength, ' '));
+                    report.State.ToString().PadRight(_padLength, ' ')).Wait();
             }
             catch (Exception ex)
             {
@@ -219,7 +222,7 @@ namespace NuCmd.Commands.Package
             }
         }
 
-        private async Task ResolveReport(PackageFrameworkReport report, SqlConnection conn)
+        private void ResolveReport(PackageFrameworkReport report, SqlConnection conn)
         {
             bool error = false;
 
@@ -239,7 +242,7 @@ namespace NuCmd.Commands.Package
                                     packageKey = report.Key
                                 });
 
-                            await Console.WriteInfoLine(" + Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework);
+                            Console.WriteInfoLine(" + Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework).Wait();
                             operation.Applied = true;
                         }
                         catch (Exception ex)
@@ -262,7 +265,7 @@ namespace NuCmd.Commands.Package
                                     packageKey = report.Key
                                 });
 
-                            await Console.WriteInfoLine(" - Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework);
+                            Console.WriteInfoLine(" - Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework).Wait();
                             operation.Applied = true;
                         }
                         catch (Exception ex)
