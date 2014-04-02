@@ -36,6 +36,9 @@ namespace NuCmd.Commands.Package
         [ArgDescription("Set this flag to process all versions of the package when the ID is specified, or all packages if ID is not specified.")]
         public bool All { get; set; }
 
+        [ArgDescription("Filters the packages to be processed down to those that currently have 'Unsupported' frameworks")]
+        public bool Unsupported { get; set; }
+
         [ArgShortcut("db")]
         [ArgDescription("SQL Connection string for the package database.")]
         public string DatabaseConnectionString { get; set; }
@@ -52,6 +55,28 @@ namespace NuCmd.Commands.Package
         private CloudStorageAccount StorageAccount { get; set; }
 
         private static readonly int _padLength = Enum.GetValues(typeof(PackageReportState)).Cast<PackageReportState>().Select(p => p.ToString().Length).Max();
+
+        private const string SqlAllPackages = @"
+                    SELECT      p.[Key], pr.Id, Version = p.NormalizedVersion, p.Hash, p.Created
+                    FROM        Packages p
+                    INNER JOIN  PackageRegistrations pr
+                            ON  pr.[Key] = p.PackageRegistrationKey
+                    WHERE       (NullIf(@Id, '') IS NULL OR pr.Id = @Id)
+                            AND (@All = 1 OR p.NormalizedVersion = @Version)
+                    ORDER BY    p.Created DESC";
+
+        private const string SqlUnsupportedPackages = @"
+                    SELECT      DISTINCT
+                                p.[Key], pr.Id, Version = p.NormalizedVersion, p.Hash, p.Created
+                    FROM        PackageFrameworks pf
+                    INNER JOIN  Packages p
+                            ON  p.[Key] = pf.Package_Key
+                    INNER JOIN  PackageRegistrations pr
+                            ON  pr.[Key] = p.PackageRegistrationKey
+                    WHERE       TargetFramework LIKE '%Unsupported%'
+                            AND (NullIf(@Id, '') IS NULL OR pr.Id = @Id)
+                            AND (@All = 1 OR p.NormalizedVersion = @Version)
+                    ORDER BY    p.Created DESC";
 
         private static readonly JsonSerializer _serializer = new JsonSerializer()
         {
@@ -92,24 +117,24 @@ namespace NuCmd.Commands.Package
             }
 
             IEnumerable<dynamic> packages;
+            int totalCount;
 
             // Get all of the packages to be processed
             using (var conn = new SqlConnection(DatabaseConnectionString))
             {
                 await conn.OpenAsync();
-                packages = conn.Query(@"
-                    SELECT      p.[Key], pr.Id, p.Version, p.Hash, p.Created
-                    FROM        Packages p
-                    INNER JOIN  PackageRegistrations pr
-                            ON  pr.[Key] = p.PackageRegistrationKey
-                    WHERE       (NullIf(@Id, '') IS NULL OR pr.Id = @Id)
-                            AND (@All = 1 OR p.NormalizedVersion = @Version)
-                    ORDER BY    p.Created DESC", new
+                var sql = Unsupported ? SqlUnsupportedPackages : SqlAllPackages;
+
+                await Console.WriteInfoLine("Getting the list of packages to process from SQL.{0}", Unsupported ? " Filtering to those containing an 'Unsupported' framework." : "");
+                packages = conn.Query(sql, new
                     {
                         Id,
                         All,
                         Version
                     });
+
+                totalCount = packages.Count();
+                await Console.WriteInfoLine("Found {0} package(s) to process", totalCount);
             }
 
             if (!WhatIf)
@@ -128,7 +153,6 @@ namespace NuCmd.Commands.Package
                 }
             }
 
-            int totalCount = packages.Count();
             int processedCount = 0;
 
             packages
@@ -236,7 +260,7 @@ namespace NuCmd.Commands.Package
 
                 if (report.State == PackageReportState.Error)
                 {
-                    Console.WriteErrorLine("Previous error recorded in report: {0}", report.Error).Wait();
+                    Console.WriteErrorLine("Recorded Error for Package {0}@{1}: {2}", report.Id,  report.Version, report.Error).Wait();
                 }
             }
             catch (Exception ex)
