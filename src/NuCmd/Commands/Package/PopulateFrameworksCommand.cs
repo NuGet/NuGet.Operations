@@ -136,7 +136,7 @@ namespace NuCmd.Commands.Package
                 .AsOrdered()
                 // Use 2 threads per processor, because we might find ourselves
                 // waiting on SQL
-                .WithDegreeOfParallelism(1)
+                .WithDegreeOfParallelism(System.Environment.ProcessorCount * 2)
                 .ForAll(package =>
                 {
                     var thisPackageId = Interlocked.Increment(ref processedCount);
