@@ -362,10 +362,10 @@ namespace NuCmd.Commands.Package
             // Get the blob URL
             var client = StorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference("packages");
-            var blob = container.GetBlockBlobReference(
-                id + "." + version + ".nupkg");
+            var nupkg = id + "." + version + ".nupkg";
+            var blob = container.GetBlockBlobReference(nupkg);
 
-            var localFile = Path.GetTempFileName();
+            var localFile = Path.Combine(Path.GetTempPath(), nupkg);
             if (File.Exists(localFile))
             {
                 File.Delete(localFile);
