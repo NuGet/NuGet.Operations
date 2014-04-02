@@ -264,11 +264,11 @@ namespace NuCmd.Commands.Package
 
             foreach (var operation in report.Operations)
             {
-                if (!WhatIf)
+                if (operation.Type == PackageFrameworkOperationType.Add)
                 {
-                    if (operation.Type == PackageFrameworkOperationType.Add)
+                    try
                     {
-                        try
+                        if (!WhatIf)
                         {
                             conn.Execute(@"
                                 INSERT  PackageFrameworks(TargetFramework, Package_Key)
@@ -277,22 +277,25 @@ namespace NuCmd.Commands.Package
                                     targetFramework = operation.Framework,
                                     packageKey = report.Key
                                 });
-
-                            Console.WriteInfoLine(" + Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework).Wait();
-                            operation.Applied = true;
                         }
-                        catch (Exception ex)
-                        {
-                            report.State = PackageReportState.Error;
-                            operation.Applied = false;
-                            operation.Error = ex.ToString();
 
-                            Console.WriteErrorLine(" {0}@{1} '{2}' Error: {3}", report.Id, report.Version, operation.Framework, operation.Error).Wait();
-                        }
+                        Console.WriteDataLine(" + Id={0}, Version={1}, Key={2}, Fx={3}", report.Id, report.Version, report.Key, operation.Framework).Wait();
+                        operation.Applied = true;
                     }
-                    else if (operation.Type == PackageFrameworkOperationType.Remove)
+                    catch (Exception ex)
                     {
-                        try
+                        report.State = PackageReportState.Error;
+                        operation.Applied = false;
+                        operation.Error = ex.ToString();
+
+                        Console.WriteErrorLine(" {0}@{1} '{2}' Error: {3}", report.Id, report.Version, operation.Framework, operation.Error).Wait();
+                    }
+                }
+                else if (operation.Type == PackageFrameworkOperationType.Remove)
+                {
+                    try
+                    {
+                        if (!WhatIf)
                         {
                             conn.Execute(@"
                                 DELETE  PackageFrameworks
@@ -302,18 +305,18 @@ namespace NuCmd.Commands.Package
                                     targetFramework = operation.Framework,
                                     packageKey = report.Key
                                 });
-
-                            Console.WriteInfoLine(" - Id={0}, Key={1}, Fx={2}", report.Id, report.Key, operation.Framework).Wait();
-                            operation.Applied = true;
                         }
-                        catch (Exception ex)
-                        {
-                            report.State = PackageReportState.Error;
-                            operation.Applied = false;
-                            operation.Error = ex.ToString();
 
-                            Console.WriteErrorLine(" {0}@{1} '{2}' Error: {3}", report.Id, report.Version, operation.Framework, operation.Error).Wait();
-                        }
+                        Console.WriteDataLine(" - Id={0}, Version={1}, Key={2}, Fx={3}", report.Id, report.Version, report.Key, operation.Framework).Wait();
+                        operation.Applied = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        report.State = PackageReportState.Error;
+                        operation.Applied = false;
+                        operation.Error = ex.ToString();
+
+                        Console.WriteErrorLine(" {0}@{1} '{2}' Error: {3}", report.Id, report.Version, operation.Framework, operation.Error).Wait();
                     }
                 }
             }
