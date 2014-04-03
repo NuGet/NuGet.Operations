@@ -172,9 +172,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Core, Version=2.8.50126.400, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="NuGet.Core, Version=2.8.50320.36, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Nuget.Core.2.8.0\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Core.2.8.1\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Indexing">
       <HintPath>..\..\packages\NuGet.Indexing.3.0.2-alpha-9\lib\net45\NuGet.Indexing.dll</HintPath>
@@ -272,6 +272,7 @@
     <Compile Include="Commands\EnvCommand.cs" />
     <Compile Include="Commands\EnvironmentCommandBase.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="Commands\Package\PopulateFrameworksCommand.cs" />
     <Compile Include="Commands\Package\DeleteCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
     <Compile Include="Commands\Scheduler\JobCollectionCommandBase.cs" />
@@ -327,10 +328,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceTypes.cs" />
     <Compile Include="SemanticVersionHelper.cs" />
-    <Compile Include="Strings1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="SystemConsole.cs" />
   </ItemGroup>
@@ -340,18 +341,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\NuGet.Services.Operations\NuGet.Services.Operations.csproj">
       <Project>{fdfe3b54-1587-4ad2-bed6-7f2a38f906ba}</Project>
       <Name>NuGet.Services.Operations</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -34,6 +34,8 @@ namespace NuCmd
 
     public static class ConsoleExtensions
     {
+        private static object _lock = new object();
+
         public static Task WriteObject(this IConsole self, object obj)
         {
             return self.WriteObject(obj, DefaultConsoleFormatter.Instance);
@@ -51,7 +53,10 @@ namespace NuCmd
 
         public static Task WriteError(this IConsole self, string message)
         {
-            return self.Error.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Error.WriteAsync(message);
+            }
         }
 
         public static Task WriteFatal(this IConsole self, string format, params object[] args)
@@ -61,7 +66,10 @@ namespace NuCmd
 
         public static Task WriteFatal(this IConsole self, string message)
         {
-            return self.Fatal.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Fatal.WriteAsync(message);
+            }
         }
 
         public static Task WriteTrace(this IConsole self, string format, params object[] args)
@@ -71,7 +79,10 @@ namespace NuCmd
 
         public static Task WriteTrace(this IConsole self, string message)
         {
-            return self.Trace.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Trace.WriteAsync(message);
+            }
         }
 
         public static Task WriteWarning(this IConsole self, string format, params object[] args)
@@ -81,7 +92,10 @@ namespace NuCmd
 
         public static Task WriteWarning(this IConsole self, string message)
         {
-            return self.Warning.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Warning.WriteAsync(message);
+            }
         }
 
         public static Task WriteInfo(this IConsole self, string format, params object[] args)
@@ -91,7 +105,10 @@ namespace NuCmd
 
         public static Task WriteInfo(this IConsole self, string message)
         {
-            return self.Info.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Info.WriteAsync(message);
+            }
         }
 
         public static Task WriteHelp(this IConsole self, string format, params object[] args)
@@ -101,7 +118,10 @@ namespace NuCmd
 
         public static Task WriteHelp(this IConsole self, string message)
         {
-            return self.Help.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Help.WriteAsync(message);
+            }
         }
 
         public static Task WriteHttp(this IConsole self, string format, params object[] args)
@@ -111,68 +131,162 @@ namespace NuCmd
 
         public static Task WriteHttp(this IConsole self, string message)
         {
-            return self.Http.WriteAsync(message);
+            lock (_lock)
+            {
+                return self.Http.WriteAsync(message);
+            }
         }
 
         public static Task WriteErrorLine(this IConsole self) { return WriteErrorLine(self, String.Empty); }
-        public static Task WriteErrorLine(this IConsole self, string message) { return self.Error.WriteLineAsync(message); }
+
+        public static Task WriteErrorLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Error.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteErrorLine(this IConsole self, string format, params object[] args)
         {
-            return self.Error.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Error.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteFatalLine(this IConsole self) { return WriteFatalLine(self, String.Empty); }
-        public static Task WriteFatalLine(this IConsole self, string message) { return self.Fatal.WriteLineAsync(message); }
+
+        public static Task WriteFatalLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Fatal.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteFatalLine(this IConsole self, string format, params object[] args)
         {
-            return self.Fatal.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Fatal.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteTraceLine(this IConsole self) { return WriteTraceLine(self, String.Empty); }
-        public static Task WriteTraceLine(this IConsole self, string message) { return self.Trace.WriteLineAsync(message); }
+
+        public static Task WriteTraceLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Trace.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteTraceLine(this IConsole self, string format, params object[] args)
         {
-            return self.Trace.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Trace.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteWarningLine(this IConsole self) { return WriteHelpLine(self, String.Empty); }
-        public static Task WriteWarningLine(this IConsole self, string message) { return self.Warning.WriteLineAsync(message); }
+
+        public static Task WriteWarningLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Warning.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteWarningLine(this IConsole self, string format, params object[] args)
         {
-            return self.Warning.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Warning.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteInfoLine(this IConsole self) { return WriteInfoLine(self, String.Empty); }
-        public static Task WriteInfoLine(this IConsole self, string message) { return self.Info.WriteLineAsync(message); }
+
+        public static Task WriteInfoLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Info.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteInfoLine(this IConsole self, string format, params object[] args)
         {
-            return self.Info.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Info.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteHelpLine(this IConsole self) { return WriteHelpLine(self, String.Empty); }
-        public static Task WriteHelpLine(this IConsole self, string message) { return self.Help.WriteLineAsync(message); }
+
+        public static Task WriteHelpLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Help.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteHelpLine(this IConsole self, string format, params object[] args)
         {
-            return self.Help.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Help.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteHttpLine(this IConsole self) { return WriteHttpLine(self, String.Empty); }
-        public static Task WriteHttpLine(this IConsole self, string message) { return self.Http.WriteLineAsync(message); }
+
+        public static Task WriteHttpLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Http.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteHttpLine(this IConsole self, string format, params object[] args)
         {
-            return self.Http.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Http.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteDataLine(this IConsole self) { return WriteDataLine(self, String.Empty); }
-        public static Task WriteDataLine(this IConsole self, string message) { return self.Data.WriteLineAsync(message); }
+
+        public static Task WriteDataLine(this IConsole self, string message)
+        {
+            lock (_lock)
+            {
+                return self.Data.WriteLineAsync(message);
+            }
+        }
+
         public static Task WriteDataLine(this IConsole self, string format, params object[] args)
         {
-            return self.Data.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            lock (_lock)
+            {
+                return self.Data.WriteLineAsync(String.Format(CultureInfo.CurrentCulture, format, args));
+            }
         }
 
         public static Task WriteTable<T>(this IConsole self, IEnumerable<T> objs)
         {
-            return self.WriteTable(objs, t => t);
+            lock (_lock)
+            {
+                return self.WriteTable(objs, t => t);
+            }
         }
     }
 }
