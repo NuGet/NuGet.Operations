@@ -668,4 +668,7 @@ Connection String: {3}</value>
   <data name="SystemConsole_ConfirmDenied" xml:space="preserve">
     <value>Command canceled by user.</value>
   </data>
+  <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
+    <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
+  </data>
 </root>

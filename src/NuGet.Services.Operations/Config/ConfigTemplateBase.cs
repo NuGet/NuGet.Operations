@@ -13,6 +13,7 @@ namespace NuGet.Services.Operations.Config
     {
         public dynamic resources { get { return Model.Resources; } }
         public Service service { get { return Model.Service; } }
+        public dynamic services { get { return Model.Services; } }
 
         public override void WriteAttribute(string name, PositionTagged<string> prefix, PositionTagged<string> suffix, params AttributeValue[] values)
         {

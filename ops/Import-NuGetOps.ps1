@@ -12,7 +12,7 @@ if($moderr) {
 function prompt() {
     $title = "<NuOps>"
     if($NuOpsVersion) {
-        $title = "<NuOps $($NuOpsVersion.ToString())>"
+        $title = "<NuOps $NuOpsVersion>"
     }
 
     Write-Host -NoNewLine -ForegroundColor Yellow "$title "

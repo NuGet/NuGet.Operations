@@ -2,8 +2,7 @@ $RepoRoot = (Convert-Path "$PsScriptRoot\..\..\..")
 Export-ModuleMember -Variable RepoRoot
 
 # Extract Ops NuGetOpsVersion
-$NuGetProps = [xml](cat (Join-Path $RepoRoot "build\NuGet.props"))
-$NuOpsVersion = New-Object System.Version $NuGetProps.Project.PropertyGroup.SimpleVersion."#text"
+$NuOpsVersion = (git --git-dir="$RepoRoot\.git" --work-tree="$RepoRoot" rev-parse --short HEAD)
 Export-ModuleMember -Variable NuOpsVersion
 
 # Find the Azure SDK
@@ -105,10 +104,11 @@ Export-ModuleMember -Function env
 $env:PATH = "$env:PATH;$RepoRoot\src\NuCmd\bin\Debug"
 
 Write-Host -BackgroundColor Blue -ForegroundColor White @"
+
  _____     _____     _      _____ _____ _____ 
 |   | |_ _|   __|___| |    |     |     |   __|
 | | | | | |  |  |  | - |   |  |  |  |__|__   |
 |_|___|___|_____|___|_|    |_____|__|  |_____|
                                               
 "@
-Write-Host -ForegroundColor Black -BackgroundColor Yellow "Welcome to the NuGet Operations Console (v$NuGetOpsVersion)"
+Write-Host -ForegroundColor Black -BackgroundColor Yellow "Welcome to the NuGet Operations Console (hash: $NuOpsVersion)"

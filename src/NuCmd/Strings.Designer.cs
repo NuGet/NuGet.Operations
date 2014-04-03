@@ -315,6 +315,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no configTemplates element in the AppModel for the &apos;{0}&apos; environment..
+        /// </summary>
+        internal static string Config_GenerateCommand_NoTemplateSource {
+            get {
+                return ResourceManager.GetString("Config_GenerateCommand_NoTemplateSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown config template source type: &apos;{0}&apos;..
         /// </summary>
         internal static string Config_GenerateCommand_UnknownConfigTemplateSourceType {

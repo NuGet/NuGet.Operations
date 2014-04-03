@@ -16,7 +16,8 @@ namespace NuGet.Services.Operations
         {
             {"azureStorage", ResolveAzureStorage},
             {"sqldb", ResolveSqlDb},
-            {"uri", ResolveUri}
+            {"uri", ResolveUri},
+            {"oauth", ResolveOAuth}
         };
 
         public static object Resolve(SecretStore secrets, Service service, Resource resource)
@@ -27,6 +28,14 @@ namespace NuGet.Services.Operations
                 return String.Empty;
             }
             return resolver(new ResourceResolutionContext(secrets, service, resource)) ?? String.Empty;
+        }
+
+        private static object ResolveOAuth(ResourceResolutionContext context)
+        {
+            return new Dictionary<string, object>() {
+                {"id", context.Resource.Value},
+                {"secret", context.GetSecretValueOrDefault("oauth." + context.Resource.Name + ":secret")}
+            };
         }
 
         private static object ResolveUri(ResourceResolutionContext context)
@@ -70,8 +79,14 @@ namespace NuGet.Services.Operations
                     // Look up the current user name
                     var login = context.GetSecretValueOrDefault("sqldb." + serverName + ":serviceUsers." + context.Service.Name);
 
-                    // Look up the connection string for that user
-                    return context.GetSecretValueOrDefault("sqldb." + serverName + ":logins." + login);
+                    // Look up the password for that user
+                    var password = context.GetSecretValueOrDefault("sqldb." + serverName + ":logins." + login);
+
+                    // Generate a connection string
+                    var builder = new SqlConnectionStringBuilder(context.Resource.Value);
+                    builder.UserID = login;
+                    builder.Password = password;
+                    return builder.ConnectionString;
                 }
             });
         }

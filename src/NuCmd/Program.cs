@@ -52,7 +52,14 @@ namespace NuCmd
 
         private async Task Run()
         {
-            await _console.WriteTraceLine("NuCmd v{0}", typeof(Program).Assembly.GetName().Version);
+            await _console.WriteTraceLine("NuCmd v{0} (built from {1})", 
+                typeof(Program).Assembly.GetName().Version,
+                typeof(Program)
+                    .Assembly
+                    .GetCustomAttributes<AssemblyMetadataAttribute>()
+                    .Where(m => String.Equals("CommitId", m.Key, StringComparison.OrdinalIgnoreCase))
+                    .Select(m => m.Value)
+                    .FirstOrDefault() ?? "<unknown>");
 
             // Try to load an ops session if the environment variable is provided
             OperationsSession session;
