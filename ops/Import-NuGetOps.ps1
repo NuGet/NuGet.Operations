@@ -1,11 +1,11 @@
 Import-Module -ErrorAction SilentlyContinue posh-git # Try to import posh-git
-$poshGit = !!(Get-Command Write-VcsStatus)
+$poshGit = !!(Get-Command Write-VcsStatus -ErrorAction SilentlyContinue)
 
 Import-Module -ErrorVariable moderr Azure
 Import-Module -ErrorVariable moderr "$PSScriptRoot\Modules\NuGetOps"
 
 if($moderr) {
-    Write-Host "Exiting ops console due to errors..."
+    Write-Warning "There were fatal errors loading the ops console. I'm going to continue loading, but you have been warned :)"
     [Environment]::Exit(1)
 }
 
