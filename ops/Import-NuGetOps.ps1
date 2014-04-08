@@ -6,7 +6,6 @@ Import-Module -ErrorVariable moderr "$PSScriptRoot\Modules\NuGetOps"
 
 if($moderr) {
     Write-Warning "There were fatal errors loading the ops console. I'm going to continue loading, but you have been warned :)"
-    [Environment]::Exit(1)
 }
 
 function prompt() {
