@@ -32,7 +32,6 @@ namespace NuCmd.Commands.Scheduler
         [ArgDescription("The name of the job instance to create")]
         public string InstanceName { get; set; }
 
-        [ArgRequired()]
         [ArgShortcut("pass")]
         [ArgDescription("The password for the work service")]
         public string Password { get; set; }

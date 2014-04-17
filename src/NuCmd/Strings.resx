@@ -671,4 +671,10 @@ Connection String: {3}</value>
   <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
     <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
   </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Work_LogCommand_FetchingLatestInvocation" xml:space="preserve">
+    <value>Fetching latest invocation of {0}</value>
+  </data>
 </root>

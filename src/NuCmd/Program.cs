@@ -110,6 +110,14 @@ namespace NuCmd
 
             commandName = commandName ?? String.Empty;
 
+            if (String.IsNullOrEmpty(commandName))
+            {
+                // nucmd work => nucmd help work
+                group = _directory.RootCommands;
+                commandName = "help";
+                _args = new[] { groupOrRootCommand };
+            }
+
             CommandDefinition command;
             if (!group.TryGetValue(commandName, out command))
             {
