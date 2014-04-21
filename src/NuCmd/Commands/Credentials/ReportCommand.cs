@@ -81,7 +81,7 @@ namespace NuCmd.Commands.Credentials
             {
                 Resource = g.Resource,
                 Type = g.Type,
-                Services = String.Join(",", g.Credentials.Single().Select(t => t.ServiceName))
+                Services = String.Join(",", g.Credentials.Single().Select(t => t.ServiceName + "(" + t.Key + ")"))
             });
         }
 
