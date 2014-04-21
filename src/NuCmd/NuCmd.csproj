@@ -314,7 +314,7 @@
     <Compile Include="Commands\Secrets\SetCommand.cs" />
     <Compile Include="Commands\Secrets\StoresCommand.cs" />
     <Compile Include="Commands\ServiceCommandBase.cs" />
-    <Compile Include="Commands\Work\HistoryCommand.cs" />
+    <Compile Include="Commands\Work\JobHistoryCommand.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />
     <Compile Include="Commands\Work\PurgeCommand.cs" />
     <Compile Include="Commands\Work\JobsCommand.cs" />
