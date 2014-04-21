@@ -256,6 +256,7 @@
     <Compile Include="Commands\AzureCommandBase.cs" />
     <Compile Include="Commands\Azure\LoginCommand.cs" />
     <Compile Include="Commands\Config\GenerateCommand.cs" />
+    <Compile Include="Commands\Credentials\ReportCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />
     <Compile Include="Commands\Db\DacCommandBase.cs" />
     <Compile Include="Commands\Db\DeleteDacCommand.cs" />

@@ -671,4 +671,19 @@ Connection String: {3}</value>
   <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
     <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
   </data>
+  <data name="Credentials_ReportCommand_CollectingConfiguration" xml:space="preserve">
+    <value>Collecting configuration data from all services in {0}...</value>
+  </data>
+  <data name="Credentials_ReportCommand_CredentialValue" xml:space="preserve">
+    <value>* {0} by {1}</value>
+  </data>
+  <data name="Credentials_ReportCommand_DifferentCredentialsUsedFor" xml:space="preserve">
+    <value>Different Credentials used for {0}!</value>
+  </data>
+  <data name="Credentials_ReportCommand_NoDiffersFound" xml:space="preserve">
+    <value>No differing credentials found.</value>
+  </data>
+  <data name="Credentials_ReportCommand_RetrievedConfigurationFor" xml:space="preserve">
+    <value>Retrieved configuration for {0}.</value>
+  </data>
 </root>
