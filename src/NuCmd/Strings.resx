@@ -671,10 +671,16 @@ Connection String: {3}</value>
   <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
     <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="Work_LogCommand_FetchingLatestInvocation" xml:space="preserve">
     <value>Fetching latest invocation of {0}</value>
+  </data>
+  <data name="Db_SanitizeCommand_CannotSanitize" xml:space="preserve">
+    <value>Cannot sanitize {0}. The name must start with Export or Backup.</value>
+  </data>
+  <data name="Db_SanitizeCommand_Sanitized" xml:space="preserve">
+    <value>Sanitized {0}/{1}.</value>
+  </data>
+  <data name="Db_SanitizeCommand_Sanitizing" xml:space="preserve">
+    <value>Sanitizing {0}/{1}.</value>
   </data>
 </root>
