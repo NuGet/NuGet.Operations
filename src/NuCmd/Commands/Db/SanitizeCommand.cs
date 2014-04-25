@@ -56,7 +56,7 @@ namespace NuCmd.Commands.Db
             {
                 using (var connection = await connInfo.Connect(BackupName))
                 {
-                    await connection.QueryAsync(SanitizeUsersQuery, new { EmailDomain });
+                    await connection.QueryAsync<int>(SanitizeUsersQuery, new { EmailDomain });
                 }
             }
             await Console.WriteInfoLine(Strings.Db_SanitizeCommand_Sanitized, connInfo.ConnectionString.DataSource, connInfo.ConnectionString.InitialCatalog);
