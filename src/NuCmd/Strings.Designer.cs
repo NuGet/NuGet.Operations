@@ -124,6 +124,33 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have an Azure Login Token.
+        /// </summary>
+        internal static string Azure_TokenCommand_NoToken {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_NoToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Azure Subscription ID is: {0}.
+        /// </summary>
+        internal static string Azure_TokenCommand_SubscriptionId {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_SubscriptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Azure Login Token is: {0}.
+        /// </summary>
+        internal static string Azure_TokenCommand_Token {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_Token", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fetching service configuration data for &apos;{0}&apos;....
         /// </summary>
         internal static string AzureCommandBase_FetchingServiceConfig {

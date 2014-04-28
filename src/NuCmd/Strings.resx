@@ -680,4 +680,13 @@ Connection String: {3}</value>
   <data name="Db_SanitizeCommand_Sanitizing" xml:space="preserve">
     <value>Sanitizing {0}/{1}.</value>
   </data>
+  <data name="Azure_TokenCommand_NoToken" xml:space="preserve">
+    <value>You do not have an Azure Login Token</value>
+  </data>
+  <data name="Azure_TokenCommand_SubscriptionId" xml:space="preserve">
+    <value>Your Azure Subscription ID is: {0}</value>
+  </data>
+  <data name="Azure_TokenCommand_Token" xml:space="preserve">
+    <value>Your Azure Login Token is: {0}</value>
+  </data>
 </root>
