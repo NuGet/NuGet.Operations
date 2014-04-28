@@ -14,7 +14,7 @@ namespace NuCmd.Commands.Db
     [Description("Sanitizes personal information from the specified Legacy database backup")]
     public class SanitizeCommand : DatabaseCommandBase
     {
-        private static readonly Regex BackupOrExportMatcher = new Regex("(Backup|Export)_.*");
+        private static readonly Regex BackupOrExportMatcher = new Regex("(Backup|Export)_.*", RegexOptions.IgnoreCase);
 
         private const string SanitizeUsersQuery = @"
             UPDATE Users
@@ -34,7 +34,7 @@ namespace NuCmd.Commands.Db
         [ArgDescription("The name of the backup to sanitize")]
         public string BackupName { get; set; }
 
-        [ArgShortcut("e")]
+        [ArgShortcut("d")]
         [ArgDescription("Domain name to use for sanitized email addresses, username@[emaildomain]")]
         public string EmailDomain { get; set; }
 
@@ -51,10 +51,12 @@ namespace NuCmd.Commands.Db
 
             EmailDomain = EmailDomain ?? "nugettest.org";
 
+            connInfo.ConnectionString.InitialCatalog = BackupName;
+
             await Console.WriteInfoLine(Strings.Db_SanitizeCommand_Sanitizing, connInfo.ConnectionString.DataSource, connInfo.ConnectionString.InitialCatalog);
             if (!WhatIf)
             {
-                using (var connection = await connInfo.Connect(BackupName))
+                using (var connection = await connInfo.Connect())
                 {
                     await connection.QueryAsync<int>(SanitizeUsersQuery, new { EmailDomain });
                 }
