@@ -671,4 +671,22 @@ Connection String: {3}</value>
   <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
     <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
   </data>
+  <data name="Db_SanitizeCommand_CannotSanitize" xml:space="preserve">
+    <value>Cannot sanitize {0}. The name must start with Export or Backup.</value>
+  </data>
+  <data name="Db_SanitizeCommand_Sanitized" xml:space="preserve">
+    <value>Sanitized {0}/{1}.</value>
+  </data>
+  <data name="Db_SanitizeCommand_Sanitizing" xml:space="preserve">
+    <value>Sanitizing {0}/{1}.</value>
+  </data>
+  <data name="Azure_TokenCommand_NoToken" xml:space="preserve">
+    <value>You do not have an Azure Login Token</value>
+  </data>
+  <data name="Azure_TokenCommand_SubscriptionId" xml:space="preserve">
+    <value>Your Azure Subscription ID is: {0}</value>
+  </data>
+  <data name="Azure_TokenCommand_Token" xml:space="preserve">
+    <value>Your Azure Login Token is: {0}</value>
+  </data>
 </root>

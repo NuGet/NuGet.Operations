@@ -124,6 +124,33 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have an Azure Login Token.
+        /// </summary>
+        internal static string Azure_TokenCommand_NoToken {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_NoToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Azure Subscription ID is: {0}.
+        /// </summary>
+        internal static string Azure_TokenCommand_SubscriptionId {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_SubscriptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Azure Login Token is: {0}.
+        /// </summary>
+        internal static string Azure_TokenCommand_Token {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_Token", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fetching service configuration data for &apos;{0}&apos;....
         /// </summary>
         internal static string AzureCommandBase_FetchingServiceConfig {
@@ -683,6 +710,33 @@ namespace NuCmd {
         internal static string Db_GenerateAdminPasswordCommand_PasswordGenerated {
             get {
                 return ResourceManager.GetString("Db_GenerateAdminPasswordCommand_PasswordGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot sanitize {0}. The name must start with Export or Backup..
+        /// </summary>
+        internal static string Db_SanitizeCommand_CannotSanitize {
+            get {
+                return ResourceManager.GetString("Db_SanitizeCommand_CannotSanitize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sanitized {0}/{1}..
+        /// </summary>
+        internal static string Db_SanitizeCommand_Sanitized {
+            get {
+                return ResourceManager.GetString("Db_SanitizeCommand_Sanitized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sanitizing {0}/{1}..
+        /// </summary>
+        internal static string Db_SanitizeCommand_Sanitizing {
+            get {
+                return ResourceManager.GetString("Db_SanitizeCommand_Sanitizing", resourceCulture);
             }
         }
         
