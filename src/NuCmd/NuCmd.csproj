@@ -266,9 +266,10 @@
     <Compile Include="CommandDefinition.cs" />
     <Compile Include="CommandDirectory.cs" />
     <Compile Include="CommandGroup.cs" />
-    <Compile Include="Commands\AzureCommandBase.cs" />
+    <Compile Include="Commands\AzureConnectionCommandBase.cs" />
     <Compile Include="Commands\Azure\LoginCommand.cs" />
     <Compile Include="Commands\Azure\TokenCommand.cs" />
+    <Compile Include="Commands\Certs\GrantCommand.cs" />
     <Compile Include="Commands\Config\GenerateCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />
     <Compile Include="Commands\Db\DacCommandBase.cs" />
@@ -306,6 +307,7 @@
     <Compile Include="Commands\Search\QueryCommand.cs" />
     <Compile Include="Commands\Search\SearchServiceCommandBase.cs" />
     <Compile Include="Commands\Secrets\CreateStoreCommand.cs" />
+    <Compile Include="Commands\Certs\StoreCommand.cs" />
     <Compile Include="Commands\Secrets\UndeleteCommand.cs" />
     <Compile Include="Commands\Secrets\DeleteCommand.cs" />
     <Compile Include="Commands\Secrets\LogCommand.cs" />
@@ -315,6 +317,7 @@
     <Compile Include="Commands\Secrets\SecretStoreCommandBase.cs" />
     <Compile Include="Commands\Secrets\SetCommand.cs" />
     <Compile Include="Commands\Secrets\StoresCommand.cs" />
+    <Compile Include="Commands\Certs\UploadCommand.cs" />
     <Compile Include="Commands\ServiceCommandBase.cs" />
     <Compile Include="Commands\Work\JobHistoryCommand.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />

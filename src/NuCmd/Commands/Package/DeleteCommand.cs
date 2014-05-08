@@ -25,7 +25,7 @@ using PowerArgs;
 namespace NuCmd.Commands.Package
 {
     [Description("Deletes a package from the primary datacenter in the target NuGet environment")]
-    public class DeleteCommand : AzureCommandBase
+    public class DeleteCommand : EnvironmentCommandBase
     {
         [ArgRequired]
         [ArgPosition(0)]

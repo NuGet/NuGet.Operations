@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using NuGet.Services.Operations.Secrets;
@@ -79,6 +82,47 @@ namespace NuCmd.Commands.Secrets
         {
             var provider = CreateProvider();
             return await provider.Open(Name);
+        }
+
+        protected virtual async Task<Secret> ReadSecret(string key)
+        {
+            return await ReadSecretAndFollowLinks(key, Datacenter, await OpenSecretStore());
+        }
+        
+        protected virtual async Task<Secret> ReadSecretAndFollowLinks(string key, int? datacenter, SecretStore store)
+        {
+            var secret = await store.Read(key, datacenter, "nucmd get");
+
+            while (secret != null && secret.Type == SecretType.Link)
+            {
+                // Follow link
+                await Console.WriteInfoLine(Strings.Secrets_FollowingLink, secret.Value);
+                secret = await store.Read(
+                    new SecretName(secret.Value, Datacenter),
+                    String.Format(CultureInfo.InvariantCulture, "nucmd get (link from {0})", secret.Name));
+            }
+            return secret;
+        }
+
+        protected virtual X509Certificate2 ReadCertificate(Secret secret)
+        {
+            // Write to our own temp file because the X509Certificate2 ctor
+            // that takes a byte array writes a temp file and then never cleans it up
+            string temp = Path.GetTempFileName();
+            X509Certificate2 cert;
+            try
+            {
+                File.WriteAllBytes(temp, Convert.FromBase64String(secret.Value));
+                cert = new X509Certificate2(temp, String.Empty);
+            }
+            finally
+            {
+                if (File.Exists(temp))
+                {
+                    File.Delete(temp);
+                }
+            }
+            return cert;
         }
     }
 }

@@ -25,7 +25,11 @@ namespace NuGet.Services.Operations.Model
 
             var app = new AppModel(
                 root.AttributeValueOrDefault("name"),
-                root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion));
+                root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion))
+                {
+                    DistinguishedName = root.AttributeValueOrDefault("distinguishedName")
+                };
+            
 
             app.Resources.AddRange(LoadComponents<Resource>(root.Element("resources")));
 

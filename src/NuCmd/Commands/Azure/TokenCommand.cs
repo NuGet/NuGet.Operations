@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NuCmd.Commands.Azure
 {
     [Description("Gets your azure login token, if any")]
-    public class TokenCommand : AzureCommandBase
+    public class TokenCommand : EnvironmentCommandBase
     {
         protected override async Task OnExecute()
         {

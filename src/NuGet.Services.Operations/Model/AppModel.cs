@@ -10,6 +10,7 @@ namespace NuGet.Services.Operations.Model
         public static readonly Version DefaultVersion = new Version(3, 0);
 
         public string Name { get; private set; }
+        public string DistinguishedName { get; set; }
         public Version Version { get; private set; }
 
         public IList<DeploymentEnvironment> Environments { get; private set; }

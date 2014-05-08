@@ -692,4 +692,43 @@ Connection String: {3}</value>
   <data name="Azure_TokenCommand_Token" xml:space="preserve">
     <value>Your Azure Login Token is: {0}</value>
   </data>
+  <data name="Certs_GrantCommand_Uploading" xml:space="preserve">
+    <value>Uploading certificate '{0}' to {1}</value>
+  </data>
+  <data name="Certs_UploadCommand_SecretIsNotACertificate" xml:space="preserve">
+    <value>Secret is not a certificate: '{0}'.</value>
+  </data>
+  <data name="Certs_UploadCommand_UploadingCert" xml:space="preserve">
+    <value>Uploading certificate '{0}' to {1}</value>
+  </data>
+  <data name="Certs_Uploaded" xml:space="preserve">
+    <value>Upload complete!</value>
+  </data>
+  <data name="Group_certs" xml:space="preserve">
+    <value>Commands for working with certificates</value>
+  </data>
+  <data name="Secrets_FollowingLink" xml:space="preserve">
+    <value>Following link to "{0}"...</value>
+  </data>
+  <data name="Secrets_GetCommand_CertificateMetadata" xml:space="preserve">
+    <value>Certificate cannot be exported. Here's the metadata:
+Thumbprint: {0}
+Subject: {1}
+Expires: {2}</value>
+  </data>
+  <data name="Secrets_GetCommand_ThumbprintCopied" xml:space="preserve">
+    <value>Certificate Thumbprint copied to clipboard.</value>
+  </data>
+  <data name="Secrets_NoSuchSecret" xml:space="preserve">
+    <value>Could not find secret '{0}'.</value>
+  </data>
+  <data name="Secrets_StoreCertCommand_CertificateHasNoPrivateKey" xml:space="preserve">
+    <value>The certificate does not have a private key, you probably don't need to store it in the secret store...</value>
+  </data>
+  <data name="Secrets_StoreCertCommand_SavingCertificate" xml:space="preserve">
+    <value>Saving certificate to key: "{0}" that will expire at {1}</value>
+  </data>
+  <data name="Secrets_StoreCertCommand_SavingCertificateReference" xml:space="preserve">
+    <value>Saving reference to certificate in: "{0}" that will expire at {1}</value>
+  </data>
 </root>
