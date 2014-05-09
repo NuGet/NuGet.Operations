@@ -42,7 +42,7 @@ function New-Certificate() {
     {
         $FullName += ", OU=$Target"
     }
-    $FullName += ", OU=$Purpose, OU=$env$dn"
+    $FullName += ", OU=$Purpose, OU=$env, OU=nuget-services$dn"
 
     Write-Host "Generating Certificate..."
     $FileName = Join-Path (Convert-Path .) "$Name.$Purpose.cer"
