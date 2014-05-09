@@ -196,6 +196,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importing &apos;{0}&apos; in to &apos;{1}&apos; store in &apos;{2}&apos;.
+        /// </summary>
+        internal static string Certs_ImportCommand_Importing {
+            get {
+                return ResourceManager.GetString("Certs_ImportCommand_Importing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Secret is not a certificate: &apos;{0}&apos;..
         /// </summary>
         internal static string Certs_UploadCommand_SecretIsNotACertificate {

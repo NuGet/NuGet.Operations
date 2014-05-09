@@ -695,6 +695,9 @@ Connection String: {3}</value>
   <data name="Certs_GrantCommand_Uploading" xml:space="preserve">
     <value>Uploading certificate '{0}' to {1}</value>
   </data>
+  <data name="Certs_ImportCommand_Importing" xml:space="preserve">
+    <value>Importing '{0}' in to '{1}' store in '{2}'</value>
+  </data>
   <data name="Certs_UploadCommand_SecretIsNotACertificate" xml:space="preserve">
     <value>Secret is not a certificate: '{0}'.</value>
   </data>

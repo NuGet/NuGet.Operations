@@ -270,6 +270,7 @@
     <Compile Include="Commands\Azure\LoginCommand.cs" />
     <Compile Include="Commands\Azure\TokenCommand.cs" />
     <Compile Include="Commands\Certs\GrantCommand.cs" />
+    <Compile Include="Commands\Certs\ImportCommand.cs" />
     <Compile Include="Commands\Config\GenerateCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />
     <Compile Include="Commands\Db\DacCommandBase.cs" />
