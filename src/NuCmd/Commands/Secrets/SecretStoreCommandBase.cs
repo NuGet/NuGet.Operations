@@ -96,9 +96,10 @@ namespace NuCmd.Commands.Secrets
             while (secret != null && secret.Type == SecretType.Link)
             {
                 // Follow link
-                await Console.WriteInfoLine(Strings.Secrets_FollowingLink, secret.Value);
+                var link = SecretName.Parse(secret.Value);
+                await Console.WriteInfoLine(Strings.Secrets_FollowingLink, link.Name);
                 secret = await store.Read(
-                    new SecretName(secret.Value, Datacenter),
+                    link,
                     String.Format(CultureInfo.InvariantCulture, "nucmd get (link from {0})", secret.Name));
             }
             return secret;

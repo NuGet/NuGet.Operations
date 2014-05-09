@@ -29,8 +29,8 @@ function New-Certificate() {
     $dn = "";
     $env = "Unknown Environment"
     if($NuOps) {
-        if(![String]::IsNullOrEmpty($NuOps.DistinguishedName)) {
-            $dn = ", " + $NuOps.DistinguishedName
+        if(![String]::IsNullOrEmpty($NuOps.Model.DistinguishedName)) {
+            $dn = ", " + $NuOps.Model.DistinguishedName
         }
         if($NuOps.CurrentEnvironment) {
             $env = $NuOps.CurrentEnvironment.Name

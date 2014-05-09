@@ -47,18 +47,19 @@ namespace NuCmd.Commands.Certs
             var expiresAt = cert.NotAfter;
 
             // Save the certificate secret
-            string certKey = "cert:" + cert.Thumbprint;
-            await Console.WriteInfoLine(Strings.Secrets_StoreCertCommand_SavingCertificate, certKey, expiresAt);
+            // Cert thumbprints are universal, no datacenter-scope needed
+            var certKey = new SecretName("cert:" + cert.Thumbprint, null);
+            await Console.WriteInfoLine(Strings.Secrets_StoreCertCommand_SavingCertificate, certKey.Name, expiresAt);
             if (!WhatIf)
             {
-                var secret = new Secret(new SecretName(certKey, Datacenter), data, DateTime.UtcNow, expiresAt, SecretType.Certificate);
+                var secret = new Secret(certKey, data, DateTime.UtcNow, expiresAt, SecretType.Certificate);
                 await store.Write(secret, "nucmd storecert");
             }
 
             await Console.WriteInfoLine(Strings.Secrets_StoreCertCommand_SavingCertificateReference, Key, expiresAt);
             if (!WhatIf)
             {
-                var secret = new Secret(new SecretName(Key, Datacenter), certKey, DateTime.UtcNow, expiresAt, SecretType.Link);
+                var secret = new Secret(new SecretName(Key, Datacenter), certKey.ToString(), DateTime.UtcNow, expiresAt, SecretType.Link);
                 await store.Write(secret, "nucmd storecert");
             }
         }
