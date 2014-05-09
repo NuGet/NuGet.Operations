@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
@@ -26,6 +27,10 @@ namespace NuCmd.Commands.Certs
         [ArgShortcut("svc")]
         [ArgDescription("The service to upload the certificate to")]
         public string TargetService { get; set; }
+
+        [ArgShortcut("pub")]
+        [ArgDescription("Only include the public key")]
+        public bool PublicOnly { get; set; }
 
         protected override async Task OnExecute()
         {
@@ -52,14 +57,23 @@ namespace NuCmd.Commands.Certs
                 await Console.WriteInfoLine(Strings.Certs_UploadCommand_UploadingCert, cert.Thumbprint, TargetService);
                 if (!WhatIf)
                 {
-                    await compute.ServiceCertificates.CreateAsync(
-                        TargetService,
+                    var parameters = PublicOnly ?
+                        // Just the public key in CER format
+                        new ServiceCertificateCreateParameters() 
+                        {
+                            CertificateFormat = CertificateFormat.Cer,
+                            Password = String.Empty,
+                            Data = cert.Export(X509ContentType.Cert)
+                        } :
+                        // Private key too in PFX format
                         new ServiceCertificateCreateParameters()
                         {
                             CertificateFormat = CertificateFormat.Pfx,
                             Password = String.Empty,
                             Data = Convert.FromBase64String(secret.Value)
-                        });
+                        };
+
+                    await compute.ServiceCertificates.CreateAsync(TargetService, parameters);
                 }
                 await Console.WriteInfoLine(Strings.Certs_Uploaded);
             }

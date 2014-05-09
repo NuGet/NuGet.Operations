@@ -15,7 +15,7 @@ function New-Certificate() {
     param(
         [Parameter(Mandatory=$true)][string]$Name,
         [Parameter(Mandatory=$true)][string]$Purpose,
-        [Parameter(Mandatory=$true)][string]$Target,
+        [Parameter(Mandatory=$false)][string]$Target,
         [Parameter(Mandatory=$false)][string]$IssuerName,
         [switch]$Force)
 
@@ -37,7 +37,12 @@ function New-Certificate() {
         }
     }
 
-    $FullName = "CN=$Name, OU=$Target, OU=$Purpose, OU=$env$dn"
+    $FullName = "CN=$Name"
+    if($Target) 
+    {
+        $FullName += ", OU=$Target"
+    }
+    $FullName += ", OU=$Purpose, OU=$env$dn"
 
     Write-Host "Generating Certificate..."
     $FileName = Join-Path (Convert-Path .) "$Name.$Purpose.cer"
