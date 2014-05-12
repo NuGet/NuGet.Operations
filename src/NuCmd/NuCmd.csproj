@@ -291,6 +291,7 @@
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\Package\PopulateFrameworksCommand.cs" />
     <Compile Include="Commands\Package\DeleteCommand.cs" />
+    <Compile Include="Commands\Package\ReserveCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
     <Compile Include="Commands\Scheduler\JobCollectionCommandBase.cs" />
     <Compile Include="Commands\Scheduler\JobsCommand.cs" />

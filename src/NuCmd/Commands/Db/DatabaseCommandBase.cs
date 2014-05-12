@@ -30,102 +30,9 @@ namespace NuCmd.Commands.Db
         [ArgDescription("The Admin Password. DO NOT SPECIFY THIS WHEN RUNNING INTERACTIVELY!")]
         public string AdminPassword { get; set; }
 
-        protected async Task<SqlConnectionInfo> GetSqlConnectionInfo()
+        protected Task<SqlConnectionInfo> GetSqlConnectionInfo()
         {
-            // Prep the connection string
-            EnsureSession();
-            var dc = GetDatacenter();
-
-            // Find the server
-            var server = dc.FindResource(ResourceTypes.SqlDb, Database.ToString());
-            if (server == null)
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_DatabaseCommandBase_NoDatabaseInDatacenter,
-                    Datacenter.Value,
-                    ResourceTypes.SqlDb,
-                    Database.ToString()));
-            }
-
-            AdminUser = AdminUser ?? Utils.GetAdminUserName(server, dc);
-
-            var connStr = new SqlConnectionStringBuilder(server.Value);
-            if (String.IsNullOrEmpty(connStr.InitialCatalog))
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "InitialCatalog"));
-            }
-            if (String.IsNullOrEmpty(connStr.DataSource))
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "DataSource"));
-            }
-            if (!String.IsNullOrEmpty(connStr.UserID))
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "User ID"));
-            }
-            if (!String.IsNullOrEmpty(connStr.Password))
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
-                    ResourceTypes.SqlDb,
-                    server.Name,
-                    "Password"));
-            }
-
-            if (String.IsNullOrEmpty(AdminPassword))
-            {
-                // Try getting it from the secret store
-                var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
-                if (secrets != null)
-                {
-                    var secret = await secrets.Read(new SecretName("sqldb." + Utils.GetServerName(connStr.DataSource) + ":admin"), Definition.FullName);
-                    if (secret != null)
-                    {
-                        await Console.WriteInfoLine(Strings.Db_DatabaseCommandBase_UsingSecretStore);
-                        AdminPassword = secret.Value;
-                    }
-                }
-            }
-
-            SecureString password;
-            if(String.IsNullOrEmpty(AdminPassword)) 
-            {
-                // Prompt the user for the admin password and put it in a SecureString.
-                password = await Console.PromptForPassword(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Db_DatabaseCommandBase_EnterAdminPassword,
-                    AdminUser));
-            }
-            else
-            {
-                // Stuff the password in a secure string and vainly attempt to clear it from unsecured memory.
-                password = new SecureString();
-                foreach(var chr in AdminPassword) {
-                    password.AppendChar(chr);
-                }
-                AdminPassword = null;
-                GC.Collect(); // Futile effort to remove AdminPassword from memory
-                password.MakeReadOnly();
-            }
-
-            // Create a SQL Credential and return the connection info
-            return new SqlConnectionInfo(connStr, new SqlCredential(AdminUser, password));
+            return GetSqlConnectionInfo(Database.ToString(), AdminUser, AdminPassword, promptForPassword: true);
         }
     }
 
@@ -161,7 +68,10 @@ namespace NuCmd.Commands.Db
 
         private async Task<SqlConnection> ConnectCore(SqlConnectionStringBuilder connStr)
         {
-            var conn = new SqlConnection(connStr.ConnectionString, Credential);
+            var conn = Credential == null ?
+                new SqlConnection(connStr.ConnectionString) :
+                new SqlConnection(connStr.ConnectionString, Credential);
+
             await conn.OpenAsync();
             return conn;
         }

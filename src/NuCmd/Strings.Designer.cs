@@ -642,6 +642,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Admin password for database &apos;{0}&apos; could not be found!.
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_MissingAdminPassword {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_MissingAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datacenter {0} does not have a {1} resource named &apos;{2}&apos;..
         /// </summary>
         internal static string Db_DatabaseCommandBase_NoDatabaseInDatacenter {
@@ -1187,6 +1196,51 @@ namespace NuCmd {
         internal static string Package_PopulatePackageFrameworksCommand_Confirm {
             get {
                 return ResourceManager.GetString("Package_PopulatePackageFrameworksCommand_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Making {0} a co-owner of {1}.
+        /// </summary>
+        internal static string Package_ReserveCommand_GrantingOwnership {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_GrantingOwnership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to reserve &apos;{0}&apos;. It already exists!.
+        /// </summary>
+        internal static string Package_ReserveCommand_IdAlreadyExists {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_IdAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User &apos;{0}&apos; is already an owner of &apos;{1}&apos;.
+        /// </summary>
+        internal static string Package_ReserveCommand_OwnerAlreadyExists {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_OwnerAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserving IDs: &apos;{0}&apos; for &apos;{1}&apos; on SQL Server &apos;{2}&apos;.
+        /// </summary>
+        internal static string Package_ReserveCommand_Reserving {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_Reserving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserving Package ID: {0}.
+        /// </summary>
+        internal static string Package_ReserveCommand_ReservingId {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_ReservingId", resourceCulture);
             }
         }
         
