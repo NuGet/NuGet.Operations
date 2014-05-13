@@ -22,22 +22,18 @@ namespace NuCmd.Commands.Db
     [Description("Creates a new SQL user for use by the specified service and with access to the specified schemas")]
     public class CreateUserCommand : DatabaseCommandBase
     {
-        [ArgShortcut("sv")]
-        [ArgRegex("[0-9a-zA-Z]+")]
-        [ArgDescription("The name of the service the user is for (i.e. 'work', 'search', etc.)")]
-        public string Service { get; set; }
-
-        [ArgShortcut("d")]
-        [ArgRegex("[0-9a-zA-Z]+")]
-        [ArgDescription("A distinguisher to use to distinguish this user name from the default name.")]
-        public string Distinguisher { get; set; }
+        [ArgPosition(0)]
+        [ArgShortcut("na")]
+        [ArgRegex("[0-9a-zA-Z_]+")]
+        [ArgDescription("The name of the user")]
+        public string Name { get; set; }
 
         [ArgShortcut("s")]
         [ArgDescription("Comma-separated list of DB schemas to grant access for. See 'nucmd db schemas' for a list.")]
         public string[] Schemas { get; set; }
 
         [ArgShortcut("sa")]
-        [ArgDescription("If set, the user will be an administrator on the database server")]
+        [ArgDescription("If set, the user will be an administrator (dbmanager, loginmanager) on the database server")]
         public bool ServerAdmin { get; set; }
 
         [ArgShortcut("xin")]
@@ -66,12 +62,8 @@ namespace NuCmd.Commands.Db
             var connInfo = await GetSqlConnectionInfo();
             
             // Generate the login name
-            string loginName = Service.ToLowerInvariant() + "_" + DateTime.UtcNow.ToString("yyyyMMMdd");
-            if (!String.IsNullOrEmpty(Distinguisher))
-            {
-                loginName += "_" + Distinguisher;
-            }
-
+            string loginName = Name.ToLowerInvariant() + "_" + DateTime.UtcNow.ToString("yyyyMMMdd");
+            
             // Generate a password
             string loginPassword = Utils.GeneratePassword(timestamped: false);
 
@@ -175,29 +167,24 @@ namespace NuCmd.Commands.Db
 
                 // Save the connection string
                 string serverBaseName = "sqldb." + connInfo.GetServerName();
-                string secretName = serverBaseName + ":logins." + loginName;
-                await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingConnectionString, secretName);
+                var secretName = new SecretName(serverBaseName + ":logins." + loginName);
+                await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingConnectionString, secretName.Name);
                 await secrets.Write(new Secret(
-                    new SecretName(secretName),
+                    secretName,
                     loginConnStr.ConnectionString,
                     DateTime.UtcNow,
                     ExpiresAt,
                     SecretType.Password),
                     "nucmd db createuser");
 
-                // Save the user name as the new active account for this service
-                string latestUserSecretName = serverBaseName + ":serviceUsers." + Service;
-                if (!String.IsNullOrEmpty(Distinguisher))
-                {
-                    latestUserSecretName += "_" + Distinguisher;
-                }
-                await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingServiceUser, latestUserSecretName);
+                // Save a link to the full user connection without the timestamp
+                string latestUserSecretName = serverBaseName + ":users." + Name;
                 await secrets.Write(new Secret(
                     new SecretName(latestUserSecretName),
-                    loginConnStr.UserID,
+                    secretName.ToString(),
                     DateTime.UtcNow,
                     ExpiresAt,
-                    SecretType.Password),
+                    SecretType.Link),
                     "nucmd db createuser");
             }
             else
@@ -207,7 +194,7 @@ namespace NuCmd.Commands.Db
                     Strings.Db_CreateUserCommand_WouldCreateUser,
                     connInfo.ConnectionString.DataSource,
                     connInfo.ConnectionString.InitialCatalog,
-                    Service));
+                    loginName));
             }
         }
     }

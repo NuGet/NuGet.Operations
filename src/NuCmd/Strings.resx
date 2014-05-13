@@ -357,7 +357,7 @@ Connection String: {3}</value>
     <value>Using provided connection string instead of using a known database in the environment.</value>
   </data>
   <data name="Db_CreateUserCommand_WouldCreateUser" xml:space="preserve">
-    <value>Would create user on server {0} for database {1}, designed for use by the {2} service.</value>
+    <value>Would create user {2} on server {0} for database {1}.</value>
   </data>
   <data name="Db_DeleteDacCommand_Deleting" xml:space="preserve">
     <value>Deleting Data-Tier Application {0} on {1}.</value>
@@ -645,7 +645,7 @@ Connection String: {3}</value>
     <value>Saving connection string to secret store key '{0}'</value>
   </data>
   <data name="Db_CreateUserCommand_SavingServiceUser" xml:space="preserve">
-    <value>Saving service username to secret store key '{0}'</value>
+    <value>Saving link to connection string to secret store key '{0}'</value>
   </data>
   <data name="Db_DatabaseCommandBase_UsingSecretStore" xml:space="preserve">
     <value>Using Admin password from secret store.</value>
