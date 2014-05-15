@@ -707,6 +707,9 @@ Connection String: {3}</value>
   <data name="Certs_Uploaded" xml:space="preserve">
     <value>Upload complete!</value>
   </data>
+  <data name="Db_DatabaseCommandBase_MissingAdminPassword" xml:space="preserve">
+    <value>Admin password for database '{0}' could not be found!</value>
+  </data>
   <data name="Group_certs" xml:space="preserve">
     <value>Commands for working with certificates</value>
   </data>
@@ -733,5 +736,20 @@ Expires: {2}</value>
   </data>
   <data name="Secrets_StoreCertCommand_SavingCertificateReference" xml:space="preserve">
     <value>Saving reference to certificate in: "{0}" that will expire at {1}</value>
+  </data>
+  <data name="Package_ReserveCommand_GrantingOwnership" xml:space="preserve">
+    <value>Making {0} a co-owner of {1}</value>
+  </data>
+  <data name="Package_ReserveCommand_IdAlreadyExists" xml:space="preserve">
+    <value>Unable to reserve '{0}'. It already exists!</value>
+  </data>
+  <data name="Package_ReserveCommand_OwnerAlreadyExists" xml:space="preserve">
+    <value>User '{0}' is already an owner of '{1}'</value>
+  </data>
+  <data name="Package_ReserveCommand_Reserving" xml:space="preserve">
+    <value>Reserving IDs: '{0}' for '{1}' on SQL Server '{2}'</value>
+  </data>
+  <data name="Package_ReserveCommand_ReservingId" xml:space="preserve">
+    <value>Reserving Package ID: {0}</value>
   </data>
 </root>

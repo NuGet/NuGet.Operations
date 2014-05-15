@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Management.Compute.Models;
+using NuCmd.Commands.Db;
+using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands
@@ -82,6 +88,111 @@ namespace NuCmd.Commands
                     x => x.Attribute("value").Value,
                     StringComparer.OrdinalIgnoreCase);
             }
+        }
+
+        protected async Task<SqlConnectionInfo> GetSqlConnectionInfo(int datacenter, string dbResource, string specifiedAdminUser, string specifiedAdminPassword, bool promptForPassword)
+        {
+            // Prep the connection string
+            var dc = GetDatacenter(datacenter, required: true);
+
+            // Find the server
+            var server = dc.FindResource(ResourceTypes.SqlDb, dbResource);
+            if (server == null)
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Db_DatabaseCommandBase_NoDatabaseInDatacenter,
+                    datacenter,
+                    ResourceTypes.SqlDb,
+                    dbResource));
+            }
+
+            specifiedAdminUser = specifiedAdminUser ?? Utils.GetAdminUserName(server, dc);
+
+            var connStr = new SqlConnectionStringBuilder(server.Value);
+            if (String.IsNullOrEmpty(connStr.InitialCatalog))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
+                    ResourceTypes.SqlDb,
+                    server.Name,
+                    "InitialCatalog"));
+            }
+            if (String.IsNullOrEmpty(connStr.DataSource))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Db_DatabaseCommandBase_ResourceMissingRequiredConnectionStringField,
+                    ResourceTypes.SqlDb,
+                    server.Name,
+                    "DataSource"));
+            }
+            if (!String.IsNullOrEmpty(connStr.UserID))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
+                    ResourceTypes.SqlDb,
+                    server.Name,
+                    "User ID"));
+            }
+            if (!String.IsNullOrEmpty(connStr.Password))
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Db_DatabaseCommandBase_ResourceHasUnexpectedConnectionStringField,
+                    ResourceTypes.SqlDb,
+                    server.Name,
+                    "Password"));
+            }
+
+            if (String.IsNullOrEmpty(specifiedAdminPassword))
+            {
+                // Try getting it from the secret store
+                var secrets = await GetEnvironmentSecretStore(Session.CurrentEnvironment);
+                if (secrets != null)
+                {
+                    var secret = await secrets.Read(new SecretName("sqldb." + Utils.GetServerName(connStr.DataSource) + ":admin"), Definition.FullName);
+                    if (secret != null)
+                    {
+                        await Console.WriteInfoLine(Strings.Db_DatabaseCommandBase_UsingSecretStore);
+                        specifiedAdminPassword = secret.Value;
+                    }
+                }
+            }
+
+            SecureString password;
+            if (String.IsNullOrEmpty(specifiedAdminPassword))
+            {
+                if (!promptForPassword)
+                {
+                    throw new InvalidOperationException(String.Format(
+                        CultureInfo.CurrentCulture,
+                        Strings.Db_DatabaseCommandBase_MissingAdminPassword,
+                        server.Name));
+                }
+                // Prompt the user for the admin password and put it in a SecureString.
+                password = await Console.PromptForPassword(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Db_DatabaseCommandBase_EnterAdminPassword,
+                    specifiedAdminUser));
+            }
+            else
+            {
+                // Stuff the password in a secure string and vainly attempt to clear it from unsecured memory.
+                password = new SecureString();
+                foreach (var chr in specifiedAdminPassword)
+                {
+                    password.AppendChar(chr);
+                }
+                specifiedAdminPassword = null;
+                GC.Collect(); // Futile effort to remove AdminPassword from memory
+                password.MakeReadOnly();
+            }
+
+            // Create a SQL Credential and return the connection info
+            return new SqlConnectionInfo(connStr, new SqlCredential(specifiedAdminUser, password));
         }
     }
 }
