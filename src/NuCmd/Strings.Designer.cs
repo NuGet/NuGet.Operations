@@ -606,7 +606,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saving service username to secret store key &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Saving link to connection string to secret store key &apos;{0}&apos;.
         /// </summary>
         internal static string Db_CreateUserCommand_SavingServiceUser {
             get {
@@ -624,7 +624,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would create user on server {0} for database {1}, designed for use by the {2} service..
+        ///   Looks up a localized string similar to Would create user {2} on server {0} for database {1}..
         /// </summary>
         internal static string Db_CreateUserCommand_WouldCreateUser {
             get {

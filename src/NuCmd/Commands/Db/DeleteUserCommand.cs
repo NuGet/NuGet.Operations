@@ -16,7 +16,7 @@ using System.ComponentModel;
 
 namespace NuCmd.Commands.Db
 {
-    [Description("Deletes the specified user from the database.")]
+    [Description("Deletes the specified SQL user from the database server.")]
     public class DeleteUserCommand : DatabaseCommandBase
     {
         [ArgRequired]
