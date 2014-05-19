@@ -345,6 +345,7 @@
     <Compile Include="Models\AuditRecord.cs" />
     <Compile Include="Models\PackageAuditRecord.cs" />
     <Compile Include="Models\PackageRegistrationAuditRecord.cs" />
+    <Compile Include="Models\SqlRoleMembership.cs" />
     <Compile Include="SqlConnectionExtensions.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IConsoleFormatter.cs" />

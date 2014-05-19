@@ -318,7 +318,7 @@ Details:
     <value>Deployment report is missing required element: '{0}'.</value>
   </data>
   <data name="Db_CreateUserCommand_AdminingUser" xml:space="preserve">
-    <value>Making {0} a server-level admin on {1}.</value>
+    <value>Making {0} a db_owner on {1}.</value>
   </data>
   <data name="Db_CreateUserCommand_Connected" xml:space="preserve">
     <value>Connected to '{1}' database on '{0}'</value>
@@ -778,5 +778,23 @@ Expires: {2}</value>
   </data>
   <data name="Groups_compute" xml:space="preserve">
     <value>Commands for working with compute nodes</value>
+  </data>
+  <data name="Db_CreateUserCommand_FetchingDBs" xml:space="preserve">
+    <value>Fetching database list...</value>
+  </data>
+  <data name="Db_CreateUserCommand_RetrievedDatabases" xml:space="preserve">
+    <value>Retrieved {0} other databases to GRANT user access to.</value>
+  </data>
+  <data name="Db_CreateUserCommand_ServerManagering" xml:space="preserve">
+    <value>Making {0} a dbmanger and loginmanager on the master database.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_DeletingSecret" xml:space="preserve">
+    <value>Deleting secret: {0}</value>
+  </data>
+  <data name="Db_UsersCommand_GatheringLoginAndDb" xml:space="preserve">
+    <value>Gathering login and database data from master</value>
+  </data>
+  <data name="Db_UsersCommand_GatheringUsers" xml:space="preserve">
+    <value>Gathering user data from {0}</value>
   </data>
 </root>

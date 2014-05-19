@@ -594,7 +594,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Making {0} a server-level admin on {1}..
+        ///   Looks up a localized string similar to Making {0} a db_owner on {1}..
         /// </summary>
         internal static string Db_CreateUserCommand_AdminingUser {
             get {
@@ -642,6 +642,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetching database list....
+        /// </summary>
+        internal static string Db_CreateUserCommand_FetchingDBs {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_FetchingDBs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Granting {0} access to the {1} schema on {2} database..
         /// </summary>
         internal static string Db_CreateUserCommand_GrantingUser {
@@ -656,6 +665,15 @@ namespace NuCmd {
         internal static string Db_CreateUserCommand_NoSchemasSpecified {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_NoSchemasSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieved {0} other databases to GRANT user access to..
+        /// </summary>
+        internal static string Db_CreateUserCommand_RetrievedDatabases {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_RetrievedDatabases", resourceCulture);
             }
         }
         
@@ -683,6 +701,15 @@ namespace NuCmd {
         internal static string Db_CreateUserCommand_SavingServiceUser {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_SavingServiceUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Making {0} a dbmanger and loginmanager on the master database..
+        /// </summary>
+        internal static string Db_CreateUserCommand_ServerManagering {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_ServerManagering", resourceCulture);
             }
         }
         
@@ -764,6 +791,15 @@ namespace NuCmd {
         internal static string Db_DeleteDacCommand_Deleting {
             get {
                 return ResourceManager.GetString("Db_DeleteDacCommand_Deleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting secret: {0}.
+        /// </summary>
+        internal static string Db_DeleteUserCommand_DeletingSecret {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_DeletingSecret", resourceCulture);
             }
         }
         
@@ -872,6 +908,24 @@ namespace NuCmd {
         internal static string Db_UsersCommand_DisplayingPermissions {
             get {
                 return ResourceManager.GetString("Db_UsersCommand_DisplayingPermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gathering login and database data from master.
+        /// </summary>
+        internal static string Db_UsersCommand_GatheringLoginAndDb {
+            get {
+                return ResourceManager.GetString("Db_UsersCommand_GatheringLoginAndDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gathering user data from {0}.
+        /// </summary>
+        internal static string Db_UsersCommand_GatheringUsers {
+            get {
+                return ResourceManager.GetString("Db_UsersCommand_GatheringUsers", resourceCulture);
             }
         }
         

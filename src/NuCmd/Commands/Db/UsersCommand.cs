@@ -25,16 +25,41 @@ namespace NuCmd.Commands.Db
 
             // Connect to master to get a list of logins
             IList<SqlLogin> logins;
+            IList<string> databaseNames;
             using (var connection = await connInfo.Connect("master"))
             {
+                await Console.WriteInfoLine(Strings.Db_UsersCommand_GatheringLoginAndDb);
                 logins = (await connection.QueryAsync<SqlLogin>("SELECT name, sid, create_date, modify_date FROM sys.sql_logins"))
                     .ToList();
+                databaseNames = (await connection.QueryAsync<string>("SELECT name FROM sys.databases WHERE name NOT LIKE 'copytemp_%'")).ToList();
             }
 
-            // Connect to the database to get a list of permissions
-            ILookup<string, SqlPermission> perms;
-            using (var connection = await connInfo.Connect())
+            // Get info for each database
+            List<SqlUserGranting> grantings = new List<SqlUserGranting>();
+            foreach(var dbName in databaseNames)
             {
+                await Console.WriteInfoLine(Strings.Db_UsersCommand_GatheringUsers, dbName);
+                grantings.AddRange(await FetchDatabaseUserInfo(connInfo, dbName));
+            }
+
+            // Order by user name and display
+            await Console.WriteTable(grantings.OrderBy(g => g.Name).ThenBy(g => g.Database), g => new
+            {
+                g.Name,
+                g.Database,
+                g.Type,
+                g.Target,
+                g.Permission
+            });
+        }
+
+        private async Task<IEnumerable<SqlUserGranting>> FetchDatabaseUserInfo(SqlConnectionInfo connInfo, string database)
+        {
+            IEnumerable<SqlPermission> perms;
+            IEnumerable<SqlRoleMembership> roles;
+            using(var connection = await connInfo.Connect(database))
+            {
+                // Fetch Permissions and role memberships
                 perms = (await connection.QueryAsync<SqlPermission>(@"
                     SELECT
 	                    u.principal_id,
@@ -49,39 +74,69 @@ namespace NuCmd.Commands.Db
                     INNER JOIN sys.database_principals u ON p.grantee_principal_id = u.principal_id
                     LEFT OUTER JOIN sys.schemas s ON p.class_desc = 'SCHEMA' AND p.major_id = s.schema_id
                     WHERE u.[type] = 'S'
-                ")).ToList().ToLookup(p => p.sid_string);
+                ")).ToList();
+
+                roles = (await connection.QueryAsync<SqlRoleMembership>(@"
+                    SELECT mem_prin.name AS member, role_prin.name AS role, mem_prin.[sid] as [sid]
+                    FROM sys.database_role_members mem
+                    INNER JOIN sys.database_principals mem_prin ON mem.member_principal_id = mem_prin.principal_id
+                    INNER JOIN sys.database_principals role_prin ON mem.role_principal_id = role_prin.principal_id
+                ")).ToList();
             }
 
-            await Console.WriteInfoLine(String.Format(
-                CultureInfo.CurrentCulture,
-                Strings.Db_UsersCommand_DisplayingPermissions,
-                connInfo.ConnectionString.InitialCatalog));
+            return Enumerable.Concat(
+                perms.Select(p => SqlUserGranting.Create(p, database)),
+                roles.Select(r => SqlUserGranting.Create(r, database)));
+        }
 
-            // Join in memory!
-            var items = logins.SelectMany(l =>
+        private class SqlUserGranting
+        {
+            public string Database { get; set; }
+            public string Name { get; set; }
+            public string Sid { get; set; }
+            public GrantingType Type { get; set; }
+            public string Permission { get; set; }
+            public string Target { get; set; }
+
+            internal static SqlUserGranting Create(SqlPermission arg, string dbName)
             {
-                var e = perms[l.sid_string];
-                if (!e.Any())
+                string target =
+                    arg.class_desc + (
+                        String.Equals(arg.class_desc, "DATABASE", StringComparison.OrdinalIgnoreCase) ?
+                            "" :
+                            (":" + arg.object_name)
+                    );
+
+
+                return new SqlUserGranting()
                 {
-                    return new[] { Tuple.Create(l, new SqlPermission()) };
-                }
-                return e.Select(p => Tuple.Create(l, p));
-            }).Select(t => new
-            {
-                Login = t.Item1.name,
-                User = t.Item2.name,
-                ObjectType = t.Item2.class_desc,
-                ObjectName = String.Equals(t.Item2.class_desc, "DATABASE", StringComparison.OrdinalIgnoreCase) ?
-                    connInfo.ConnectionString.InitialCatalog :
-                    t.Item2.object_name,
-                Permission = t.Item2.permission_name,
-                Status = t.Item2.state_desc,
-                LoginCreated = t.Item1.create_date,
-                LoginModified = t.Item1.modify_date
-            });
+                    Database = dbName,
+                    Name = arg.name,
+                    Sid = arg.sid_string,
+                    Type = GrantingType.Grant,
+                    Target = target,
+                    Permission = arg.permission_name
+                };
+            }
 
-            // Display!
-            await Console.WriteTable(items);
+            internal static SqlUserGranting Create(SqlRoleMembership arg, string dbName)
+            {
+                return new SqlUserGranting()
+                {
+                    Database = dbName,
+                    Name = arg.member,
+                    Sid = arg.sid_string,
+                    Type = GrantingType.Member,
+                    Target = arg.role,
+                    Permission = String.Empty
+                };
+            }
+        }
+
+        private enum GrantingType
+        {
+            Grant,
+            Member
         }
     }
 }

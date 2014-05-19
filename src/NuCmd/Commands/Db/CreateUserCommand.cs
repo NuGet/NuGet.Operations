@@ -16,6 +16,7 @@ using System.Threading;
 using NuGet.Services.Operations.Secrets;
 using System.Text.RegularExpressions;
 using NuGet.Services.Operations;
+using System.Diagnostics;
 
 namespace NuCmd.Commands.Db
 {
@@ -75,6 +76,7 @@ namespace NuCmd.Commands.Db
             // Connect to master
             if (!WhatIf)
             {
+                IList<string> databases = null;
                 using (var connection = await connInfo.Connect("master"))
                 {
                     var masterConnStr = new SqlConnectionStringBuilder(connection.ConnectionString);
@@ -109,12 +111,45 @@ namespace NuCmd.Commands.Db
 
                         await Console.WriteInfoLine(String.Format(
                             CultureInfo.CurrentCulture,
-                            Strings.Db_CreateUserCommand_AdminingUser,
+                            Strings.Db_CreateUserCommand_ServerManagering,
                             loginName,
                             masterConnStr.DataSource));
                         await connection.QueryAsync<int>(
                             "EXEC sp_addrolemember 'dbmanager', '" + loginName + "'; " +
                             "EXEC sp_addrolemember 'loginmanager', '" + loginName + "';");
+
+                        await Console.WriteInfoLine(Strings.Db_CreateUserCommand_FetchingDBs);
+                        databases = (await connection.QueryAsync<string>(@"
+                            SELECT name 
+                            FROM sys.databases 
+                            WHERE name <> 'master' 
+                            AND name <> @targetDb", new { targetDb = connInfo.ConnectionString.InitialCatalog })).ToList();
+                        await Console.WriteInfoLine(Strings.Db_CreateUserCommand_RetrievedDatabases, databases.Count);
+                    }
+                }
+
+                if(ServerAdmin)
+                {
+                    Debug.Assert(databases != null);
+                    // Connect to each Database except for the target db and master and make the user a db_owner of that DB
+                    foreach (var database in databases)
+                    {
+                        using(var connection = await connInfo.Connect(database))
+                        {
+                            await Console.WriteInfoLine(String.Format(
+                                CultureInfo.CurrentCulture,
+                                Strings.Db_CreateUserCommand_CreatingUser,
+                                loginName,
+                                database));
+                            await connection.QueryAsync<int>("CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
+
+                            await Console.WriteInfoLine(String.Format(
+                                CultureInfo.CurrentCulture,
+                                Strings.Db_CreateUserCommand_AdminingUser,
+                                loginName,
+                                database));
+                            await connection.QueryAsync<int>("EXEC sp_addrolemember 'db_owner', '" + loginName + "';");
+                        }
                     }
                 }
 
