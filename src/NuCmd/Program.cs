@@ -52,6 +52,12 @@ namespace NuCmd
 
         private async Task Run()
         {
+            if (String.Equals(_args.FirstOrDefault(), "-data", StringComparison.OrdinalIgnoreCase))
+            {
+                _args = _args.Skip(1);
+                _console = new DataOnlyConsole(_console);
+            }
+
             await _console.WriteTraceLine("NuCmd v{0} (built from {1})", 
                 typeof(Program).Assembly.GetName().Version,
                 typeof(Program)

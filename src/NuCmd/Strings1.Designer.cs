@@ -342,6 +342,78 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Getting RDP file for instance {1} of the {0} service.
+        /// </summary>
+        internal static string Compute_RdpCommand_GettingRdpFile {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_GettingRdpFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launching MSTSC....
+        /// </summary>
+        internal static string Compute_RdpCommand_LaunchingMstsc {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_LaunchingMstsc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are multiple role instances in this service. An instance name is required!.
+        /// </summary>
+        internal static string Compute_RdpCommand_MultipleInstances {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_MultipleInstances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no role instances in this service!.
+        /// </summary>
+        internal static string Compute_RdpCommand_NoInstances {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_NoInstances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No password found at secret store key &apos;rdp.{0}&apos;. You will need to provide the password manually!.
+        /// </summary>
+        internal static string Compute_RdpCommand_NoPasswordFound {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_NoPasswordFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removing stored credentials from credential vault....
+        /// </summary>
+        internal static string Compute_RdpCommand_RemovingCredentials {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_RemovingCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporarily storing credentials in credential vault....
+        /// </summary>
+        internal static string Compute_RdpCommand_TemporarilyStoringPassword {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_TemporarilyStoringPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waiting 5 seconds before cleaning up....
+        /// </summary>
+        internal static string Compute_RdpCommand_WaitingForCleanup {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_WaitingForCleanup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compiling config template for &apos;{0}&apos;....
         /// </summary>
         internal static string Config_GenerateCommand_CompilingConfigTemplate {
@@ -975,6 +1047,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Commands for working with compute nodes.
+        /// </summary>
+        internal static string Groups_compute {
+            get {
+                return ResourceManager.GetString("Groups_compute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command groups. Type &apos;nucmd help &lt;group&gt;&apos; to see a list of commands available in that group.
         /// </summary>
         internal static string Help_CommandGroupsHeader {
@@ -1564,7 +1645,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Secret &apos;{0}&apos; = &apos;{1}&apos;..
+        ///   Looks up a localized string similar to Value of secret &apos;{0}&apos;:.
         /// </summary>
         internal static string Secrets_GetCommand_SecretValue {
             get {

@@ -35,7 +35,7 @@ namespace NuCmd.Commands.Secrets
             // Check for null
             if (secret == null)
             {
-                await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretDoesNotExist, Key);
+                await Console.WriteErrorLine(Strings.Secrets_GetCommand_SecretDoesNotExist, Key);
             }
             else
             {
@@ -66,7 +66,8 @@ namespace NuCmd.Commands.Secrets
                     }
                     else
                     {
-                        await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretValue, Key, secret.Value);
+                        await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretValue, Key);
+                        await Console.WriteDataLine(secret.Value);
                     }
                 }
             }
