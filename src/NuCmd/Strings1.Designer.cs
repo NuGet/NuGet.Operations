@@ -903,6 +903,42 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Creating Login &apos;{0}&apos; in &apos;{1}&apos; with SID matching DC0.
+        /// </summary>
+        internal static string Db_SyncUserCommand_CreatingLogin {
+            get {
+                return ResourceManager.GetString("Db_SyncUserCommand_CreatingLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t find Login &apos;{0}&apos; on &apos;{1}&apos;!.
+        /// </summary>
+        internal static string Db_SyncUserCommand_NoLoginInDC0 {
+            get {
+                return ResourceManager.GetString("Db_SyncUserCommand_NoLoginInDC0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password was not specified and could not be found in secret store!.
+        /// </summary>
+        internal static string Db_SyncUserCommand_NoPassword {
+            get {
+                return ResourceManager.GetString("Db_SyncUserCommand_NoPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving SID for Login &apos;{0}&apos; on &apos;{1}&apos;.
+        /// </summary>
+        internal static string Db_SyncUserCommand_RetrievingSid {
+            get {
+                return ResourceManager.GetString("Db_SyncUserCommand_RetrievingSid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Permissions in the {0} database:.
         /// </summary>
         internal static string Db_UsersCommand_DisplayingPermissions {

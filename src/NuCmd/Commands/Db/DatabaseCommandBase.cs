@@ -34,6 +34,11 @@ namespace NuCmd.Commands.Db
         {
             return GetSqlConnectionInfo(Database.ToString(), AdminUser, AdminPassword, promptForPassword: true);
         }
+
+        protected Task<SqlConnectionInfo> GetSqlConnectionInfo(int datacenter)
+        {
+            return GetSqlConnectionInfo(datacenter, Database.ToString(), AdminUser, AdminPassword, promptForPassword: true);
+        }
     }
 
     public class SqlConnectionInfo

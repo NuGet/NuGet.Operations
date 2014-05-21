@@ -290,6 +290,7 @@
     <Compile Include="Commands\Db\GenerateAdminPasswordCommand.cs" />
     <Compile Include="Commands\Db\SanitizeCommand.cs" />
     <Compile Include="Commands\Db\SchemasCommand.cs" />
+    <Compile Include="Commands\Db\SyncLoginCommand.cs" />
     <Compile Include="Commands\Db\UsersCommand.cs" />
     <Compile Include="Commands\Db\CreateUserCommand.cs" />
     <Compile Include="Commands\EnvCommand.cs" />

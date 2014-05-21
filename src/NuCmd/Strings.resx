@@ -797,4 +797,16 @@ Expires: {2}</value>
   <data name="Db_UsersCommand_GatheringUsers" xml:space="preserve">
     <value>Gathering user data from {0}</value>
   </data>
+  <data name="Db_SyncUserCommand_CreatingLogin" xml:space="preserve">
+    <value>Creating Login '{0}' in '{1}' with SID matching DC0</value>
+  </data>
+  <data name="Db_SyncUserCommand_NoLoginInDC0" xml:space="preserve">
+    <value>Couldn't find Login '{0}' on '{1}'!</value>
+  </data>
+  <data name="Db_SyncUserCommand_NoPassword" xml:space="preserve">
+    <value>Password was not specified and could not be found in secret store!</value>
+  </data>
+  <data name="Db_SyncUserCommand_RetrievingSid" xml:space="preserve">
+    <value>Retrieving SID for Login '{0}' on '{1}'</value>
+  </data>
 </root>
