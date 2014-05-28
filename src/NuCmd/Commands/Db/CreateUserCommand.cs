@@ -190,23 +190,13 @@ namespace NuCmd.Commands.Db
                     }
                 }
 
-                // Generate the connection string
-                var loginConnStr = new SqlConnectionStringBuilder(connInfo.ConnectionString.ConnectionString)
-                {
-                    UserID = loginName,
-                    Password = loginPassword,
-                    ConnectTimeout = 30,
-                    Encrypt = true,
-                    IntegratedSecurity = false
-                };
-
-                // Save the connection string
-                string serverBaseName = "sqldb." + connInfo.GetServerName();
+                // Save the password
+                string serverBaseName = "sql." + Database.ToString().ToLowerInvariant();
                 var secretName = new SecretName(serverBaseName + ":logins." + loginName);
                 await Console.WriteInfoLine(Strings.Db_CreateUserCommand_SavingConnectionString, secretName.Name);
                 await secrets.Write(new Secret(
                     secretName,
-                    loginConnStr.ConnectionString,
+                    loginPassword,
                     DateTime.UtcNow,
                     ExpiresAt,
                     SecretType.Password),

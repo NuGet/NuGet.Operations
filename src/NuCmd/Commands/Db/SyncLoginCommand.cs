@@ -63,7 +63,7 @@ namespace NuCmd.Commands.Db
             }
 
             // Get the DC0 password
-            Password = Password ?? (await GetExistingPassword(dc0conn));
+            Password = Password ?? (await GetSecretOrDefault("sql." + Database.ToString().ToLowerInvariant() + ":logins." + Name));
             if (String.IsNullOrEmpty(Password))
             {
                 await Console.WriteErrorLine(Strings.Db_SyncUserCommand_NoPassword);
@@ -79,12 +79,6 @@ namespace NuCmd.Commands.Db
                 await connection.QueryAsync<int>(
                     "CREATE LOGIN [" + Name + "] WITH PASSWORD = '" + Password + "', SID=0x" + sidString);
             }
-        }
-
-        private async Task<string> GetExistingPassword(SqlConnectionInfo dc0conn)
-        {
-            var cstr = await GetSecretOrDefault("sqldb." + dc0conn.GetServerName() + ":logins." + Name);
-            return String.IsNullOrEmpty(cstr) ? null : new SqlConnectionStringBuilder(cstr).Password;
         }
     }
 }

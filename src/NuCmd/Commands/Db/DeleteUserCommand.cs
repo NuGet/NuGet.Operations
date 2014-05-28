@@ -145,13 +145,8 @@ namespace NuCmd.Commands.Db
                 return;
             }
 
-            var loginSecretName = new SecretName("sqldb." + connInfo.GetServerName() + ":logins." + User, datacenter: null);
-            var secret = await secrets.Read(loginSecretName, "nucmd db deleteuser");
-            if (secret != null)
-            {
-                await Console.WriteInfoLine(Strings.Db_DeleteUserCommand_DeletingSecret, loginSecretName.Name);
-                await secrets.Delete(loginSecretName, "nucmd db deleteuser");
-            }
+            await DeleteSecret(secrets, "sqldb." + connInfo.GetServerName() + ":logins." + User);
+            await DeleteSecret(secrets, "sql." + Database.ToString().ToLowerInvariant() + ":logins." + User);
 
             // Check if there is a link that points at this user
             var match = BaseNameExtractor.Match(User);
@@ -160,13 +155,20 @@ namespace NuCmd.Commands.Db
                 return;
             }
 
-            var userSecretName = new SecretName("sqldb." + connInfo.GetServerName() + "users." + match.Groups["base"].Value);
-            secret = await secrets.Read(userSecretName, "nucmd db deleteuser");
-            if (String.Equals(secret.Value, loginSecretName.ToString(), StringComparison.OrdinalIgnoreCase))
+            await DeleteSecret(secrets, "sqldb." + connInfo.GetServerName() + "users." + match.Groups["base"].Value);
+            await DeleteSecret(secrets, "sql." + Database.ToString().ToLowerInvariant() + "users." + match.Groups["base"].Value);
+        }
+
+        private async Task DeleteSecret(SecretStore secrets, string name)
+        {
+            var secretName = new SecretName(name, datacenter: null);
+            var secret = await secrets.Read(secretName, "nucmd db deleteuser");
+            if (secret != null)
             {
-                await Console.WriteInfoLine(Strings.Db_DeleteUserCommand_DeletingSecret, userSecretName.Name);
-                await secrets.Delete(userSecretName, "nucmd db deleteuser");
+                await Console.WriteInfoLine(Strings.Db_DeleteUserCommand_DeletingSecret, name);
+                await secrets.Delete(secretName, "nucmd db deleteuser");
             }
+
         }
     }
 }
