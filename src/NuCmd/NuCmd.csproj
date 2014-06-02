@@ -194,29 +194,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NuGet.Core.2.8.1\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Indexing, Version=3.0.16.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Indexing.3.0.16-r-master\lib\net45\NuGet.Indexing.dll</HintPath>
+    <Reference Include="NuGet.Indexing">
+      <HintPath>..\..\packages\NuGet.Indexing.3.0.29-r-master\lib\net45\NuGet.Indexing.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Platform, Version=3.0.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Platform.3.0.11-r-master\lib\net45\NuGet.Services.Platform.dll</HintPath>
+    <Reference Include="NuGet.Services.Platform">
+      <HintPath>..\..\packages\NuGet.Services.Platform.3.0.17-r-master\lib\net45\NuGet.Services.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Platform.Client, Version=3.0.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.11-r-master\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
+    <Reference Include="NuGet.Services.Platform.Client">
+      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.17-r-master\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Search.Client, Version=3.0.16.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.16-r-master\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Work.Client, Version=3.0.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.9-r-master\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
+    <Reference Include="NuGet.Services.Work.Client">
+      <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.35-r-master\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
     </Reference>
-    <Reference Include="NuGetGallery.Core, Version=3.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGetGallery.Core.3.0.5-r-master\lib\net45\NuGetGallery.Core.dll</HintPath>
+    <Reference Include="NuGetGallery.Core">
+      <HintPath>..\..\packages\NuGetGallery.Core.3.0.61-r-master\lib\net45\NuGetGallery.Core.dll</HintPath>
     </Reference>
     <Reference Include="PowerArgs">
       <HintPath>..\..\packages\PowerArgs.2.0.4.0-preview\lib\net40\PowerArgs.dll</HintPath>
@@ -233,7 +228,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.1.0-rc1\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.1.1\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Reactive.Core">
