@@ -203,9 +203,9 @@
     <Reference Include="NuGet.Services.Platform.Client">
       <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.17-r-master\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Search.Client, Version=3.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NuGet.Services.Search.Client, Version=3.0.29.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.16-r-master\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.29-r-master\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Work.Client">
       <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.35-r-master\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
