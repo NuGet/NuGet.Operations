@@ -7,11 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using NuGet.Services.Client;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using NuGet.Services.Operations.Azure;
 
 namespace NuGet.Services.Operations
 {
     public class AzureTokenManager
     {
+        private const string AdalAuthority = "https://login.windows.net/{0}";
+        private const string ClientId = "074bc578-c33d-4a8a-aeb0-60f6ec6c3c2c";
+        private const string AdalResource = "https://management.core.windows.net/";
+        private static readonly Uri CallBackUrl = new Uri("http://operations.nuget.org");
+
         private string _root;
 
         public AzureTokenManager(string root)
@@ -19,76 +25,49 @@ namespace NuGet.Services.Operations
             _root = root;
         }
 
-        public async Task<AzureToken> Authenticate(string subscriptionId)
+        public async Task<AuthenticationResult> GetToken(string tenantId)
         {
             // Authenticate!
-            var context = new AuthenticationContext("https://login.windows.net/common");
+            var context = CreateContext(tenantId);
+
             AuthenticationResult result = null;
             await STAHelper.InSTAThread(() =>
                 result = context.AcquireToken(
-                    "https://management.core.windows.net/",
-                    "1950a258-227b-4e31-a9cf-717495945fc2",
-                    new Uri("urn:ietf:wg:oauth:2.0:oob"),
+                    AdalResource,
+                    ClientId,
+                    CallBackUrl,
                     PromptBehavior.Auto));
-            if (result == null)
-            {
-                return null;
-            }
 
-            return new AzureToken()
-            {
-                SubscriptionId = subscriptionId,
-                Token = result
-            };
+            return result;
         }
 
-        public async Task<AzureToken> LoadToken(string subscriptionId)
+        public async Task<AuthenticationResult> RefreshToken(AuthenticationResult result)
         {
-            string path = Path.Combine(_root, "Subscriptions", subscriptionId + ".dat");
-            if (!File.Exists(path))
+            var context = CreateContext(result.TenantId);
+
+            // Reauthenticate with the refresh token
+            if (!String.IsNullOrEmpty(result.RefreshToken))
             {
-                return null;
+                try
+                {
+                    return await context.AcquireTokenByRefreshTokenAsync(
+                        result.RefreshToken, ClientId);
+                }
+                catch (Exception)
+                {
+                    // Failed to refresh...
+                }
             }
 
-            string content = null;
-            using (var reader = new StreamReader(path))
-            {
-                content = await reader.ReadToEndAsync();
-            }
-            if (content == null)
-            {
-                return null;
-            }
-            var unprotected =
-                Encoding.UTF8.GetString(
-                    ProtectedData.Unprotect(
-                        Convert.FromBase64String(content),
-                        null,
-                        DataProtectionScope.CurrentUser));
-            
-            return JsonFormat.Deserialize<AzureToken>(unprotected);
+            // If we got here, we don't have a refresh token or we failed to refresh with it. Just get a fresh new token
+            return await GetToken(result.TenantId);
         }
 
-        public async Task StoreToken(AzureToken token)
+        private AuthenticationContext CreateContext(string tenantId)
         {
-            string dir = Path.Combine(_root, "Subscriptions");
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-            string path = Path.Combine(dir, token.SubscriptionId + ".dat");
-
-            string content = JsonFormat.Serialize(token);
-            var protectedData = Convert.ToBase64String(
-                ProtectedData.Protect(
-                    Encoding.UTF8.GetBytes(content),
-                    null,
-                    DataProtectionScope.CurrentUser));
-
-            using (var writer = new StreamWriter(path))
-            {
-                await writer.WriteAsync(protectedData);
-            }
+            return new AuthenticationContext(
+                String.Format(AdalAuthority, tenantId),
+                new CredManCache());
         }
     }
 }

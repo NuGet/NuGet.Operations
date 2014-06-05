@@ -16,6 +16,7 @@ namespace NuCmd.Commands
         protected override async Task OnExecute()
         {
             var cred = await GetAzureCredentials();
+
             bool expired = false;
             try
             {

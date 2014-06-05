@@ -396,7 +396,7 @@ Connection String: {3}</value>
     <value>You must log in to Azure using "nucmd azure login" before running this command</value>
   </data>
   <data name="AzureCommandBase_TokenExpired" xml:space="preserve">
-    <value>Your login token has expired, use "nucmd azure login" to refresh it.</value>
+    <value>Your login token has expired and could not be refreshed.</value>
   </data>
   <data name="Azure_LoginCommand_AuthenticatedGettingSubscription" xml:space="preserve">
     <value>Authenticated. Verifying subscription access...</value>
@@ -593,15 +593,6 @@ Connection String: {3}</value>
   <data name="Search_QueryCommand_Hits" xml:space="preserve">
     <value>{0} hits.</value>
   </data>
-  <data name="Azure_CycleStorageKeyCommand_FetchingConfig" xml:space="preserve">
-    <value>Fetching configuration for {0} service...</value>
-  </data>
-  <data name="Azure_CycleStorageKeyCommand_MissingConfigKey" xml:space="preserve">
-    <value>The {0} service does not use the {1} storage account!</value>
-  </data>
-  <data name="Azure_CycleStorageKeyCommand_NoAzureRoles" xml:space="preserve">
-    <value>No Azure Role Services were found in the app model!</value>
-  </data>
   <data name="Command_EnvironmentHasNoSecretStore" xml:space="preserve">
     <value>Environment '{0}' has no secret store</value>
   </data>
@@ -796,5 +787,11 @@ Expires: {2}</value>
   </data>
   <data name="Db_UsersCommand_GatheringUsers" xml:space="preserve">
     <value>Gathering user data from {0}</value>
+  </data>
+  <data name="AzureCommandBase_RefreshingToken" xml:space="preserve">
+    <value>Azure Login Token has expired, refreshing...</value>
+  </data>
+  <data name="AzureCommandBase_TokenCleared" xml:space="preserve">
+    <value>Your login token for this subscription has been cleared.</value>
   </data>
 </root>

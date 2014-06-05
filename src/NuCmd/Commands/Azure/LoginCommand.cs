@@ -15,7 +15,7 @@ namespace NuCmd.Commands.Azure
         protected override async Task OnExecute()
         {
             var env = GetEnvironment();
-            var token = await Session.AzureTokens.Authenticate(env.Subscription.Id);
+            var token = await Session.AzureTokens.GetToken(env.App.AdTenantId);
             if (token == null)
             {
                 await Console.WriteErrorLine(Strings.Azure_LoginCommand_AuthenticationFailed);
@@ -25,14 +25,13 @@ namespace NuCmd.Commands.Azure
                 await Console.WriteInfoLine(Strings.Azure_LoginCommand_AuthenticatedGettingSubscription);
 
                 SubscriptionGetResponse resp;
-                using (var client = CloudContext.Clients.CreateManagementClient(new TokenCloudCredentials(env.Subscription.Id, token.Token.AccessToken)))
+                using (var client = CloudContext.Clients.CreateManagementClient(new TokenCloudCredentials(env.Subscription.Id, token.AccessToken)))
                 {
                     resp = await client.Subscriptions.GetAsync(CancellationToken.None);
                 }
                 if (resp.SubscriptionStatus == SubscriptionStatus.Active)
                 {
                     await Console.WriteInfoLine(Strings.Azure_LoginCommand_AuthenticationComplete);
-                    await Session.AzureTokens.StoreToken(token);
                 }
                 else
                 {

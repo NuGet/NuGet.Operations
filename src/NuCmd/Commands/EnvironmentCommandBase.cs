@@ -7,6 +7,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Management.Compute.Models;
 using NuCmd.Commands.Db;
@@ -19,6 +20,8 @@ namespace NuCmd.Commands
 {
     public abstract class EnvironmentCommandBase : Command
     {
+        public static readonly XNamespace ConfigXmlns = XNamespace.Get("http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration");
+
         [ArgShortcut("e")]
         [ArgDescription("The environment to work in (defaults to the current environment)")]
         public string Environment { get; set; }
@@ -57,15 +60,33 @@ namespace NuCmd.Commands
                 throw new InvalidOperationException(Strings.AzureCommandBase_RequiresSubscription);
             }
 
-            var token = await Session.AzureTokens.LoadToken(Session.CurrentEnvironment.Subscription.Id);
-            if (token == null)
+            return GetAzureCredentials(await GetAzureToken());
+        }
+
+        protected SubscriptionCloudCredentials GetAzureCredentials(AuthenticationResult result)
+        {
+            if (Session == null ||
+                Session.CurrentEnvironment == null ||
+                Session.CurrentEnvironment.Subscription == null)
             {
-                throw new InvalidOperationException(Strings.AzureCommandBase_RequiresToken);
+                throw new InvalidOperationException(Strings.AzureCommandBase_RequiresSubscription);
             }
 
             return new TokenCloudCredentials(
                 Session.CurrentEnvironment.Subscription.Id,
-                token.Token.AccessToken);
+                result.AccessToken);
+        }
+
+        protected async Task<AuthenticationResult> GetAzureToken()
+        {
+            var token = await Session.AzureTokens.GetToken(Session.CurrentEnvironment.App.AdTenantId);
+            if (DateTimeOffset.UtcNow.AddSeconds(-30) >= token.ExpiresOn)
+            {
+                // Token will expire within 30 seconds. Refresh it
+                await Console.WriteInfoLine(Strings.AzureCommandBase_RefreshingToken);
+                token = await Session.AzureTokens.RefreshToken(token);
+            }
+            return token;
         }
 
         protected async Task<IDictionary<string, string>> LoadServiceConfig(Datacenter dc, Service service)
@@ -74,20 +95,24 @@ namespace NuCmd.Commands
 
             // Get creds
             var creds = await GetAzureCredentials();
-            var ns = XNamespace.Get("http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration");
-
+            
             // Connect to the Compute Management Client
             using (var client = CloudContext.Clients.CreateComputeManagementClient(creds))
             {
                 // Download config for the deployment
                 var result = await client.Deployments.GetBySlotAsync(service.Value, DeploymentSlot.Production);
 
-                var parsed = XDocument.Parse(result.Configuration);
-                return parsed.Descendants(ns + "Setting").ToDictionary(
-                    x => x.Attribute("name").Value,
-                    x => x.Attribute("value").Value,
-                    StringComparer.OrdinalIgnoreCase);
+                return ParseConfig(result.Configuration);
             }
+        }
+
+        public static IDictionary<string, string> ParseConfig(string configXml)
+        {
+            var parsed = XDocument.Parse(configXml);
+            return parsed.Descendants(ConfigXmlns + "Setting").ToDictionary(
+                x => x.Attribute("name").Value,
+                x => x.Attribute("value").Value,
+                StringComparer.OrdinalIgnoreCase);
         }
 
         protected async Task<SqlConnectionInfo> GetSqlConnectionInfo(int datacenter, string dbResource, string specifiedAdminUser, string specifiedAdminPassword, bool promptForPassword)

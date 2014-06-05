@@ -12,6 +12,7 @@ namespace NuGet.Services.Operations.Model
         public string Name { get; private set; }
         public string DistinguishedName { get; set; }
         public Version Version { get; private set; }
+        public string AdTenantId { get; set; }
 
         public IList<DeploymentEnvironment> Environments { get; private set; }
         public IList<AzureSubscription> Subscriptions { get; private set; }

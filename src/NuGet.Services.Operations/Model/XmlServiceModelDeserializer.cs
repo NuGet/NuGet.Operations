@@ -27,7 +27,8 @@ namespace NuGet.Services.Operations.Model
                 root.AttributeValueOrDefault("name"),
                 root.AttributeValueOrDefault("version", Version.Parse, AppModel.DefaultVersion))
                 {
-                    DistinguishedName = root.AttributeValueOrDefault("distinguishedName")
+                    DistinguishedName = root.AttributeValueOrDefault("distinguishedName"),
+                    AdTenantId = root.AttributeValueOrDefault("adTenantId")
                 };
             
 

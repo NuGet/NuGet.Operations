@@ -61,33 +61,6 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fetching configuration for {0} service....
-        /// </summary>
-        internal static string Azure_CycleStorageKeyCommand_FetchingConfig {
-            get {
-                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_FetchingConfig", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The {0} service does not use the {1} storage account!.
-        /// </summary>
-        internal static string Azure_CycleStorageKeyCommand_MissingConfigKey {
-            get {
-                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_MissingConfigKey", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No Azure Role Services were found in the app model!.
-        /// </summary>
-        internal static string Azure_CycleStorageKeyCommand_NoAzureRoles {
-            get {
-                return ResourceManager.GetString("Azure_CycleStorageKeyCommand_NoAzureRoles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Authenticated. Verifying subscription access....
         /// </summary>
         internal static string Azure_LoginCommand_AuthenticatedGettingSubscription {
@@ -160,6 +133,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Azure Login Token has expired, refreshing....
+        /// </summary>
+        internal static string AzureCommandBase_RefreshingToken {
+            get {
+                return ResourceManager.GetString("AzureCommandBase_RefreshingToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This command must be run from the NuGet Ops console with a current environment that has a subscription..
         /// </summary>
         internal static string AzureCommandBase_RequiresSubscription {
@@ -178,7 +160,16 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your login token has expired, use &quot;nucmd azure login&quot; to refresh it..
+        ///   Looks up a localized string similar to Your login token for this subscription has been cleared..
+        /// </summary>
+        internal static string AzureCommandBase_TokenCleared {
+            get {
+                return ResourceManager.GetString("AzureCommandBase_TokenCleared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your login token has expired and could not be refreshed..
         /// </summary>
         internal static string AzureCommandBase_TokenExpired {
             get {

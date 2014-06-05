@@ -19,15 +19,14 @@ namespace NuCmd.Commands.Azure
                 throw new InvalidOperationException(Strings.AzureCommandBase_RequiresSubscription);
             }
 
-            var token = await Session.AzureTokens.LoadToken(Session.CurrentEnvironment.Subscription.Id);
+            var token = await Session.AzureTokens.GetToken(Session.CurrentEnvironment.App.AdTenantId);
             if (token == null)
             {
                 await Console.WriteInfoLine(Strings.Azure_TokenCommand_NoToken);
             }
             else
             {
-                await Console.WriteInfoLine(Strings.Azure_TokenCommand_Token, token.Token.AccessToken);
-                await Console.WriteInfoLine(Strings.Azure_TokenCommand_SubscriptionId, token.SubscriptionId);
+                await Console.WriteInfoLine(Strings.Azure_TokenCommand_Token, token.AccessToken);
             }
         }
     }
