@@ -100,7 +100,17 @@ namespace NuCmd.Commands.Config
 
             // Identify accounts and databases
             var storageAccounts = storageConnections.GroupBy(s => s.Parsed.Credentials.AccountName);
-            var sqlDatabases = sqlConnections.GroupBy(s => Tuple.Create(s.Parsed.DataSource, s.Parsed.InitialCatalog));
+            var sqlDatabases = sqlConnections.GroupBy(s => Tuple.Create(s.Parsed.DataSource, s.Parsed.InitialCatalog, s.Parsed.UserID));
+
+            // Fetch keys for storage accounts in use
+            IDictionary<string, string> keys;
+            using (var client = CloudContext.Clients.CreateStorageManagementClient(await GetAzureCredentials()))
+            {
+                var keyTasks = storageAccounts.Select(name => client.StorageAccounts.GetKeysAsync(name)).ToList();
+                await Task.WhenAll(keyTasks);
+
+            }
+
 
             await Console.WriteInfoLine("Storage Accounts in use:");
             await Console.WriteTable(storageAccounts, a => new
@@ -114,6 +124,7 @@ namespace NuCmd.Commands.Config
             {
                 Server = a.Key.Item1,
                 Database = a.Key.Item2,
+                User = a.Key.Item3,
                 UsedBy = String.Join(",", a.Select(c => c.ServiceName).Distinct())
             });
         }
