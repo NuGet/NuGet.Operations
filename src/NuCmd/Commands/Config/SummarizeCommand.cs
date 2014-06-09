@@ -4,10 +4,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Management.Compute;
 using Microsoft.WindowsAzure.Management.Compute.Models;
+using Microsoft.WindowsAzure.Management.Storage.Models;
 using Microsoft.WindowsAzure.Storage;
 
 namespace NuCmd.Commands.Config
@@ -99,34 +101,72 @@ namespace NuCmd.Commands.Config
             }
 
             // Identify accounts and databases
-            var storageAccounts = storageConnections.GroupBy(s => s.Parsed.Credentials.AccountName);
-            var sqlDatabases = sqlConnections.GroupBy(s => Tuple.Create(s.Parsed.DataSource, s.Parsed.InitialCatalog, s.Parsed.UserID));
+            var storageAccounts = storageConnections.GroupBy(s => new {
+                Account = s.Parsed.Credentials.AccountName,
+                Key = s.Parsed.Credentials.ExportBase64EncodedKey()
+            });
+            var sqlDatabases = sqlConnections.GroupBy(s => new
+            {
+                Server = s.Parsed.DataSource,
+                Database = s.Parsed.InitialCatalog,
+                User = s.Parsed.UserID
+            });
 
             // Fetch keys for storage accounts in use
-            IDictionary<string, string> keys;
+            IDictionary<string, StorageAccountGetKeysResponse> keys;
             using (var client = CloudContext.Clients.CreateStorageManagementClient(await GetAzureCredentials()))
             {
-                var keyTasks = storageAccounts.Select(name => client.StorageAccounts.GetKeysAsync(name)).ToList();
+                var keyTasks = storageConnections.GroupBy(s => s.Parsed.Credentials.AccountName).Select(async acct => 
+                    Tuple.Create(
+                        acct.Key, 
+                        await client.StorageAccounts.GetKeysAsync(acct.Key))).ToList();
                 await Task.WhenAll(keyTasks);
 
+                keys = keyTasks.ToDictionary(
+                    t => t.Result.Item1,
+                    t => t.Result.Item2);
             }
-
 
             await Console.WriteInfoLine("Storage Accounts in use:");
             await Console.WriteTable(storageAccounts, a => new
             {
-                Account = a.Key,
+                a.Key.Account,
+                KeyInUse = IdentifyKey(keys, a.Key.Account, a.Key.Key),
                 UsedBy = String.Join(",", a.Select(c => c.ServiceName).Distinct())
             });
 
             await Console.WriteInfoLine("SQL Databases in use:");
             await Console.WriteTable(sqlDatabases, a => new
             {
-                Server = a.Key.Item1,
-                Database = a.Key.Item2,
-                User = a.Key.Item3,
+                a.Key.Server,
+                a.Key.Database,
+                a.Key.User,
                 UsedBy = String.Join(",", a.Select(c => c.ServiceName).Distinct())
             });
+        }
+
+        private string IdentifyKey(IDictionary<string, StorageAccountGetKeysResponse> keys, string account, string key)
+        {
+            StorageAccountGetKeysResponse keySet;
+            if (!keys.TryGetValue(account, out keySet))
+            {
+                return "UNKNOWN";
+            }
+            else
+            {
+                if (String.Equals(keySet.PrimaryKey, key))
+                {
+                    return "Primary";
+                }
+                else if (String.Equals(keySet.SecondaryKey, key))
+                {
+                    return "Secondary";
+                }
+                else
+                {
+                    return "INVALID";
+                }
+            }
         }
 
         private async Task<DeploymentGetResponse> GetDeployment(ComputeManagementClient client, string serviceName, DeploymentSlot slot)
