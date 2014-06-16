@@ -61,6 +61,8 @@ namespace NuGet.Services.Operations.Secrets
 
     public enum SecretType
     {
-        Password
+        Password,
+        Certificate,
+        Link
     }
 }

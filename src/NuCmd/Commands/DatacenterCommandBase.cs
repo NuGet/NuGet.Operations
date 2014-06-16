@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NuCmd.Commands.Db;
 using NuGet.Services.Operations.Model;
 using PowerArgs;
 
@@ -37,6 +38,11 @@ namespace NuCmd.Commands
             {
                 return GetDatacenter(env, Datacenter.Value);
             }
+        }
+
+        protected virtual Task<SqlConnectionInfo> GetSqlConnectionInfo(string dbResource, string specifiedAdminUser, string specifiedAdminPassword, bool promptForPassword)
+        {
+            return GetSqlConnectionInfo(Datacenter ?? 0, dbResource, specifiedAdminUser, specifiedAdminPassword, promptForPassword);
         }
     }
 }

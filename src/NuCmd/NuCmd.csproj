@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.props" Condition="Exists('..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.props')" />
+  <Import Project="..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.props" Condition="Exists('..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Standalone>true</Standalone>
+    <NuGetPackageImportStamp>6b54748b</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -104,8 +105,20 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms">
       <HintPath>..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.1.0.3\lib\net40\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.2.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.3.0.0-beta1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.3.0.0-beta1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.Hosting.3.0.0-beta1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\..\packages\Microsoft.Owin.Security.3.0.0-beta1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.SemanticLogging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -127,42 +140,47 @@
     <Reference Include="Microsoft.Web.XmlTransform">
       <HintPath>..\..\packages\Microsoft.Web.Xdt.1.0.0\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Common">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Common.0.9.9-preview\lib\net45\Microsoft.WindowsAzure.Common.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Common.1.0.3\lib\net45\Microsoft.WindowsAzure.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Common.NetFramework">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Common.0.9.9-preview\lib\net45\Microsoft.WindowsAzure.Common.NetFramework.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Common.NetFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Common.1.0.3\lib\net45\Microsoft.WindowsAzure.Common.NetFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.0.9.5-preview\lib\net40\Microsoft.WindowsAzure.Management.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.1.0.3\lib\net40\Microsoft.WindowsAzure.Management.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.Compute">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Compute.0.9.11-preview\lib\net40\Microsoft.WindowsAzure.Management.Compute.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.Compute, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Compute.1.0.2\lib\net40\Microsoft.WindowsAzure.Management.Compute.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.Monitoring">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Monitoring.0.9.2-preview\lib\net40\Microsoft.WindowsAzure.Management.Monitoring.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.MediaServices">
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.MediaServices.1.0.3\lib\net40\Microsoft.WindowsAzure.Management.MediaServices.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.Scheduler">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Scheduler.0.9.8-preview\lib\net40\Microsoft.WindowsAzure.Management.Scheduler.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.Network">
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Network.1.1.1\lib\net40\Microsoft.WindowsAzure.Management.Network.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.ServiceBus">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.ServiceBus.0.9.3-preview\lib\net40\Microsoft.WindowsAzure.Management.ServiceBus.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.Scheduler, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Scheduler.1.0.3\lib\net40\Microsoft.WindowsAzure.Management.Scheduler.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.Sql">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Sql.0.9.5-preview\lib\net40\Microsoft.WindowsAzure.Management.Sql.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.Sql, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Sql.1.0.2\lib\net40\Microsoft.WindowsAzure.Management.Sql.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.Storage">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Storage.0.9.3-preview\lib\net40\Microsoft.WindowsAzure.Management.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.Storage.1.0.3\lib\net40\Microsoft.WindowsAzure.Management.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.VirtualNetworks">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.VirtualNetworks.0.9.3-preview\lib\net40\Microsoft.WindowsAzure.Management.VirtualNetworks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Management.WebSites">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.WebSites.0.9.10-preview\lib\net40\Microsoft.WindowsAzure.Management.WebSites.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Management.WebSites, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.Management.WebSites.2.0.1\lib\net40\Microsoft.WindowsAzure.Management.WebSites.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=3.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -170,35 +188,30 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.8.50320.36, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NuGet.Core.2.8.1\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Indexing">
-      <HintPath>..\..\packages\NuGet.Indexing.3.0.2-alpha-9\lib\net45\NuGet.Indexing.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Indexing.3.0.29-r-master\lib\net45\NuGet.Indexing.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Services.Platform, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NuGet.Services.Platform">
+      <HintPath>..\..\packages\NuGet.Services.Platform.3.0.17-r-master\lib\net45\NuGet.Services.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Services.Platform.Client">
+      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.17-r-master\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Services.Search.Client, Version=3.0.29.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Platform.3.0.1-rel-3\lib\net45\NuGet.Services.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Services.Platform.Client, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NuGet.Services.Platform.Client.3.0.1-rel-3\lib\portable-net45+wp80+win\NuGet.Services.Platform.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Services.Search.Client">
-      <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.2-alpha-17\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Services.Search.Client.3.0.29-r-master\lib\portable-net45+wp80+win\NuGet.Services.Search.Client.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Services.Work.Client">
-      <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.1-rel-4\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
+      <HintPath>..\..\packages\NuGet.Services.Work.Client.3.0.35-r-master\lib\portable-net45+wp80+win\NuGet.Services.Work.Client.dll</HintPath>
     </Reference>
     <Reference Include="NuGetGallery.Core">
-      <HintPath>..\..\packages\NuGetGallery.Core.2.0.0-alpha-118\lib\net45\NuGetGallery.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Nustache.Core, Version=1.13.8.22, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuGetGallery.Core.3.0.61-r-master\lib\net45\NuGetGallery.Core.dll</HintPath>
     </Reference>
     <Reference Include="PowerArgs">
       <HintPath>..\..\packages\PowerArgs.2.0.4.0-preview\lib\net40\PowerArgs.dll</HintPath>
@@ -253,8 +266,12 @@
     <Compile Include="CommandDefinition.cs" />
     <Compile Include="CommandDirectory.cs" />
     <Compile Include="CommandGroup.cs" />
-    <Compile Include="Commands\AzureCommandBase.cs" />
+    <Compile Include="Commands\AzureConnectionCommandBase.cs" />
     <Compile Include="Commands\Azure\LoginCommand.cs" />
+    <Compile Include="Commands\Azure\TokenCommand.cs" />
+    <Compile Include="Commands\Certs\GrantCommand.cs" />
+    <Compile Include="Commands\Certs\ImportCommand.cs" />
+    <Compile Include="Commands\Compute\InstancesCommand.cs" />
     <Compile Include="Commands\Config\GenerateCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />
     <Compile Include="Commands\Db\DacCommandBase.cs" />
@@ -266,6 +283,7 @@
     <Compile Include="Commands\Db\DeployCommand.cs" />
     <Compile Include="Commands\Db\ApplyAdminPasswordCommand.cs" />
     <Compile Include="Commands\Db\GenerateAdminPasswordCommand.cs" />
+    <Compile Include="Commands\Db\SanitizeCommand.cs" />
     <Compile Include="Commands\Db\SchemasCommand.cs" />
     <Compile Include="Commands\Db\UsersCommand.cs" />
     <Compile Include="Commands\Db\CreateUserCommand.cs" />
@@ -274,6 +292,8 @@
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\Package\PopulateFrameworksCommand.cs" />
     <Compile Include="Commands\Package\DeleteCommand.cs" />
+    <Compile Include="Commands\Package\ReserveCommand.cs" />
+    <Compile Include="Commands\Compute\RdpCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
     <Compile Include="Commands\Scheduler\JobCollectionCommandBase.cs" />
     <Compile Include="Commands\Scheduler\JobsCommand.cs" />
@@ -291,6 +311,7 @@
     <Compile Include="Commands\Search\QueryCommand.cs" />
     <Compile Include="Commands\Search\SearchServiceCommandBase.cs" />
     <Compile Include="Commands\Secrets\CreateStoreCommand.cs" />
+    <Compile Include="Commands\Certs\StoreCommand.cs" />
     <Compile Include="Commands\Secrets\UndeleteCommand.cs" />
     <Compile Include="Commands\Secrets\DeleteCommand.cs" />
     <Compile Include="Commands\Secrets\LogCommand.cs" />
@@ -300,22 +321,26 @@
     <Compile Include="Commands\Secrets\SecretStoreCommandBase.cs" />
     <Compile Include="Commands\Secrets\SetCommand.cs" />
     <Compile Include="Commands\Secrets\StoresCommand.cs" />
+    <Compile Include="Commands\Certs\UploadCommand.cs" />
     <Compile Include="Commands\ServiceCommandBase.cs" />
+    <Compile Include="Commands\Work\JobHistoryCommand.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />
     <Compile Include="Commands\Work\PurgeCommand.cs" />
     <Compile Include="Commands\Work\JobsCommand.cs" />
-    <Compile Include="Commands\Work\RunCommand.cs" />
+    <Compile Include="Commands\Work\StatusCommand.cs" />
     <Compile Include="Commands\Work\StatsCommand.cs" />
     <Compile Include="Commands\Work\GetCommand.cs" />
     <Compile Include="Commands\Work\InvokeCommand.cs" />
     <Compile Include="Commands\Work\WorkServiceCommandBase.cs" />
     <Compile Include="ConsoleHttpTraceHandler.cs" />
     <Compile Include="ConsoleTable.cs" />
+    <Compile Include="DataOnlyConsole.cs" />
     <Compile Include="Models\AuditActor.cs" />
     <Compile Include="Models\AuditEntry.cs" />
     <Compile Include="Models\AuditRecord.cs" />
     <Compile Include="Models\PackageAuditRecord.cs" />
     <Compile Include="Models\PackageRegistrationAuditRecord.cs" />
+    <Compile Include="Models\SqlRoleMembership.cs" />
     <Compile Include="SqlConnectionExtensions.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IConsoleFormatter.cs" />
@@ -328,10 +353,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceTypes.cs" />
     <Compile Include="SemanticVersionHelper.cs" />
-    <Compile Include="Strings.Designer.cs">
-      <DependentUpon>Strings.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Strings1.Designer.cs">
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="SystemConsole.cs" />
   </ItemGroup>
@@ -349,7 +374,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -357,8 +382,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.props'))" />
-    <Error Condition="!Exists('..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.targets'))" />
+    <Error Condition="!Exists('..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.props'))" />
+    <Error Condition="!Exists('..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.targets'))" />
   </Target>
-  <Import Project="..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.targets" Condition="Exists('..\..\packages\NuGet.Services.Build.3.0.3-alpha-0019\build\NuGet.Services.Build.targets')" />
+  <Import Project="..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.targets" Condition="Exists('..\..\packages\NuGet.Services.Build.3.0.4-rel-4\build\NuGet.Services.Build.targets')" />
 </Project>

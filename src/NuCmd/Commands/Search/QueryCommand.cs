@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Services.Search.Models;
 using PowerArgs;
 
 namespace NuCmd.Commands.Search
@@ -60,7 +61,8 @@ namespace NuCmd.Commands.Search
                 Query, 
                 ProjectType, 
                 IncludePrerelease, 
-                CuratedFeed, 
+                CuratedFeed,
+                SortOrder.Relevance,
                 Skip, 
                 Take, 
                 IsLuceneQuery, 

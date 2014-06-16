@@ -318,7 +318,7 @@ Details:
     <value>Deployment report is missing required element: '{0}'.</value>
   </data>
   <data name="Db_CreateUserCommand_AdminingUser" xml:space="preserve">
-    <value>Making {0} a server-level admin on {1}.</value>
+    <value>Making {0} a db_owner on {1}.</value>
   </data>
   <data name="Db_CreateUserCommand_Connected" xml:space="preserve">
     <value>Connected to '{1}' database on '{0}'</value>
@@ -357,7 +357,7 @@ Connection String: {3}</value>
     <value>Using provided connection string instead of using a known database in the environment.</value>
   </data>
   <data name="Db_CreateUserCommand_WouldCreateUser" xml:space="preserve">
-    <value>Would create user on server {0} for database {1}, designed for use by the {2} service.</value>
+    <value>Would create user {2} on server {0} for database {1}.</value>
   </data>
   <data name="Db_DeleteDacCommand_Deleting" xml:space="preserve">
     <value>Deleting Data-Tier Application {0} on {1}.</value>
@@ -510,7 +510,7 @@ Connection String: {3}</value>
     <value>Secret '{0}' does not exist.</value>
   </data>
   <data name="Secrets_GetCommand_SecretValue" xml:space="preserve">
-    <value>Secret '{0}' = '{1}'.</value>
+    <value>Value of secret '{0}':</value>
   </data>
   <data name="Secrets_ListCommand_Secrets" xml:space="preserve">
     <value>Secrets available in the store:</value>
@@ -645,7 +645,7 @@ Connection String: {3}</value>
     <value>Saving connection string to secret store key '{0}'</value>
   </data>
   <data name="Db_CreateUserCommand_SavingServiceUser" xml:space="preserve">
-    <value>Saving service username to secret store key '{0}'</value>
+    <value>Saving link to connection string to secret store key '{0}'</value>
   </data>
   <data name="Db_DatabaseCommandBase_UsingSecretStore" xml:space="preserve">
     <value>Using Admin password from secret store.</value>
@@ -670,5 +670,131 @@ Connection String: {3}</value>
   </data>
   <data name="Config_GenerateCommand_NoTemplateSource" xml:space="preserve">
     <value>There is no configTemplates element in the AppModel for the '{0}' environment.</value>
+  </data>
+  <data name="Work_LogCommand_FetchingLatestInvocation" xml:space="preserve">
+    <value>Fetching latest invocation of {0}</value>
+  </data>
+  <data name="Db_SanitizeCommand_CannotSanitize" xml:space="preserve">
+    <value>Cannot sanitize {0}. The name must start with Export or Backup.</value>
+  </data>
+  <data name="Db_SanitizeCommand_Sanitized" xml:space="preserve">
+    <value>Sanitized {0}/{1}.</value>
+  </data>
+  <data name="Db_SanitizeCommand_Sanitizing" xml:space="preserve">
+    <value>Sanitizing {0}/{1}.</value>
+  </data>
+  <data name="Azure_TokenCommand_NoToken" xml:space="preserve">
+    <value>You do not have an Azure Login Token</value>
+  </data>
+  <data name="Azure_TokenCommand_SubscriptionId" xml:space="preserve">
+    <value>Your Azure Subscription ID is: {0}</value>
+  </data>
+  <data name="Azure_TokenCommand_Token" xml:space="preserve">
+    <value>Your Azure Login Token is: {0}</value>
+  </data>
+  <data name="Certs_GrantCommand_Uploading" xml:space="preserve">
+    <value>Uploading certificate '{0}' to {1}</value>
+  </data>
+  <data name="Certs_ImportCommand_Importing" xml:space="preserve">
+    <value>Importing '{0}' in to '{1}' store in '{2}'</value>
+  </data>
+  <data name="Certs_UploadCommand_SecretIsNotACertificate" xml:space="preserve">
+    <value>Secret is not a certificate: '{0}'.</value>
+  </data>
+  <data name="Certs_UploadCommand_UploadingCert" xml:space="preserve">
+    <value>Uploading certificate '{0}' to {1}</value>
+  </data>
+  <data name="Certs_Uploaded" xml:space="preserve">
+    <value>Upload complete!</value>
+  </data>
+  <data name="Db_DatabaseCommandBase_MissingAdminPassword" xml:space="preserve">
+    <value>Admin password for database '{0}' could not be found!</value>
+  </data>
+  <data name="Group_certs" xml:space="preserve">
+    <value>Commands for working with certificates</value>
+  </data>
+  <data name="Secrets_FollowingLink" xml:space="preserve">
+    <value>Following link to "{0}"...</value>
+  </data>
+  <data name="Secrets_GetCommand_CertificateMetadata" xml:space="preserve">
+    <value>Certificate cannot be exported. Here's the metadata:
+Thumbprint: {0}
+Subject: {1}
+Expires: {2}</value>
+  </data>
+  <data name="Secrets_GetCommand_ThumbprintCopied" xml:space="preserve">
+    <value>Certificate Thumbprint copied to clipboard.</value>
+  </data>
+  <data name="Secrets_NoSuchSecret" xml:space="preserve">
+    <value>Could not find secret '{0}'.</value>
+  </data>
+  <data name="Secrets_StoreCertCommand_CertificateHasNoPrivateKey" xml:space="preserve">
+    <value>The certificate does not have a private key, you probably don't need to store it in the secret store...</value>
+  </data>
+  <data name="Secrets_StoreCertCommand_SavingCertificate" xml:space="preserve">
+    <value>Saving certificate to key: "{0}" that will expire at {1}</value>
+  </data>
+  <data name="Secrets_StoreCertCommand_SavingCertificateReference" xml:space="preserve">
+    <value>Saving reference to certificate in: "{0}" that will expire at {1}</value>
+  </data>
+  <data name="Package_ReserveCommand_GrantingOwnership" xml:space="preserve">
+    <value>Making {0} a co-owner of {1}</value>
+  </data>
+  <data name="Package_ReserveCommand_IdAlreadyExists" xml:space="preserve">
+    <value>Unable to reserve '{0}'. It already exists!</value>
+  </data>
+  <data name="Package_ReserveCommand_OwnerAlreadyExists" xml:space="preserve">
+    <value>User '{0}' is already an owner of '{1}'</value>
+  </data>
+  <data name="Package_ReserveCommand_Reserving" xml:space="preserve">
+    <value>Reserving IDs: '{0}' for '{1}' on SQL Server '{2}'</value>
+  </data>
+  <data name="Package_ReserveCommand_ReservingId" xml:space="preserve">
+    <value>Reserving Package ID: {0}</value>
+  </data>
+  <data name="Compute_RdpCommand_GettingRdpFile" xml:space="preserve">
+    <value>Getting RDP file for instance {1} of the {0} service</value>
+  </data>
+  <data name="Compute_RdpCommand_LaunchingMstsc" xml:space="preserve">
+    <value>Launching MSTSC...</value>
+  </data>
+  <data name="Compute_RdpCommand_MultipleInstances" xml:space="preserve">
+    <value>There are multiple role instances in this service. An instance name is required!</value>
+  </data>
+  <data name="Compute_RdpCommand_NoInstances" xml:space="preserve">
+    <value>There are no role instances in this service!</value>
+  </data>
+  <data name="Compute_RdpCommand_NoPasswordFound" xml:space="preserve">
+    <value>No password found at secret store key 'rdp.{0}'. You will need to provide the password manually!</value>
+  </data>
+  <data name="Compute_RdpCommand_RemovingCredentials" xml:space="preserve">
+    <value>Removing stored credentials from credential vault...</value>
+  </data>
+  <data name="Compute_RdpCommand_TemporarilyStoringPassword" xml:space="preserve">
+    <value>Temporarily storing credentials in credential vault...</value>
+  </data>
+  <data name="Compute_RdpCommand_WaitingForCleanup" xml:space="preserve">
+    <value>Waiting 5 seconds before cleaning up...</value>
+  </data>
+  <data name="Groups_compute" xml:space="preserve">
+    <value>Commands for working with compute nodes</value>
+  </data>
+  <data name="Db_CreateUserCommand_FetchingDBs" xml:space="preserve">
+    <value>Fetching database list...</value>
+  </data>
+  <data name="Db_CreateUserCommand_RetrievedDatabases" xml:space="preserve">
+    <value>Retrieved {0} other databases to GRANT user access to.</value>
+  </data>
+  <data name="Db_CreateUserCommand_ServerManagering" xml:space="preserve">
+    <value>Making {0} a dbmanger and loginmanager on the master database.</value>
+  </data>
+  <data name="Db_DeleteUserCommand_DeletingSecret" xml:space="preserve">
+    <value>Deleting secret: {0}</value>
+  </data>
+  <data name="Db_UsersCommand_GatheringLoginAndDb" xml:space="preserve">
+    <value>Gathering login and database data from master</value>
+  </data>
+  <data name="Db_UsersCommand_GatheringUsers" xml:space="preserve">
+    <value>Gathering user data from {0}</value>
   </data>
 </root>

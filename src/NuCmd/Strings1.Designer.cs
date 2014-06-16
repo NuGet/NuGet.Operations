@@ -124,6 +124,33 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have an Azure Login Token.
+        /// </summary>
+        internal static string Azure_TokenCommand_NoToken {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_NoToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Azure Subscription ID is: {0}.
+        /// </summary>
+        internal static string Azure_TokenCommand_SubscriptionId {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_SubscriptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Azure Login Token is: {0}.
+        /// </summary>
+        internal static string Azure_TokenCommand_Token {
+            get {
+                return ResourceManager.GetString("Azure_TokenCommand_Token", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fetching service configuration data for &apos;{0}&apos;....
         /// </summary>
         internal static string AzureCommandBase_FetchingServiceConfig {
@@ -156,6 +183,51 @@ namespace NuCmd {
         internal static string AzureCommandBase_TokenExpired {
             get {
                 return ResourceManager.GetString("AzureCommandBase_TokenExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading certificate &apos;{0}&apos; to {1}.
+        /// </summary>
+        internal static string Certs_GrantCommand_Uploading {
+            get {
+                return ResourceManager.GetString("Certs_GrantCommand_Uploading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing &apos;{0}&apos; in to &apos;{1}&apos; store in &apos;{2}&apos;.
+        /// </summary>
+        internal static string Certs_ImportCommand_Importing {
+            get {
+                return ResourceManager.GetString("Certs_ImportCommand_Importing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secret is not a certificate: &apos;{0}&apos;..
+        /// </summary>
+        internal static string Certs_UploadCommand_SecretIsNotACertificate {
+            get {
+                return ResourceManager.GetString("Certs_UploadCommand_SecretIsNotACertificate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading certificate &apos;{0}&apos; to {1}.
+        /// </summary>
+        internal static string Certs_UploadCommand_UploadingCert {
+            get {
+                return ResourceManager.GetString("Certs_UploadCommand_UploadingCert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload complete!.
+        /// </summary>
+        internal static string Certs_Uploaded {
+            get {
+                return ResourceManager.GetString("Certs_Uploaded", resourceCulture);
             }
         }
         
@@ -266,6 +338,78 @@ namespace NuCmd {
         internal static string Commands_UsingServiceUri {
             get {
                 return ResourceManager.GetString("Commands_UsingServiceUri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting RDP file for instance {1} of the {0} service.
+        /// </summary>
+        internal static string Compute_RdpCommand_GettingRdpFile {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_GettingRdpFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launching MSTSC....
+        /// </summary>
+        internal static string Compute_RdpCommand_LaunchingMstsc {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_LaunchingMstsc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are multiple role instances in this service. An instance name is required!.
+        /// </summary>
+        internal static string Compute_RdpCommand_MultipleInstances {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_MultipleInstances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no role instances in this service!.
+        /// </summary>
+        internal static string Compute_RdpCommand_NoInstances {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_NoInstances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No password found at secret store key &apos;rdp.{0}&apos;. You will need to provide the password manually!.
+        /// </summary>
+        internal static string Compute_RdpCommand_NoPasswordFound {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_NoPasswordFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removing stored credentials from credential vault....
+        /// </summary>
+        internal static string Compute_RdpCommand_RemovingCredentials {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_RemovingCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporarily storing credentials in credential vault....
+        /// </summary>
+        internal static string Compute_RdpCommand_TemporarilyStoringPassword {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_TemporarilyStoringPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waiting 5 seconds before cleaning up....
+        /// </summary>
+        internal static string Compute_RdpCommand_WaitingForCleanup {
+            get {
+                return ResourceManager.GetString("Compute_RdpCommand_WaitingForCleanup", resourceCulture);
             }
         }
         
@@ -450,7 +594,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Making {0} a server-level admin on {1}..
+        ///   Looks up a localized string similar to Making {0} a db_owner on {1}..
         /// </summary>
         internal static string Db_CreateUserCommand_AdminingUser {
             get {
@@ -498,6 +642,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetching database list....
+        /// </summary>
+        internal static string Db_CreateUserCommand_FetchingDBs {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_FetchingDBs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Granting {0} access to the {1} schema on {2} database..
         /// </summary>
         internal static string Db_CreateUserCommand_GrantingUser {
@@ -512,6 +665,15 @@ namespace NuCmd {
         internal static string Db_CreateUserCommand_NoSchemasSpecified {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_NoSchemasSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieved {0} other databases to GRANT user access to..
+        /// </summary>
+        internal static string Db_CreateUserCommand_RetrievedDatabases {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_RetrievedDatabases", resourceCulture);
             }
         }
         
@@ -534,11 +696,20 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saving service username to secret store key &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Saving link to connection string to secret store key &apos;{0}&apos;.
         /// </summary>
         internal static string Db_CreateUserCommand_SavingServiceUser {
             get {
                 return ResourceManager.GetString("Db_CreateUserCommand_SavingServiceUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Making {0} a dbmanger and loginmanager on the master database..
+        /// </summary>
+        internal static string Db_CreateUserCommand_ServerManagering {
+            get {
+                return ResourceManager.GetString("Db_CreateUserCommand_ServerManagering", resourceCulture);
             }
         }
         
@@ -552,7 +723,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would create user on server {0} for database {1}, designed for use by the {2} service..
+        ///   Looks up a localized string similar to Would create user {2} on server {0} for database {1}..
         /// </summary>
         internal static string Db_CreateUserCommand_WouldCreateUser {
             get {
@@ -566,6 +737,15 @@ namespace NuCmd {
         internal static string Db_DatabaseCommandBase_EnterAdminPassword {
             get {
                 return ResourceManager.GetString("Db_DatabaseCommandBase_EnterAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin password for database &apos;{0}&apos; could not be found!.
+        /// </summary>
+        internal static string Db_DatabaseCommandBase_MissingAdminPassword {
+            get {
+                return ResourceManager.GetString("Db_DatabaseCommandBase_MissingAdminPassword", resourceCulture);
             }
         }
         
@@ -611,6 +791,15 @@ namespace NuCmd {
         internal static string Db_DeleteDacCommand_Deleting {
             get {
                 return ResourceManager.GetString("Db_DeleteDacCommand_Deleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting secret: {0}.
+        /// </summary>
+        internal static string Db_DeleteUserCommand_DeletingSecret {
+            get {
+                return ResourceManager.GetString("Db_DeleteUserCommand_DeletingSecret", resourceCulture);
             }
         }
         
@@ -687,11 +876,56 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot sanitize {0}. The name must start with Export or Backup..
+        /// </summary>
+        internal static string Db_SanitizeCommand_CannotSanitize {
+            get {
+                return ResourceManager.GetString("Db_SanitizeCommand_CannotSanitize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sanitized {0}/{1}..
+        /// </summary>
+        internal static string Db_SanitizeCommand_Sanitized {
+            get {
+                return ResourceManager.GetString("Db_SanitizeCommand_Sanitized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sanitizing {0}/{1}..
+        /// </summary>
+        internal static string Db_SanitizeCommand_Sanitizing {
+            get {
+                return ResourceManager.GetString("Db_SanitizeCommand_Sanitizing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Permissions in the {0} database:.
         /// </summary>
         internal static string Db_UsersCommand_DisplayingPermissions {
             get {
                 return ResourceManager.GetString("Db_UsersCommand_DisplayingPermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gathering login and database data from master.
+        /// </summary>
+        internal static string Db_UsersCommand_GatheringLoginAndDb {
+            get {
+                return ResourceManager.GetString("Db_UsersCommand_GatheringLoginAndDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gathering user data from {0}.
+        /// </summary>
+        internal static string Db_UsersCommand_GatheringUsers {
+            get {
+                return ResourceManager.GetString("Db_UsersCommand_GatheringUsers", resourceCulture);
             }
         }
         
@@ -804,6 +1038,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Commands for working with certificates.
+        /// </summary>
+        internal static string Group_certs {
+            get {
+                return ResourceManager.GetString("Group_certs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Commands for managing configuration.
         /// </summary>
         internal static string Group_config {
@@ -854,6 +1097,15 @@ namespace NuCmd {
         internal static string Group_work {
             get {
                 return ResourceManager.GetString("Group_work", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commands for working with compute nodes.
+        /// </summary>
+        internal static string Groups_compute {
+            get {
+                return ResourceManager.GetString("Groups_compute", resourceCulture);
             }
         }
         
@@ -1079,6 +1331,51 @@ namespace NuCmd {
         internal static string Package_PopulatePackageFrameworksCommand_Confirm {
             get {
                 return ResourceManager.GetString("Package_PopulatePackageFrameworksCommand_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Making {0} a co-owner of {1}.
+        /// </summary>
+        internal static string Package_ReserveCommand_GrantingOwnership {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_GrantingOwnership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to reserve &apos;{0}&apos;. It already exists!.
+        /// </summary>
+        internal static string Package_ReserveCommand_IdAlreadyExists {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_IdAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User &apos;{0}&apos; is already an owner of &apos;{1}&apos;.
+        /// </summary>
+        internal static string Package_ReserveCommand_OwnerAlreadyExists {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_OwnerAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserving IDs: &apos;{0}&apos; for &apos;{1}&apos; on SQL Server &apos;{2}&apos;.
+        /// </summary>
+        internal static string Package_ReserveCommand_Reserving {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_Reserving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserving Package ID: {0}.
+        /// </summary>
+        internal static string Package_ReserveCommand_ReservingId {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_ReservingId", resourceCulture);
             }
         }
         
@@ -1363,6 +1660,27 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Following link to &quot;{0}&quot;....
+        /// </summary>
+        internal static string Secrets_FollowingLink {
+            get {
+                return ResourceManager.GetString("Secrets_FollowingLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Certificate cannot be exported. Here&apos;s the metadata:
+        ///Thumbprint: {0}
+        ///Subject: {1}
+        ///Expires: {2}.
+        /// </summary>
+        internal static string Secrets_GetCommand_CertificateMetadata {
+            get {
+                return ResourceManager.GetString("Secrets_GetCommand_CertificateMetadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Secret &apos;{0}&apos; copied to clipboard..
         /// </summary>
         internal static string Secrets_GetCommand_SecretCopied {
@@ -1381,11 +1699,20 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Secret &apos;{0}&apos; = &apos;{1}&apos;..
+        ///   Looks up a localized string similar to Value of secret &apos;{0}&apos;:.
         /// </summary>
         internal static string Secrets_GetCommand_SecretValue {
             get {
                 return ResourceManager.GetString("Secrets_GetCommand_SecretValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Certificate Thumbprint copied to clipboard..
+        /// </summary>
+        internal static string Secrets_GetCommand_ThumbprintCopied {
+            get {
+                return ResourceManager.GetString("Secrets_GetCommand_ThumbprintCopied", resourceCulture);
             }
         }
         
@@ -1413,6 +1740,15 @@ namespace NuCmd {
         internal static string Secrets_LogCommand_WroteEntries {
             get {
                 return ResourceManager.GetString("Secrets_LogCommand_WroteEntries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find secret &apos;{0}&apos;..
+        /// </summary>
+        internal static string Secrets_NoSuchSecret {
+            get {
+                return ResourceManager.GetString("Secrets_NoSuchSecret", resourceCulture);
             }
         }
         
@@ -1458,6 +1794,33 @@ namespace NuCmd {
         internal static string Secrets_SetCommand_Written {
             get {
                 return ResourceManager.GetString("Secrets_SetCommand_Written", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The certificate does not have a private key, you probably don&apos;t need to store it in the secret store....
+        /// </summary>
+        internal static string Secrets_StoreCertCommand_CertificateHasNoPrivateKey {
+            get {
+                return ResourceManager.GetString("Secrets_StoreCertCommand_CertificateHasNoPrivateKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving certificate to key: &quot;{0}&quot; that will expire at {1}.
+        /// </summary>
+        internal static string Secrets_StoreCertCommand_SavingCertificate {
+            get {
+                return ResourceManager.GetString("Secrets_StoreCertCommand_SavingCertificate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving reference to certificate in: &quot;{0}&quot; that will expire at {1}.
+        /// </summary>
+        internal static string Secrets_StoreCertCommand_SavingCertificateReference {
+            get {
+                return ResourceManager.GetString("Secrets_StoreCertCommand_SavingCertificateReference", resourceCulture);
             }
         }
         
@@ -1622,6 +1985,15 @@ namespace NuCmd {
         internal static string Work_InvokeCommand_PayloadInvalid {
             get {
                 return ResourceManager.GetString("Work_InvokeCommand_PayloadInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetching latest invocation of {0}.
+        /// </summary>
+        internal static string Work_LogCommand_FetchingLatestInvocation {
+            get {
+                return ResourceManager.GetString("Work_LogCommand_FetchingLatestInvocation", resourceCulture);
             }
         }
         

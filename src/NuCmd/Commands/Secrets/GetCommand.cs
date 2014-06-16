@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NuGet.Services.Operations;
+using NuGet.Services.Operations.Secrets;
 using PowerArgs;
 
 namespace NuCmd.Commands.Secrets
@@ -25,25 +29,47 @@ namespace NuCmd.Commands.Secrets
 
         protected override async Task OnExecute()
         {
-            // Open the store
-            var store = await OpenSecretStore();
-
             // Read the secret
-            var secret = await store.Read(Key, Datacenter, "nucmd get");
+            var secret = await ReadSecret(Key);
 
-            // Write the value
+            // Check for null
             if (secret == null)
             {
-                await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretDoesNotExist, Key);
-            }
-            else if (CopyToClipboard)
-            {
-                await STAHelper.InSTAThread(() => Clipboard.SetText(secret.Value));
-                await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretCopied, Key);
+                await Console.WriteErrorLine(Strings.Secrets_GetCommand_SecretDoesNotExist, Key);
             }
             else
             {
-                await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretValue, Key, secret.Value);
+                if (secret.Type == SecretType.Certificate)
+                {
+                    X509Certificate2 cert = ReadCertificate(secret);
+
+                    if (CopyToClipboard)
+                    {
+                        await STAHelper.InSTAThread(() => Clipboard.SetText(cert.Thumbprint));
+                        await Console.WriteInfoLine(Strings.Secrets_GetCommand_ThumbprintCopied, Key);
+                    }
+                    else
+                    {
+                        await Console.WriteInfoLine(
+                            Strings.Secrets_GetCommand_CertificateMetadata,
+                            cert.Thumbprint,
+                            cert.Subject,
+                            cert.NotAfter);
+                    }
+                }
+                else
+                {
+                    if (CopyToClipboard)
+                    {
+                        await STAHelper.InSTAThread(() => Clipboard.SetText(secret.Value));
+                        await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretCopied, Key);
+                    }
+                    else
+                    {
+                        await Console.WriteInfoLine(Strings.Secrets_GetCommand_SecretValue, Key);
+                        await Console.WriteDataLine(secret.Value);
+                    }
+                }
             }
         }
     }
