@@ -798,22 +798,22 @@ Expires: {2}</value>
     <value>Gathering user data from {0}</value>
   </data>
   <data name="User_DeleteCommand_Confirm_Header" xml:space="preserve">
-    <value>Do you want to delete the following user from the {0} datacenter?</value>
+    <value>The following user will be deleted from the {0} datacenter:</value>
   </data>
   <data name="User_DeleteCommand_Confirm_Data" xml:space="preserve">
     <value>* {0} : {1}</value>
   </data>
   <data name="User_DeleteCommand_Error_PackageOwnerships" xml:space="preserve">
-    <value>User cannot be deleted because of existing package ownerships. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}.</value>
+    <value>User owns packages and cannot be deleted. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}.</value>
   </data>
   <data name="User_DeleteCommand_Confirm" xml:space="preserve">
-    <value>Retype the Username (case-sensitive) to confirm:</value>
+    <value>Enter the user's email address to confirm (be sure to confirm via email):</value>
   </data>
   <data name="User_DeleteCommand_DeletionCompleted" xml:space="preserve">
     <value>Deletion completed. The effects may take a few minutes to propagate.</value>
   </data>
-  <data name="User_DeleteCommand_Error_IncorrectUsername" xml:space="preserve">
-    <value>'{0}' is not the right Username. Remember it is case-sensitive.</value>
+  <data name="User_DeleteCommand_Error_IncorrectEmailAddress" xml:space="preserve">
+    <value>'{0}' is not the right Email Address.</value>
   </data>
   <data name="User_WritingAuditRecord" xml:space="preserve">
     <value>Writing audit record '{0}' to users audit store.</value>

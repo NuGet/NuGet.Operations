@@ -27,12 +27,6 @@ namespace NuCmd.Commands.User
         public string Username { get; set; }
 
         [ArgRequired]
-        [ArgPosition(1)]
-        [ArgShortcut("e")]
-        [ArgDescription("The EmailAddress of the user to delete - used to verify the username")]
-        public string EmailAddress { get; set; }
-
-        [ArgRequired]
         [ArgShortcut("r")]
         [ArgDescription("The reason for deletion. Must be specified.")]
         public string Reason { get; set; }
@@ -53,7 +47,9 @@ namespace NuCmd.Commands.User
             var dc = GetDatacenter(0, required: false);
             if (dc != null)
             {
-                await LoadDefaultsFromAzure(dc);
+                var defaults = await LoadDefaultsFromAzure(dc, DatabaseConnectionString, StorageConnectionString);
+                DatabaseConnectionString = defaults.DatabaseConnectionString;
+                StorageConnectionString = defaults.StorageConnectionString;
             }
 
             StorageAccount = CloudStorageAccount.Parse(StorageConnectionString);
@@ -67,24 +63,35 @@ namespace NuCmd.Commands.User
                         u.[Key],
                         u.Username,
                         u.EmailAddress,
+                        u.UnconfirmedEmailAddress,
                         u.CreatedUtc,
                         PackageOwnerships = (SELECT COUNT(*) FROM PackageRegistrationOwners WHERE UserKey = u.[Key]),
                         PackageOwnershipInvites = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE NewOwnerKey = u.[Key]),
                         PackageOwnershipRequests = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE RequestingOwnerKey = u.[Key])
                     FROM [Users] u
-                    WHERE u.Username = @Username AND u.EmailAddress = @EmailAddress", new
+                    WHERE u.Username = @Username", new
                     {
-                        Username,
-                        EmailAddress
+                        Username
                     });
 
                 var user = results.SingleOrDefault();
 
                 if (user == null)
                 {
-                    await Console.WriteErrorLine("Query did not result in a single record.  Aborting.");
+                    await Console.WriteErrorLine("Username not found. Aborting.");
                     return;
                 }
+
+                DateTime createdUtc = ((DateTime?)user.CreatedUtc) ?? DateTime.MinValue;
+
+                await Console.WriteInfoLine(Strings.User_DeleteCommand_Confirm_Header, (dc == null ? "<unknown>" : dc.FullName));
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Username", (string)user.Username);
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "EmailAddress", (string)user.EmailAddress);
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "UnconfirmedEmailAddress", (string)user.UnconfirmedEmailAddress);
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "CreatedUtc", createdUtc.ToString("yyyy/MM/dd HH:mm"));
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Package Ownerships", (int)user.PackageOwnerships);
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Package Ownership Invites", (int)user.PackageOwnershipInvites);
+                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Package Ownership Requests", (int)user.PackageOwnershipRequests);
 
                 // Don't allow the user to be deleted if they own any packages
                 // But allow deletion if there are pending invites (in either direction)
@@ -94,25 +101,23 @@ namespace NuCmd.Commands.User
                     return;
                 }
 
-                await Console.WriteInfoLine(Strings.User_DeleteCommand_Confirm_Header, (dc == null ? "<unknown>" : dc.FullName));
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Username", (string)user.Username);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "EmailAddress", (string)user.EmailAddress);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "CreatedUtc", ((DateTime)user.CreatedUtc).ToString("yyyy/MM/dd HH:mm"));
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "PackageOwnershipInvites", (int)user.PackageOwnershipInvites);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "PackageOwnershipRequests", (int)user.PackageOwnershipRequests);
-
-                string typed = await Console.Prompt(Strings.User_DeleteCommand_Confirm);
-                if (!String.Equals(typed, user.Username, StringComparison.Ordinal))
+                if (!WhatIf)
                 {
-                    await Console.WriteErrorLine(Strings.User_DeleteCommand_Error_IncorrectUsername, typed);
-                    return;
+                    string typed = await Console.Prompt(Strings.User_DeleteCommand_Confirm);
+                    // If the user has confirmed an email address, then verify that
+                    // If the user hasn't confirmed an email address, verify their unconfirmed address
+                    if (!String.Equals(typed, user.EmailAddress ?? user.UnconfirmedEmailAddress, StringComparison.Ordinal))
+                    {
+                        await Console.WriteErrorLine(Strings.User_DeleteCommand_Error_IncorrectEmailAddress, typed);
+                        return;
+                    }
                 }
 
-                DeleteUser(user, conn);
+                await DeleteUser(user, conn);
             }
         }
 
-        private async void DeleteUser(dynamic user, SqlConnection conn)
+        private async Task DeleteUser(dynamic user, SqlConnection conn)
         {
             var userRecord = await conn.QueryDatatable(
                 "SELECT * FROM [Users] WHERE [Key] = @key",
@@ -120,7 +125,7 @@ namespace NuCmd.Commands.User
 
             var auditRecord = new UserAuditRecord(
                 user.Username,
-                user.EmailAddress,
+                user.EmailAddress ?? user.UnconfirmedEmailAddress + " (unconfirmed)",
                 userRecord,
                 UserAuditAction.Deleted,
                 Reason);
@@ -141,7 +146,7 @@ namespace NuCmd.Commands.User
             await Console.WriteInfoLine(
                 Strings.User_DeleteCommand_DeletingUserData,
                 (string)user.Username,
-                (string)user.EmailAddress,
+                (string)user.EmailAddress ?? (string)user.UnconfirmedEmailAddress + " (unconfirmed)",
                 conn.Database,
                 conn.DataSource);
 
@@ -158,12 +163,14 @@ namespace NuCmd.Commands.User
                         'PackageId: ' + pr.Id + '; New User: ' + nu.Username + '; Requesting User: ' + ru.Username AS Value
                 INTO    @actions
                 FROM    PackageOwnerRequests por
+                JOIN    PackageRegistrations pr ON pr.[Key] = por.PackageRegistrationKey
                 JOIN    [Users] nu ON nu.[Key] = por.NewOwnerKey
                 JOIN    [Users] ru ON ru.[Key] = por.RequestingOwnerKey
                 WHERE   @key IN (nu.[Key], ru.[Key])
 
                 DELETE  u
-                OUTPUT  'Users' AS TableName, u.Username AS Value
+                OUTPUT  'Users' AS TableName,
+                        'Username: ' + deleted.Username AS Value
                 INTO    @actions
                 FROM    [Users] u
                 WHERE   u.[Key] = @key
@@ -182,62 +189,6 @@ namespace NuCmd.Commands.User
                 Table = (string)d.TableName,
                 Value = (string)d.Value
             });
-        }
-
-        private async Task LoadDefaultsFromAzure(Datacenter dc)
-        {
-            bool expired = false;
-            try
-            {
-                if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
-                    String.IsNullOrWhiteSpace(StorageConnectionString))
-                {
-                    var config = await LoadServiceConfig(dc, dc.GetService("work"));
-
-                    DatabaseConnectionString = DatabaseConnectionString ??
-                        GetValueOrDefault(config, "Sql.Legacy");
-                    StorageConnectionString = StorageConnectionString ??
-                        GetValueOrDefault(config, "Storage.Legacy");
-                }
-
-                if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
-                    String.IsNullOrWhiteSpace(StorageConnectionString))
-                {
-                    throw new InvalidOperationException(Strings.Command_MissingEnvironmentArguments);
-                }
-
-                await Console.WriteInfoLine(
-                    Strings.Command_ConnectionInfo,
-                    new SqlConnectionStringBuilder(DatabaseConnectionString).DataSource,
-                    CloudStorageAccount.Parse(StorageConnectionString).Credentials.AccountName);
-            }
-            catch (CloudException ex)
-            {
-                if (ex.ErrorCode == "AuthenticationFailed")
-                {
-                    expired = true;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            if (expired)
-            {
-                await Console.WriteErrorLine(Strings.AzureCommandBase_TokenExpired);
-                throw new OperationCanceledException();
-            }
-        }
-
-        private string GetValueOrDefault(IDictionary<string, string> dict, string key)
-        {
-            string val;
-            if (!dict.TryGetValue(key, out val))
-            {
-                return null;
-            }
-            return val;
         }
     }
 }

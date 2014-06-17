@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Management.Compute.Models;
+using Microsoft.WindowsAzure.Storage;
 using NuCmd.Commands.Db;
 using NuGet.Services.Operations;
 using NuGet.Services.Operations.Model;
@@ -193,6 +194,70 @@ namespace NuCmd.Commands
 
             // Create a SQL Credential and return the connection info
             return new SqlConnectionInfo(connStr, new SqlCredential(specifiedAdminUser, password));
+        }
+
+        protected async Task<AzureDefaults> LoadDefaultsFromAzure(Datacenter dc, string databaseConnectionString = null, string storageConnectionString = null)
+        {
+            bool expired = false;
+            try
+            {
+                if (String.IsNullOrWhiteSpace(databaseConnectionString) ||
+                    String.IsNullOrWhiteSpace(storageConnectionString))
+                {
+                    var config = await LoadServiceConfig(dc, dc.GetService("work"));
+
+                    databaseConnectionString = databaseConnectionString ??
+                        GetValueOrDefault(config, "Sql.Legacy");
+                    storageConnectionString = storageConnectionString ??
+                        GetValueOrDefault(config, "Storage.Legacy");
+                }
+
+                if (String.IsNullOrWhiteSpace(databaseConnectionString) ||
+                    String.IsNullOrWhiteSpace(storageConnectionString))
+                {
+                    throw new InvalidOperationException(Strings.Command_MissingEnvironmentArguments);
+                }
+
+                await Console.WriteInfoLine(
+                    Strings.Command_ConnectionInfo,
+                    new SqlConnectionStringBuilder(databaseConnectionString).DataSource,
+                    CloudStorageAccount.Parse(storageConnectionString).Credentials.AccountName);
+            }
+            catch (CloudException ex)
+            {
+                if (ex.ErrorCode == "AuthenticationFailed")
+                {
+                    expired = true;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            if (expired)
+            {
+                await Console.WriteErrorLine(Strings.AzureCommandBase_TokenExpired);
+                throw new OperationCanceledException();
+            }
+
+            return new AzureDefaults { DatabaseConnectionString = databaseConnectionString, StorageConnectionString = storageConnectionString };
+        }
+
+        private string GetValueOrDefault(IDictionary<string, string> dict, string key)
+        {
+            string val;
+            if (!dict.TryGetValue(key, out val))
+            {
+                return null;
+            }
+            return val;
+        }
+
+        public struct AzureDefaults
+        {
+            public string DatabaseConnectionString { get; set; }
+            public string StorageConnectionString { get; set; }
         }
     }
 }
