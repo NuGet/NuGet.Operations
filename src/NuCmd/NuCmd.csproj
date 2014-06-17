@@ -339,9 +339,7 @@
     <Compile Include="Models\AuditActor.cs" />
     <Compile Include="Models\AuditEntry.cs" />
     <Compile Include="Models\AuditRecord.cs" />
-    <Compile Include="Models\PackageAuditRecord.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Models\PackageAuditRecord.cs" />
     <Compile Include="Models\PackageRegistrationAuditRecord.cs" />
     <Compile Include="Models\SqlRoleMembership.cs" />
     <Compile Include="Models\UserAuditRecord.cs" />
