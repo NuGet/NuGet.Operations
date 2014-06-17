@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
-using NuCmd;
 using NuCmd.Models;
-using NuGet.Services.Client;
-using NuGet.Services.Operations.Model;
 using PowerArgs;
 
 namespace NuCmd.Commands.User
