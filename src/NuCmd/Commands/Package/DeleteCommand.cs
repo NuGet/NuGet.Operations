@@ -218,7 +218,7 @@ namespace NuCmd.Commands.Package
             await Console.WriteInfoLine(Strings.Package_DeleteCommand_WritingAuditRecord, auditRecord.GetPath());
             if (!WhatIf)
             {
-                await WriteAuditRecord(auditRecord, "package");
+                await auditRecord.WriteAuditRecord("package", StorageAccount);
             }
 
             await DeletePackageData(package, conn);
@@ -245,7 +245,7 @@ namespace NuCmd.Commands.Package
             await Console.WriteInfoLine(Strings.Package_DeleteCommand_WritingRegistrationAuditRecord, auditRecord.GetPath());
             if (!WhatIf)
             {
-                await WriteAuditRecord(auditRecord, "packageregistrations");
+                await auditRecord.WriteAuditRecord("packageregistrations", StorageAccount);
             }
 
             // Delete all data
@@ -447,32 +447,6 @@ namespace NuCmd.Commands.Package
                     AccessCondition.GenerateEmptyCondition(), 
                     new BlobRequestOptions(), new OperationContext());
             }
-        }
-
-        private async Task WriteAuditRecord(AuditRecord auditRecord, string resourceType)
-        {
-            var entry = new AuditEntry(
-                auditRecord,
-                await AuditActor.GetCurrentMachineActor());
-
-            // Write the blob to the storage account
-            var client = StorageAccount.CreateCloudBlobClient();
-            var container = client.GetContainerReference("auditing");
-            await container.CreateIfNotExistsAsync();
-            var blob = container.GetBlockBlobReference(
-                resourceType + "/" + auditRecord.GetPath() + "/" + DateTime.UtcNow.ToString("s") + "-" + auditRecord.GetAction().ToLowerInvariant() + ".audit.v1.json");
-
-            if (await blob.ExistsAsync())
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Package_DeleteCommand_AuditBlobExists,
-                    blob.Uri.AbsoluteUri));
-            }
-
-            byte[] data = Encoding.UTF8.GetBytes(
-                JsonFormat.Serialize(entry));
-            await blob.UploadFromByteArrayAsync(data, 0, data.Length);
         }
     }
 }

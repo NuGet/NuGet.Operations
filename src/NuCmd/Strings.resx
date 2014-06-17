@@ -459,7 +459,7 @@ Connection String: {3}</value>
     <value>Downloading Package to temporary file...</value>
   </data>
   <data name="Package_DeleteCommand_IncorrectId" xml:space="preserve">
-    <value>'{0}' is not the right Id. Remember it is case-sensitive</value>
+    <value>'{0}' is not the right Id. Remember it is case-sensitive.</value>
   </data>
   <data name="Command_MissingEnvironmentArguments" xml:space="preserve">
     <value>The "-db" and "-st" arguments must be specified if there is no current environment.</value>
@@ -796,5 +796,32 @@ Expires: {2}</value>
   </data>
   <data name="Db_UsersCommand_GatheringUsers" xml:space="preserve">
     <value>Gathering user data from {0}</value>
+  </data>
+  <data name="User_DeleteCommand_Confirm_Header" xml:space="preserve">
+    <value>Do you want to delete the following user from the {0} datacenter?</value>
+  </data>
+  <data name="User_DeleteCommand_Confirm_Data" xml:space="preserve">
+    <value>* {0} : {1}</value>
+  </data>
+  <data name="User_DeleteCommand_Error_PackageOwnerships" xml:space="preserve">
+    <value>User cannot be deleted because of existing package ownerships. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}.</value>
+  </data>
+  <data name="User_DeleteCommand_Confirm" xml:space="preserve">
+    <value>Retype the Username (case-sensitive) to confirm:</value>
+  </data>
+  <data name="User_DeleteCommand_DeletionCompleted" xml:space="preserve">
+    <value>Deletion completed. The effects may take a few minutes to propagate.</value>
+  </data>
+  <data name="User_DeleteCommand_Error_IncorrectUsername" xml:space="preserve">
+    <value>'{0}' is not the right Username. Remember it is case-sensitive.</value>
+  </data>
+  <data name="User_WritingAuditRecord" xml:space="preserve">
+    <value>Writing audit record '{0}' to users audit store.</value>
+  </data>
+  <data name="User_DeleteCommand_DatabaseActions" xml:space="preserve">
+    <value>Completed the following operations:</value>
+  </data>
+  <data name="User_DeleteCommand_DeletingUserData" xml:space="preserve">
+    <value>Deleting data for User '{0}' with Email Address '{1}' from the '{2}' database on '{3}'.</value>
   </data>
 </root>

@@ -1263,7 +1263,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is not the right Id. Remember it is case-sensitive.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not the right Id. Remember it is case-sensitive..
         /// </summary>
         internal static string Package_DeleteCommand_IncorrectId {
             get {
@@ -1940,6 +1940,87 @@ namespace NuCmd {
         internal static string Usage {
             get {
                 return ResourceManager.GetString("Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retype the Username (case-sensitive) to confirm:.
+        /// </summary>
+        internal static string User_DeleteCommand_Confirm {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * {0} : {1}.
+        /// </summary>
+        internal static string User_DeleteCommand_Confirm_Data {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_Confirm_Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to delete the following user from the {0} datacenter?.
+        /// </summary>
+        internal static string User_DeleteCommand_Confirm_Header {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_Confirm_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed the following operations:.
+        /// </summary>
+        internal static string User_DeleteCommand_DatabaseActions {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_DatabaseActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting data for User &apos;{0}&apos; with Email Address &apos;{1}&apos; from the &apos;{2}&apos; database on &apos;{3}&apos;..
+        /// </summary>
+        internal static string User_DeleteCommand_DeletingUserData {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_DeletingUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deletion completed. The effects may take a few minutes to propagate..
+        /// </summary>
+        internal static string User_DeleteCommand_DeletionCompleted {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_DeletionCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not the right Username. Remember it is case-sensitive..
+        /// </summary>
+        internal static string User_DeleteCommand_Error_IncorrectUsername {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_Error_IncorrectUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User cannot be deleted because of existing package ownerships. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}..
+        /// </summary>
+        internal static string User_DeleteCommand_Error_PackageOwnerships {
+            get {
+                return ResourceManager.GetString("User_DeleteCommand_Error_PackageOwnerships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing audit record &apos;{0}&apos; to users audit store..
+        /// </summary>
+        internal static string User_WritingAuditRecord {
+            get {
+                return ResourceManager.GetString("User_WritingAuditRecord", resourceCulture);
             }
         }
         
