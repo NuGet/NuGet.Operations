@@ -10,14 +10,20 @@ using PowerArgs;
 
 namespace NuCmd.Commands.User
 {
-    [Description("Deletes a user from the primary data center in the target NuGet environment")]
-    public class DeleteCommand : EnvironmentCommandBase
+    [Description("Renames a user in the primary data center in the target NuGet environment")]
+    public class RenameCommand : EnvironmentCommandBase
     {
         [ArgRequired]
         [ArgPosition(0)]
-        [ArgShortcut("u")]
-        [ArgDescription("The Username of the user to delete")]
-        public string Username { get; set; }
+        [ArgShortcut("old")]
+        [ArgDescription("The Old Username of the user")]
+        public string OldUsername { get; set; }
+
+        [ArgRequired]
+        [ArgPosition(1)]
+        [ArgShortcut("new")]
+        [ArgDescription("The New Username for the user")]
+        public string NewUsername { get; set; }
 
         [ArgRequired]
         [ArgShortcut("r")]
@@ -62,9 +68,9 @@ namespace NuCmd.Commands.User
                         PackageOwnershipInvites = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE NewOwnerKey = u.[Key]),
                         PackageOwnershipRequests = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE RequestingOwnerKey = u.[Key])
                     FROM [Users] u
-                    WHERE u.Username = @Username", new
+                    WHERE u.Username = @OldUsername", new
                     {
-                        Username
+                        OldUsername
                     });
 
                 var user = results.SingleOrDefault();
@@ -77,22 +83,14 @@ namespace NuCmd.Commands.User
 
                 DateTime createdUtc = ((DateTime?)user.CreatedUtc) ?? DateTime.MinValue;
 
-                await Console.WriteInfoLine(Strings.User_DeleteCommand_Confirm_Header, (dc == null ? "<unknown>" : dc.FullName));
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Username", (string)user.Username);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "EmailAddress", (string)user.EmailAddress);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "UnconfirmedEmailAddress", (string)user.UnconfirmedEmailAddress);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "CreatedUtc", createdUtc.ToString("yyyy/MM/dd HH:mm"));
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Package Ownerships", (int)user.PackageOwnerships);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Package Ownership Invites", (int)user.PackageOwnershipInvites);
-                await Console.WriteDataLine(Strings.User_DeleteCommand_Confirm_Data, "Package Ownership Requests", (int)user.PackageOwnershipRequests);
-
-                // Don't allow the user to be deleted if they own any packages
-                // But allow deletion if there are pending invites (in either direction)
-                if (user.PackageOwnerships > 0)
-                {
-                    await Console.WriteErrorLine(Strings.User_DeleteCommand_Error_PackageOwnerships, (int)user.PackageOwnerships, (int)user.PackageOwnershipInvites, (int)user.PackageOwnershipRequests);
-                    return;
-                }
+                await Console.WriteInfoLine(Strings.User_RenameCommand_Confirm_Header, (dc == null ? "<unknown>" : dc.FullName));
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "Username", (string)user.Username);
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "EmailAddress", (string)user.EmailAddress);
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "UnconfirmedEmailAddress", (string)user.UnconfirmedEmailAddress);
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "CreatedUtc", createdUtc.ToString("yyyy/MM/dd HH:mm"));
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "Package Ownerships", (int)user.PackageOwnerships);
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "Package Ownership Invites", (int)user.PackageOwnershipInvites);
+                await Console.WriteDataLine(Strings.User_RenameCommand_Confirm_Data, "Package Ownership Requests", (int)user.PackageOwnershipRequests);
 
                 if (!WhatIf)
                 {
@@ -106,21 +104,21 @@ namespace NuCmd.Commands.User
                     }
                 }
 
-                await DeleteUser(user, conn);
+                await RenameUser(user, conn);
             }
         }
 
-        private async Task DeleteUser(dynamic user, SqlConnection conn)
+        private async Task RenameUser(dynamic user, SqlConnection conn)
         {
             var userRecord = await conn.QueryDatatable(
-                "SELECT * FROM [Users] WHERE [Key] = @key",
-                new SqlParameter("@key", user.Key));
+                "SELECT NewUsername = @newUsername, * FROM [Users] WHERE [Key] = @key",
+                new SqlParameter("@key", user.Key), new SqlParameter("@newUsername", NewUsername));
 
             var auditRecord = new UserAuditRecord(
                 user.Username,
                 user.EmailAddress ?? user.UnconfirmedEmailAddress + " (unconfirmed)",
                 userRecord,
-                UserAuditAction.Deleted,
+                UserAuditAction.Renamed,
                 Reason);
 
             await Console.WriteInfoLine(Strings.User_WritingAuditRecord, auditRecord.GetPath());
@@ -129,15 +127,15 @@ namespace NuCmd.Commands.User
                 await auditRecord.WriteAuditRecord("user", StorageAccount);
             }
 
-            await DeleteUserData(user, conn);
+            await RenameUserRecord(user, conn);
 
-            await Console.WriteInfoLine(Strings.User_DeleteCommand_DeletionCompleted);
+            await Console.WriteInfoLine(Strings.User_RenameCommand_UpdateCompleted);
         }
 
-        private async Task DeleteUserData(dynamic user, SqlConnection conn)
+        private async Task RenameUserRecord(dynamic user, SqlConnection conn)
         {
             await Console.WriteInfoLine(
-                Strings.User_DeleteCommand_DeletingUserData,
+                Strings.User_RenameCommand_UpdatingUserData,
                 (string)user.Username,
                 (string)user.EmailAddress ?? (string)user.UnconfirmedEmailAddress + " (unconfirmed)",
                 conn.Database,
@@ -151,34 +149,26 @@ namespace NuCmd.Commands.User
                     Value nvarchar(MAX)
                 )
 
-                DELETE  por
-                OUTPUT  'PackageOwnerRequests' AS TableName,
-                        'PackageId: ' + pr.Id + '; New User: ' + nu.Username + '; Requesting User: ' + ru.Username AS Value
-                INTO    @actions
-                FROM    PackageOwnerRequests por
-                JOIN    PackageRegistrations pr ON pr.[Key] = por.PackageRegistrationKey
-                JOIN    [Users] nu ON nu.[Key] = por.NewOwnerKey
-                JOIN    [Users] ru ON ru.[Key] = por.RequestingOwnerKey
-                WHERE   @key IN (nu.[Key], ru.[Key])
-
-                DELETE  u
-                OUTPUT  'Users' AS TableName,
-                        'Username: ' + deleted.Username AS Value
+                UPDATE  u
+                SET     Username = @newUsername
+                OUTPUT  'Users' AS TableName
+                    ,   'Old Username: ' + deleted.Username + '; New Username: ' + inserted.Username AS Value
                 INTO    @actions
                 FROM    [Users] u
-                WHERE   u.[Key] = @key
+                WHERE   u.Username = @oldUsername
 
                 SELECT  *
                 FROM    @actions
                 " + (WhatIf ? "ROLLBACK TRAN" : "COMMIT TRAN"), new
                 {
-                    key = (int)user.Key
+                    oldUsername = OldUsername,
+                    newUsername = NewUsername
                 });
 
-            await Console.WriteInfoLine(Strings.User_DeleteCommand_DatabaseActions);
+            await Console.WriteInfoLine(Strings.User_RenameCommand_DatabaseActions);
             await Console.WriteTable(result, d => new
             {
-                Action = "DELETE",
+                Action = "UPDATE",
                 Table = (string)d.TableName,
                 Value = (string)d.Value
             });

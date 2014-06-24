@@ -1946,9 +1946,9 @@ namespace NuCmd {
         /// <summary>
         ///   Looks up a localized string similar to Enter the user&apos;s email address to confirm (be sure to confirm via email):.
         /// </summary>
-        internal static string User_DeleteCommand_Confirm {
+        internal static string User_ConfirmEmailAddress {
             get {
-                return ResourceManager.GetString("User_DeleteCommand_Confirm", resourceCulture);
+                return ResourceManager.GetString("User_ConfirmEmailAddress", resourceCulture);
             }
         }
         
@@ -1998,20 +1998,65 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is not the right Email Address..
-        /// </summary>
-        internal static string User_DeleteCommand_Error_IncorrectEmailAddress {
-            get {
-                return ResourceManager.GetString("User_DeleteCommand_Error_IncorrectEmailAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to User owns packages and cannot be deleted. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}..
         /// </summary>
         internal static string User_DeleteCommand_Error_PackageOwnerships {
             get {
                 return ResourceManager.GetString("User_DeleteCommand_Error_PackageOwnerships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not the right Email Address..
+        /// </summary>
+        internal static string User_Error_IncorrectEmailAddress {
+            get {
+                return ResourceManager.GetString("User_Error_IncorrectEmailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * {0} : {1}.
+        /// </summary>
+        internal static string User_RenameCommand_Confirm_Data {
+            get {
+                return ResourceManager.GetString("User_RenameCommand_Confirm_Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following user will be renamed in the {0} datacenter:.
+        /// </summary>
+        internal static string User_RenameCommand_Confirm_Header {
+            get {
+                return ResourceManager.GetString("User_RenameCommand_Confirm_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed the following operations:.
+        /// </summary>
+        internal static string User_RenameCommand_DatabaseActions {
+            get {
+                return ResourceManager.GetString("User_RenameCommand_DatabaseActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update completed. The effects may take a few minutes to propagate..
+        /// </summary>
+        internal static string User_RenameCommand_UpdateCompleted {
+            get {
+                return ResourceManager.GetString("User_RenameCommand_UpdateCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating data for User &apos;{0}&apos; with Email Address &apos;{1}&apos; from the &apos;{2}&apos; database on &apos;{3}&apos;..
+        /// </summary>
+        internal static string User_RenameCommand_UpdatingUserData {
+            get {
+                return ResourceManager.GetString("User_RenameCommand_UpdatingUserData", resourceCulture);
             }
         }
         

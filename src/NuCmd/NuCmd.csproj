@@ -323,6 +323,7 @@
     <Compile Include="Commands\Secrets\StoresCommand.cs" />
     <Compile Include="Commands\Certs\UploadCommand.cs" />
     <Compile Include="Commands\ServiceCommandBase.cs" />
+    <Compile Include="Commands\User\RenameCommand.cs" />
     <Compile Include="Commands\User\DeleteCommand.cs" />
     <Compile Include="Commands\Work\JobHistoryCommand.cs" />
     <Compile Include="Commands\Work\LogCommand.cs" />
