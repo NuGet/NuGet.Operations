@@ -1944,7 +1944,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the user&apos;s email address to confirm: (the deletion request must be confirmed by sending the user an email to this address).
+        ///   Looks up a localized string similar to Enter the user&apos;s email address to confirm (be sure to confirm via email):.
         /// </summary>
         internal static string User_DeleteCommand_Confirm {
             get {
@@ -2007,7 +2007,7 @@ namespace NuCmd {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User cannot be deleted because of existing package ownerships. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}..
+        ///   Looks up a localized string similar to User owns packages and cannot be deleted. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}..
         /// </summary>
         internal static string User_DeleteCommand_Error_PackageOwnerships {
             get {

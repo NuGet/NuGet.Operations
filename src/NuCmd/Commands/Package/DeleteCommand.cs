@@ -1,25 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Dapper;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Management.Compute.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using NuCmd.Models;
-using NuGet;
-using NuGet.Services;
-using NuGet.Services.Client;
-using NuGet.Services.Operations.Model;
 using PowerArgs;
 
 namespace NuCmd.Commands.Package
@@ -69,7 +57,9 @@ namespace NuCmd.Commands.Package
             var dc = GetDatacenter(0, required: false);
             if (dc != null)
             {
-                await LoadDefaultsFromAzure(dc);
+                var defaults = await LoadDefaultsFromAzure(dc, DatabaseConnectionString, StorageConnectionString);
+                DatabaseConnectionString = defaults.DatabaseConnectionString;
+                StorageConnectionString = defaults.StorageConnectionString;
             }
 
             StorageAccount = CloudStorageAccount.Parse(StorageConnectionString);
@@ -139,62 +129,6 @@ namespace NuCmd.Commands.Package
             }
         }
 
-        private async Task LoadDefaultsFromAzure(Datacenter dc)
-        {
-            bool expired = false;
-            try
-            {
-                if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
-                    String.IsNullOrWhiteSpace(StorageConnectionString))
-                {
-                    var config = await LoadServiceConfig(dc, dc.GetService("work"));
-
-                    DatabaseConnectionString = DatabaseConnectionString ??
-                        GetValueOrDefault(config, "Sql.Legacy");
-                    StorageConnectionString = StorageConnectionString ??
-                        GetValueOrDefault(config, "Storage.Legacy");
-                }
-
-                if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
-                    String.IsNullOrWhiteSpace(StorageConnectionString))
-                {
-                    throw new InvalidOperationException(Strings.Command_MissingEnvironmentArguments);
-                }
-
-                await Console.WriteInfoLine(
-                    Strings.Command_ConnectionInfo,
-                    new SqlConnectionStringBuilder(DatabaseConnectionString).DataSource,
-                    CloudStorageAccount.Parse(StorageConnectionString).Credentials.AccountName);
-            }
-            catch (CloudException ex)
-            {
-                if (ex.ErrorCode == "AuthenticationFailed")
-                {
-                    expired = true;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            if (expired)
-            {
-                await Console.WriteErrorLine(Strings.AzureCommandBase_TokenExpired);
-                throw new OperationCanceledException();
-            }
-        }
-
-        private string GetValueOrDefault(IDictionary<string, string> dict, string key)
-        {
-            string val;
-            if (!dict.TryGetValue(key, out val))
-            {
-                return null;
-            }
-            return val;
-        }
-
         private async Task DeletePackage(dynamic package, SqlConnection conn)
         {
             // Capture the data from the database
@@ -218,7 +152,7 @@ namespace NuCmd.Commands.Package
             await Console.WriteInfoLine(Strings.Package_DeleteCommand_WritingAuditRecord, auditRecord.GetPath());
             if (!WhatIf)
             {
-                await WriteAuditRecord(auditRecord, "package");
+                await auditRecord.WriteAuditRecord("package", StorageAccount);
             }
 
             await DeletePackageData(package, conn);
@@ -245,7 +179,7 @@ namespace NuCmd.Commands.Package
             await Console.WriteInfoLine(Strings.Package_DeleteCommand_WritingRegistrationAuditRecord, auditRecord.GetPath());
             if (!WhatIf)
             {
-                await WriteAuditRecord(auditRecord, "packageregistrations");
+                await auditRecord.WriteAuditRecord("packageregistrations", StorageAccount);
             }
 
             // Delete all data
@@ -447,32 +381,6 @@ namespace NuCmd.Commands.Package
                     AccessCondition.GenerateEmptyCondition(), 
                     new BlobRequestOptions(), new OperationContext());
             }
-        }
-
-        private async Task WriteAuditRecord(AuditRecord auditRecord, string resourceType)
-        {
-            var entry = new AuditEntry(
-                auditRecord,
-                await AuditActor.GetCurrentMachineActor());
-
-            // Write the blob to the storage account
-            var client = StorageAccount.CreateCloudBlobClient();
-            var container = client.GetContainerReference("auditing");
-            await container.CreateIfNotExistsAsync();
-            var blob = container.GetBlockBlobReference(
-                resourceType + "/" + auditRecord.GetPath() + "/" + DateTime.UtcNow.ToString("s") + "-" + auditRecord.GetAction().ToLowerInvariant() + ".audit.v1.json");
-
-            if (await blob.ExistsAsync())
-            {
-                throw new InvalidOperationException(String.Format(
-                    CultureInfo.CurrentCulture,
-                    Strings.Package_DeleteCommand_AuditBlobExists,
-                    blob.Uri.AbsoluteUri));
-            }
-
-            byte[] data = Encoding.UTF8.GetBytes(
-                JsonFormat.Serialize(entry));
-            await blob.UploadFromByteArrayAsync(data, 0, data.Length);
         }
     }
 }

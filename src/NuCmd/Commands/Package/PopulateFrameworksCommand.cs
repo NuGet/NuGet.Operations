@@ -8,13 +8,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using NuGet;
-using NuGet.Services.Operations.Model;
 using PowerArgs;
 
 namespace NuCmd.Commands.Package
@@ -99,7 +97,10 @@ namespace NuCmd.Commands.Package
             var dc = GetDatacenter(0, required: false);
             if (dc != null)
             {
-                await LoadDefaultsFromAzure(dc);
+
+                var defaults = await LoadDefaultsFromAzure(dc, DatabaseConnectionString, StorageConnectionString);
+                DatabaseConnectionString = defaults.DatabaseConnectionString;
+                StorageConnectionString = defaults.StorageConnectionString;
             }
 
             StorageAccount = CloudStorageAccount.Parse(StorageConnectionString);
@@ -412,62 +413,6 @@ namespace NuCmd.Commands.Package
                 });
 
             report.Operations = Enumerable.Concat(adds, rems).ToArray();
-        }
-
-        private async Task LoadDefaultsFromAzure(Datacenter dc)
-        {
-            bool expired = false;
-            try
-            {
-                if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
-                    String.IsNullOrWhiteSpace(StorageConnectionString))
-                {
-                    var config = await LoadServiceConfig(dc, dc.GetService("work"));
-
-                    DatabaseConnectionString = DatabaseConnectionString ??
-                        GetValueOrDefault(config, "Sql.Legacy");
-                    StorageConnectionString = StorageConnectionString ??
-                        GetValueOrDefault(config, "Storage.Legacy");
-                }
-
-                if (String.IsNullOrWhiteSpace(DatabaseConnectionString) ||
-                    String.IsNullOrWhiteSpace(StorageConnectionString))
-                {
-                    throw new InvalidOperationException(Strings.Command_MissingEnvironmentArguments);
-                }
-
-                await Console.WriteInfoLine(
-                    Strings.Command_ConnectionInfo,
-                    new SqlConnectionStringBuilder(DatabaseConnectionString).DataSource,
-                    CloudStorageAccount.Parse(StorageConnectionString).Credentials.AccountName);
-            }
-            catch (CloudException ex)
-            {
-                if (ex.ErrorCode == "AuthenticationFailed")
-                {
-                    expired = true;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            if (expired)
-            {
-                await Console.WriteErrorLine(Strings.AzureCommandBase_TokenExpired);
-                throw new OperationCanceledException();
-            }
-        }
-
-        private string GetValueOrDefault(IDictionary<string, string> dict, string key)
-        {
-            string val;
-            if (!dict.TryGetValue(key, out val))
-            {
-                return null;
-            }
-            return val;
         }
 
         public class Package
