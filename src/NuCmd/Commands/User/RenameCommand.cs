@@ -66,11 +66,14 @@ namespace NuCmd.Commands.User
                         u.CreatedUtc,
                         PackageOwnerships = (SELECT COUNT(*) FROM PackageRegistrationOwners WHERE UserKey = u.[Key]),
                         PackageOwnershipInvites = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE NewOwnerKey = u.[Key]),
-                        PackageOwnershipRequests = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE RequestingOwnerKey = u.[Key])
+                        PackageOwnershipRequests = (SELECT COUNT(*) FROM PackageOwnerRequests WHERE RequestingOwnerKey = u.[Key]),
+                        ExistingNewUserEmailAddress = (SELECT IsNull(EmailAddress, UnconfirmedEmailAddress) FROM [Users] newUser WHERE newUser.Username = @NewUsername)
+
                     FROM [Users] u
                     WHERE u.Username = @OldUsername", new
                     {
-                        OldUsername
+                        OldUsername,
+                        NewUsername
                     });
 
                 var user = results.SingleOrDefault();
@@ -78,6 +81,12 @@ namespace NuCmd.Commands.User
                 if (user == null)
                 {
                     await Console.WriteErrorLine("Username not found. Aborting.");
+                    return;
+                }
+
+                if (user.ExistingNewUserEmailAddress != null)
+                {
+                    await Console.WriteErrorLine(Strings.User_RenameCommand_Error_NewUsernameExists, NewUsername, (string)user.ExistingNewUserEmailAddress);
                     return;
                 }
 
@@ -111,8 +120,8 @@ namespace NuCmd.Commands.User
         private async Task RenameUser(dynamic user, SqlConnection conn)
         {
             var userRecord = await conn.QueryDatatable(
-                "SELECT NewUsername = @newUsername, * FROM [Users] WHERE [Key] = @key",
-                new SqlParameter("@key", user.Key), new SqlParameter("@newUsername", NewUsername));
+                "SELECT NewUsername = @NewUsername, * FROM [Users] WHERE [Key] = @key",
+                new SqlParameter("@key", user.Key), new SqlParameter("@NewUsername", NewUsername));
 
             var auditRecord = new UserAuditRecord(
                 user.Username,
@@ -150,19 +159,19 @@ namespace NuCmd.Commands.User
                 )
 
                 UPDATE  u
-                SET     Username = @newUsername
+                SET     Username = @NewUsername
                 OUTPUT  'Users' AS TableName
                     ,   'Old Username: ' + deleted.Username + '; New Username: ' + inserted.Username AS Value
                 INTO    @actions
                 FROM    [Users] u
-                WHERE   u.Username = @oldUsername
+                WHERE   u.Username = @OldUsername
 
                 SELECT  *
                 FROM    @actions
                 " + (WhatIf ? "ROLLBACK TRAN" : "COMMIT TRAN"), new
                 {
-                    oldUsername = OldUsername,
-                    newUsername = NewUsername
+                    OldUsername,
+                    NewUsername
                 });
 
             await Console.WriteInfoLine(Strings.User_RenameCommand_DatabaseActions);

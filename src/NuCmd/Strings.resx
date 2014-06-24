@@ -839,4 +839,7 @@ Expires: {2}</value>
   <data name="User_RenameCommand_UpdatingUserData" xml:space="preserve">
     <value>Updating data for User '{0}' with Email Address '{1}' from the '{2}' database on '{3}'.</value>
   </data>
+  <data name="User_RenameCommand_Error_NewUsernameExists" xml:space="preserve">
+    <value>Cannot rename user to have the username of '{0}' because a user with that username already exists with the email address of '{1}'.</value>
+  </data>
 </root>

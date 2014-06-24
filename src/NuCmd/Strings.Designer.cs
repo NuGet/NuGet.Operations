@@ -2043,6 +2043,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot rename user to have the username of &apos;{0}&apos; because a user with that username already exists with the email address of &apos;{1}&apos;..
+        /// </summary>
+        internal static string User_RenameCommand_Error_NewUsernameExists {
+            get {
+                return ResourceManager.GetString("User_RenameCommand_Error_NewUsernameExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update completed. The effects may take a few minutes to propagate..
         /// </summary>
         internal static string User_RenameCommand_UpdateCompleted {
