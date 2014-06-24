@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using NuGet.Services.Client;
 
 namespace NuCmd.Models
 {
@@ -26,6 +30,32 @@ namespace NuCmd.Models
                 return type.Substring(0, type.Length - 11);
             }
             return type;
+        }
+
+        public async Task WriteAuditRecord(string resourceType, CloudStorageAccount storageAccount)
+        {
+            var entry = new AuditEntry(
+                this,
+                await AuditActor.GetCurrentMachineActor());
+
+            // Write the blob to the storage account
+            var client = storageAccount.CreateCloudBlobClient();
+            var container = client.GetContainerReference("auditing");
+            await container.CreateIfNotExistsAsync();
+            var blob = container.GetBlockBlobReference(
+                resourceType + "/" + this.GetPath() + "/" + DateTime.UtcNow.ToString("s") + "-" + this.GetAction().ToLowerInvariant() + ".audit.v1.json");
+
+            if (await blob.ExistsAsync())
+            {
+                throw new InvalidOperationException(String.Format(
+                    CultureInfo.CurrentCulture,
+                    Strings.Package_DeleteCommand_AuditBlobExists,
+                    blob.Uri.AbsoluteUri));
+            }
+
+            byte[] data = Encoding.UTF8.GetBytes(
+                JsonFormat.Serialize(entry));
+            await blob.UploadFromByteArrayAsync(data, 0, data.Length);
         }
     }
 
