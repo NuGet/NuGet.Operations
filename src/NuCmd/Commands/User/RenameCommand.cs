@@ -27,7 +27,7 @@ namespace NuCmd.Commands.User
 
         [ArgRequired]
         [ArgShortcut("r")]
-        [ArgDescription("The reason for deletion. Must be specified.")]
+        [ArgDescription("The reason for the user rename. Must be specified.")]
         public string Reason { get; set; }
 
         [ArgShortcut("db")]
