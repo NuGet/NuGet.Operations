@@ -806,13 +806,13 @@ Expires: {2}</value>
   <data name="User_DeleteCommand_Error_PackageOwnerships" xml:space="preserve">
     <value>User owns packages and cannot be deleted. Ownerships: {0}; Pending Invites: {1}; Pending Requests: {2}.</value>
   </data>
-  <data name="User_DeleteCommand_Confirm" xml:space="preserve">
+  <data name="User_ConfirmEmailAddress" xml:space="preserve">
     <value>Enter the user's email address to confirm (be sure to confirm via email):</value>
   </data>
   <data name="User_DeleteCommand_DeletionCompleted" xml:space="preserve">
     <value>Deletion completed. The effects may take a few minutes to propagate.</value>
   </data>
-  <data name="User_DeleteCommand_Error_IncorrectEmailAddress" xml:space="preserve">
+  <data name="User_Error_IncorrectEmailAddress" xml:space="preserve">
     <value>'{0}' is not the right Email Address.</value>
   </data>
   <data name="User_WritingAuditRecord" xml:space="preserve">
@@ -823,5 +823,23 @@ Expires: {2}</value>
   </data>
   <data name="User_DeleteCommand_DeletingUserData" xml:space="preserve">
     <value>Deleting data for User '{0}' with Email Address '{1}' from the '{2}' database on '{3}'.</value>
+  </data>
+  <data name="User_RenameCommand_Confirm_Data" xml:space="preserve">
+    <value>* {0} : {1}</value>
+  </data>
+  <data name="User_RenameCommand_Confirm_Header" xml:space="preserve">
+    <value>The following user will be renamed in the {0} datacenter:</value>
+  </data>
+  <data name="User_RenameCommand_DatabaseActions" xml:space="preserve">
+    <value>Completed the following operations:</value>
+  </data>
+  <data name="User_RenameCommand_UpdateCompleted" xml:space="preserve">
+    <value>Update completed. The effects may take a few minutes to propagate.</value>
+  </data>
+  <data name="User_RenameCommand_UpdatingUserData" xml:space="preserve">
+    <value>Updating data for User '{0}' with Email Address '{1}' from the '{2}' database on '{3}'.</value>
+  </data>
+  <data name="User_RenameCommand_Error_NewUsernameExists" xml:space="preserve">
+    <value>Cannot rename user to have the username of '{0}' because a user with that username already exists with the email address of '{1}'.</value>
   </data>
 </root>

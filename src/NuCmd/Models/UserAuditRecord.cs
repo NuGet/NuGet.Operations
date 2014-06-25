@@ -28,6 +28,7 @@ namespace NuCmd.Models
 
     public enum UserAuditAction
     {
-        Deleted
+        Deleted,
+        Renamed
     }
 }
