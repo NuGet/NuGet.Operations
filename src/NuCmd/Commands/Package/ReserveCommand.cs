@@ -70,9 +70,25 @@ namespace NuCmd.Commands.Package
                             new { id })).Single();
                         if (result == 0)
                         {
+
+                            var owners = await connection.QueryAsync<string>(@"
+                                SELECT      u.Username
+                                FROM        PackageRegistrations pr
+                                INNER JOIN  PackageRegistrationOwners pro ON pro.PackageRegistrationKey = pr.[Key]
+                                INNER JOIN  [Users] u ON u.[Key] = pro.UserKey
+                                WHERE       pr.[Id] = @id
+                                ORDER BY    u.Username",
+                            new { id });
+
                             await Console.WriteErrorLine(
                                 Strings.Package_ReserveCommand_IdAlreadyExists,
                                 id);
+
+                            foreach (string owner in owners)
+                            {
+                                await Console.WriteErrorLine(Strings.Package_ReserveCommand_ExistingOwner, owner);
+                            }
+
                             continue; // Don't change owners of existing packages.
                         }
                     }

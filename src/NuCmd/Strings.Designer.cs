@@ -1335,6 +1335,15 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Existing Owner: {0}.
+        /// </summary>
+        internal static string Package_ReserveCommand_ExistingOwner {
+            get {
+                return ResourceManager.GetString("Package_ReserveCommand_ExistingOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Making {0} a co-owner of {1}.
         /// </summary>
         internal static string Package_ReserveCommand_GrantingOwnership {
