@@ -25,6 +25,9 @@ namespace NuCmd.Commands.Package
         [ArgDescription("A comma-separated list of owners to provide for the package registration")]
         public string[] Owners { get; set; }
 
+        [ArgShortcut("q")]
+        [ArgDescription("Quiet mode - only emit messages for packages that already exist and are owned by different users")]
+        public bool Quiet { get; set; }
         [ArgShortcut("db")]
         [ArgDescription("SQL Connection string for the package database. Inferred by default from the environment")]
         public string DatabaseConnectionString { get; set; }
@@ -57,7 +60,11 @@ namespace NuCmd.Commands.Package
             {
                 foreach (var id in Ids)
                 {
-                    await Console.WriteInfoLine(Strings.Package_ReserveCommand_ReservingId, id);
+                    if (!Quiet)
+                    {
+                        await Console.WriteInfoLine(Strings.Package_ReserveCommand_ReservingId, id);
+                    }
+
                     if (!WhatIf)
                     {
                         var result = (await connection.QueryAsync<int>(@"
@@ -70,15 +77,39 @@ namespace NuCmd.Commands.Package
                             new { id })).Single();
                         if (result == 0)
                         {
-                            await Console.WriteErrorLine(
-                                Strings.Package_ReserveCommand_IdAlreadyExists,
-                                id);
+
+                            var existingOwners = await connection.QueryAsync<string>(@"
+                                SELECT      u.Username
+                                FROM        PackageRegistrations pr
+                                INNER JOIN  PackageRegistrationOwners pro ON pro.PackageRegistrationKey = pr.[Key]
+                                INNER JOIN  [Users] u ON u.[Key] = pro.UserKey
+                                WHERE       pr.[Id] = @id
+                                ORDER BY    u.Username",
+                            new { id });
+
+                            // If we're in quiet mode, only show errors for packages owned by users not in the target
+                            if (!Quiet || existingOwners.Any(o => !Owners.Contains(o)))
+                            {
+                                await Console.WriteErrorLine(
+                                    Strings.Package_ReserveCommand_IdAlreadyExists,
+                                    id);
+
+                                foreach (string owner in existingOwners)
+                                {
+                                    await Console.WriteErrorLine(Strings.Package_ReserveCommand_ExistingOwner, owner);
+                                }
+                            }
+
                             continue; // Don't change owners of existing packages.
                         }
                     }
                     foreach (var owner in Owners)
                     {
-                        await Console.WriteInfoLine(Strings.Package_ReserveCommand_GrantingOwnership, owner, id);
+                        if (!Quiet)
+                        {
+                            await Console.WriteInfoLine(Strings.Package_ReserveCommand_GrantingOwnership, owner, id);
+                        }
+
                         if (!WhatIf)
                         {
                             var result = (await connection.QueryAsync<int>(@"
@@ -93,7 +124,8 @@ namespace NuCmd.Commands.Package
 	                                SELECT 1
                                 END",
                                 new { id, owner })).Single();
-                            if (result == 0)
+
+                            if (result == 0 && !Quiet)
                             {
                                 await Console.WriteInfoLine(Strings.Package_ReserveCommand_OwnerAlreadyExists, owner, id);
                             }

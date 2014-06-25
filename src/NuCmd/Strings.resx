@@ -842,4 +842,7 @@ Expires: {2}</value>
   <data name="User_RenameCommand_Error_NewUsernameExists" xml:space="preserve">
     <value>Cannot rename user to have the username of '{0}' because a user with that username already exists with the email address of '{1}'.</value>
   </data>
+  <data name="Package_ReserveCommand_ExistingOwner" xml:space="preserve">
+    <value>Existing Owner: {0}</value>
+  </data>
 </root>
