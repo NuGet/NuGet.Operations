@@ -186,10 +186,17 @@ namespace NuCmd.Commands
             }
 
             var secret = await secrets.Read(new SecretName(secretName, datacenter), clientOperation);
+            
+            while (secret != null && secret.Type == SecretType.Link)
+            {
+                secret = await secrets.Read(SecretName.Parse(secret.Value), clientOperation);
+            }
+
             if (secret == null)
             {
                 return null;
             }
+
             return secret.Value;
         }
     }

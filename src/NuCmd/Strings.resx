@@ -794,4 +794,13 @@ Expires: {2}</value>
   <data name="AzureCommandBase_TokenCleared" xml:space="preserve">
     <value>Your login token for this subscription has been cleared.</value>
   </data>
+  <data name="Db_GetCsCommand_ConnectionStringCopied" xml:space="preserve">
+    <value>Connection String placed on the clipboard</value>
+  </data>
+  <data name="Db_NewPasswordCommand_ResettingPassword" xml:space="preserve">
+    <value>Resetting password for login '{0}'.</value>
+  </data>
+  <data name="Db_NewPasswordCommand_WouldResetPassword" xml:space="preserve">
+    <value>Would reset password for login {2} on server {0} for database {1}.</value>
+  </data>
 </root>

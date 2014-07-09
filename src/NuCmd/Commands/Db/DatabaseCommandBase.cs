@@ -26,7 +26,7 @@ namespace NuCmd.Commands.Db
         [ArgDescription("The Admin User Name for the database. Normally not required if the admin is named using the default pattern.")]
         public string AdminUser { get; set; }
 
-        [ArgShortcut("pass")]
+        [ArgShortcut("ap")]
         [ArgDescription("The Admin Password. DO NOT SPECIFY THIS WHEN RUNNING INTERACTIVELY!")]
         public string AdminPassword { get; set; }
 

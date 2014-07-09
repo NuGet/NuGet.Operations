@@ -276,6 +276,8 @@
     <Compile Include="Commands\Compute\InstancesCommand.cs" />
     <Compile Include="Commands\Config\SummarizeCommand.cs" />
     <Compile Include="Commands\DatacenterCommandBase.cs" />
+    <Compile Include="Commands\Db\GrantCommand.cs" />
+    <Compile Include="Commands\Db\SetPasswordCommand.cs" />
     <Compile Include="Commands\Db\DacCommandBase.cs" />
     <Compile Include="Commands\Db\DeleteDacCommand.cs" />
     <Compile Include="Commands\Db\CheckDacCommand.cs" />
@@ -285,6 +287,7 @@
     <Compile Include="Commands\Db\DeployCommand.cs" />
     <Compile Include="Commands\Db\ApplyAdminPasswordCommand.cs" />
     <Compile Include="Commands\Db\GenerateAdminPasswordCommand.cs" />
+    <Compile Include="Commands\Db\GetCsCommand.cs" />
     <Compile Include="Commands\Db\SanitizeCommand.cs" />
     <Compile Include="Commands\Db\SchemasCommand.cs" />
     <Compile Include="Commands\Db\UsersCommand.cs" />

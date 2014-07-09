@@ -132,7 +132,7 @@ namespace NuCmd.Commands.Config
             {
                 a.Key.Account,
                 KeyInUse = IdentifyKey(keys, a.Key.Account, a.Key.Key),
-                UsedBy = String.Join(",", a.Select(c => c.ServiceName).Distinct())
+                UsedBy = String.Join(",", a.Select(c => c.ServiceName + ":" + c.Slot.ToString()).Distinct())
             });
 
             await Console.WriteInfoLine("SQL Databases in use:");

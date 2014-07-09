@@ -29,14 +29,6 @@ namespace NuCmd.Commands.Db
         [ArgDescription("The name of the user")]
         public string Name { get; set; }
 
-        [ArgShortcut("s")]
-        [ArgDescription("Comma-separated list of DB schemas to grant access for. See 'nucmd db schemas' for a list.")]
-        public string[] Schemas { get; set; }
-
-        [ArgShortcut("sa")]
-        [ArgDescription("If set, the user will be an administrator (dbmanager, loginmanager) on the database server")]
-        public bool ServerAdmin { get; set; }
-
         [ArgShortcut("xin")]
         [ArgDescription("Sets the expiry date of the secret to the current date, plus this time")]
         public TimeSpan? ExpiresIn { get; set; }
@@ -98,95 +90,52 @@ namespace NuCmd.Commands.Db
                         masterConnStr.DataSource));
                     await connection.QueryAsync<int>("CREATE LOGIN [" + loginName + "] WITH password='" + loginPassword + "'");
 
-                    if (ServerAdmin)
-                    {
-                        // Make the user a dbmanager
-                        await Console.WriteInfoLine(String.Format(
-                            CultureInfo.CurrentCulture,
-                            Strings.Db_CreateUserCommand_CreatingUser,
-                            loginName,
-                            masterConnStr.InitialCatalog));
-                        await connection.QueryAsync<int>(
-                            "CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
-
-                        await Console.WriteInfoLine(String.Format(
-                            CultureInfo.CurrentCulture,
-                            Strings.Db_CreateUserCommand_ServerManagering,
-                            loginName,
-                            masterConnStr.DataSource));
-                        await connection.QueryAsync<int>(
-                            "EXEC sp_addrolemember 'dbmanager', '" + loginName + "'; " +
-                            "EXEC sp_addrolemember 'loginmanager', '" + loginName + "';");
-
-                        await Console.WriteInfoLine(Strings.Db_CreateUserCommand_FetchingDBs);
-                        databases = (await connection.QueryAsync<string>(@"
-                            SELECT name 
-                            FROM sys.databases 
-                            WHERE name <> 'master' 
-                            AND name <> @targetDb", new { targetDb = connInfo.ConnectionString.InitialCatalog })).ToList();
-                        await Console.WriteInfoLine(Strings.Db_CreateUserCommand_RetrievedDatabases, databases.Count);
-                    }
-                }
-
-                if(ServerAdmin)
-                {
-                    Debug.Assert(databases != null);
-                    // Connect to each Database except for the target db and master and make the user a db_owner of that DB
-                    foreach (var database in databases)
-                    {
-                        using(var connection = await connInfo.Connect(database))
-                        {
-                            await Console.WriteInfoLine(String.Format(
-                                CultureInfo.CurrentCulture,
-                                Strings.Db_CreateUserCommand_CreatingUser,
-                                loginName,
-                                database));
-                            await connection.QueryAsync<int>("CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
-
-                            await Console.WriteInfoLine(String.Format(
-                                CultureInfo.CurrentCulture,
-                                Strings.Db_CreateUserCommand_AdminingUser,
-                                loginName,
-                                database));
-                            await connection.QueryAsync<int>("EXEC sp_addrolemember 'db_owner', '" + loginName + "';");
-                        }
-                    }
-                }
-
-                // Connect to the database itself
-                using (var connection = await connInfo.Connect())
-                {
-                    await Console.WriteInfoLine(String.Format(
-                        CultureInfo.CurrentCulture,
-                        Strings.Db_CreateUserCommand_Connected,
-                        connInfo.ConnectionString.DataSource,
-                        connInfo.ConnectionString.InitialCatalog));
-
-                    // Create the user and grant permissions
+                    // Make the user a dbmanager
                     await Console.WriteInfoLine(String.Format(
                         CultureInfo.CurrentCulture,
                         Strings.Db_CreateUserCommand_CreatingUser,
                         loginName,
-                        connInfo.ConnectionString.InitialCatalog));
+                        masterConnStr.InitialCatalog));
                     await connection.QueryAsync<int>(
                         "CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
 
-                    if (Schemas == null)
-                    {
-                        await Console.WriteWarningLine(Strings.Db_CreateUserCommand_NoSchemasSpecified);
-                        Schemas = new [] { "dbo" };
-                    }
+                    await Console.WriteInfoLine(String.Format(
+                        CultureInfo.CurrentCulture,
+                        Strings.Db_CreateUserCommand_ServerManagering,
+                        loginName,
+                        masterConnStr.DataSource));
+                    await connection.QueryAsync<int>(
+                        "EXEC sp_addrolemember 'dbmanager', '" + loginName + "'; " +
+                        "EXEC sp_addrolemember 'loginmanager', '" + loginName + "';");
 
-                    foreach (var schema in Schemas)
+                    await Console.WriteInfoLine(Strings.Db_CreateUserCommand_FetchingDBs);
+                    databases = (await connection.QueryAsync<string>(@"
+                        SELECT name 
+                        FROM sys.databases 
+                        WHERE name <> 'master' 
+                        AND name <> @targetDb", new { targetDb = connInfo.ConnectionString.InitialCatalog })).ToList();
+                    await Console.WriteInfoLine(Strings.Db_CreateUserCommand_RetrievedDatabases, databases.Count);
+                }
+
+                Debug.Assert(databases != null);
+                // Connect to each Database and make the user a db_owner of that DB
+                foreach (var database in databases)
+                {
+                    using(var connection = await connInfo.Connect(database))
                     {
                         await Console.WriteInfoLine(String.Format(
                             CultureInfo.CurrentCulture,
-                            Strings.Db_CreateUserCommand_GrantingUser,
+                            Strings.Db_CreateUserCommand_CreatingUser,
                             loginName,
-                            schema,
-                            connInfo.ConnectionString.InitialCatalog));
-                        await connection.QueryAsync<int>(
-                            "GRANT CONTROL ON SCHEMA :: [" + schema + "] TO " + loginName);
+                            database));
+                        await connection.QueryAsync<int>("CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
+
+                        await Console.WriteInfoLine(String.Format(
+                            CultureInfo.CurrentCulture,
+                            Strings.Db_CreateUserCommand_AdminingUser,
+                            loginName,
+                            database));
+                        await connection.QueryAsync<int>("EXEC sp_addrolemember 'db_owner', '" + loginName + "';");
                     }
                 }
 

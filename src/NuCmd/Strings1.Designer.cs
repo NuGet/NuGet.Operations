@@ -867,6 +867,33 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection String placed on the clipboard.
+        /// </summary>
+        internal static string Db_GetCsCommand_ConnectionStringCopied {
+            get {
+                return ResourceManager.GetString("Db_GetCsCommand_ConnectionStringCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resetting password for login &apos;{0}&apos;..
+        /// </summary>
+        internal static string Db_NewPasswordCommand_ResettingPassword {
+            get {
+                return ResourceManager.GetString("Db_NewPasswordCommand_ResettingPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would reset password for login {2} on server {0} for database {1}..
+        /// </summary>
+        internal static string Db_NewPasswordCommand_WouldResetPassword {
+            get {
+                return ResourceManager.GetString("Db_NewPasswordCommand_WouldResetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot sanitize {0}. The name must start with Export or Backup..
         /// </summary>
         internal static string Db_SanitizeCommand_CannotSanitize {
