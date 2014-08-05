@@ -23,6 +23,9 @@ namespace NuCmd.Commands.Work
         [ArgDescription("Purges invocations that completed before this local time")]
         public DateTime? BeforeLocal { get; set; }
 
+        [ArgDescription("Purges a specific invocation")]
+        public string Id { get; set; }
+
         protected override async Task OnExecute()
         {
             if (BeforeUtc == null && BeforeLocal != null)
@@ -33,7 +36,11 @@ namespace NuCmd.Commands.Work
             var client = await OpenClient();
             if (client == null) { return; }
             ServiceResponse<IEnumerable<Invocation>> response;
-            if (BeforeUtc == null)
+            if (!String.IsNullOrEmpty(Id))
+            {
+                await Console.WriteInfoLine("Purging invocation {0}...", Id);
+            }
+            else if (BeforeUtc == null)
             {
                 await Console.WriteInfoLine(Strings.Work_PurgeCommand_PurgingAllInvocations);
             }
@@ -42,29 +49,36 @@ namespace NuCmd.Commands.Work
                 await Console.WriteInfoLine(Strings.Work_PurgeCommand_PurgingInvocationsBefore, BeforeUtc.Value);
             }
 
-            if (WhatIf)
+            if (!String.IsNullOrEmpty(Id))
             {
-                // Get the list of invocations we would be able to purge
-                response = await client.Invocations.GetPurgable(BeforeUtc);
+                await ReportHttpStatus(await client.Invocations.Purge(Id));
             }
             else
             {
-                // Get the list of invocations we would be able to purge
-                response = await client.Invocations.Purge(BeforeUtc);
-            }
-
-            if (await ReportHttpStatus(response))
-            {
-                await Console.WriteInfoLine("Successfully purged the following invocations:");
-                var purgable = await response.ReadContent();
-                await Console.WriteTable(purgable, i => new
+                if (WhatIf)
                 {
-                    i.Job,
-                    i.Status,
-                    i.Result,
-                    i.Id,
-                    CompletedAtLocalTime = i.CompletedAt.Value.ToLocalTime()
-                });
+                    // Get the list of invocations we would be able to purge
+                    response = await client.Invocations.GetPurgable(BeforeUtc);
+                }
+                else
+                {
+                    // Get the list of invocations we would be able to purge
+                    response = await client.Invocations.Purge(BeforeUtc);
+                }
+
+                if (await ReportHttpStatus(response))
+                {
+                    await Console.WriteInfoLine("Successfully purged the following invocations:");
+                    var purgable = await response.ReadContent();
+                    await Console.WriteTable(purgable, i => new
+                    {
+                        i.Job,
+                        i.Status,
+                        i.Result,
+                        i.Id,
+                        CompletedAtLocalTime = i.CompletedAt.Value.ToLocalTime()
+                    });
+                }
             }
         }
     }

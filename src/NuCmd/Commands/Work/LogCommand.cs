@@ -18,6 +18,10 @@ namespace NuCmd.Commands.Work
         [ArgDescription("The ID of the invocation to get the log for, or a Job Name to get the log for the latest invocation of that job")]
         public string IdOrJob { get; set; }
 
+        [ArgShortcut("t")]
+        [ArgDescription("If specified, only display the last T records")]
+        public int? Tail { get; set; }
+
         protected override async Task OnExecute()
         {
             var client = await OpenClient();
@@ -44,6 +48,13 @@ namespace NuCmd.Commands.Work
             {
                 var log = await logResponse.ReadContent();
                 var events = LogEvent.ParseLogEvents(log);
+
+                // Filter the events to select the ones we want
+                if (Tail.HasValue)
+                {
+                    events = events.Reverse().Take(Tail.Value).Reverse();
+                }
+
                 string message = String.Format(Strings.Work_LogCommand_RenderingLog, id);
                 await Console.WriteInfoLine(message);
                 await Console.WriteInfoLine(new String('-', message.Length));
