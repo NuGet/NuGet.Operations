@@ -136,19 +136,39 @@ namespace NuCmd.Commands.Db
                     {
                         using(var connection = await connInfo.Connect(database))
                         {
-                            await Console.WriteInfoLine(String.Format(
-                                CultureInfo.CurrentCulture,
-                                Strings.Db_CreateUserCommand_CreatingUser,
-                                loginName,
-                                database));
-                            await connection.QueryAsync<int>("CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
+                            bool isReplica = false;
+                            try
+                            {
+                                await Console.WriteInfoLine(String.Format(
+                                    CultureInfo.CurrentCulture,
+                                    Strings.Db_CreateUserCommand_CreatingUser,
+                                    loginName,
+                                    database));
+                                await connection.QueryAsync<int>("CREATE USER [" + loginName + "] FROM LOGIN [" + loginName + "]");
 
-                            await Console.WriteInfoLine(String.Format(
-                                CultureInfo.CurrentCulture,
-                                Strings.Db_CreateUserCommand_AdminingUser,
-                                loginName,
-                                database));
-                            await connection.QueryAsync<int>("EXEC sp_addrolemember 'db_owner', '" + loginName + "';");
+                                await Console.WriteInfoLine(String.Format(
+                                    CultureInfo.CurrentCulture,
+                                    Strings.Db_CreateUserCommand_AdminingUser,
+                                    loginName,
+                                    database));
+                                await connection.QueryAsync<int>("EXEC sp_addrolemember 'db_owner', '" + loginName + "';");
+                            }
+                            catch (SqlException sqlex)
+                            {
+                                // 40682 - Database is an active secondary replica
+                                if (sqlex.Number == 40682)
+                                {
+                                    isReplica = true;
+                                }
+                                else
+                                {
+                                    throw;
+                                }
+                            }
+                            if (isReplica)
+                            {
+                                await Console.WriteInfoLine("Skipping {0}, it is an active secondary replica", database);
+                            }
                         }
                     }
                 }
