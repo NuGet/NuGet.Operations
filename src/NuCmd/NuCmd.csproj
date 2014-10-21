@@ -300,6 +300,7 @@
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\Package\PopulateFrameworksCommand.cs" />
     <Compile Include="Commands\Package\DeleteCommand.cs" />
+    <Compile Include="Commands\Package\AddOwnersCommand.cs" />
     <Compile Include="Commands\Package\ReserveCommand.cs" />
     <Compile Include="Commands\Compute\RdpCommand.cs" />
     <Compile Include="Commands\Scheduler\DeleteColCommand.cs" />
@@ -386,6 +387,7 @@
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

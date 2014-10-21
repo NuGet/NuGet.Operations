@@ -1272,6 +1272,24 @@ namespace NuCmd {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Either &apos;Id&apos; or &apos;PackagesConfig&apos; argument must be specified..
+        /// </summary>
+        internal static string Package_DeleteCommand_InvalidArguments {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_InvalidArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Either {0} doesn&apos;t exist or is not a valid packages config file..
+        /// </summary>
+        internal static string Package_DeleteCommand_InvalidPackagesConfig {
+            get {
+                return ResourceManager.GetString("Package_DeleteCommand_InvalidPackagesConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Package blob not found!.
         /// </summary>
         internal static string Package_DeleteCommand_MissingSourceBlob {
