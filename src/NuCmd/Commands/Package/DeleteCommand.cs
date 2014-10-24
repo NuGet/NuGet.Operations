@@ -68,7 +68,7 @@ namespace NuCmd.Commands.Package
                 return;
             }
 
-            if (!Id && (String.IsNullOrEmpty(PackagesConfig) || !PackagesConfig))
+            if (String.IsNullOrEmpty(Id) && String.IsNullOrEmpty(PackagesConfig))
             {
                 await Console.WriteErrorLine(Strings.Package_DeleteCommand_InvalidArguments);
                 return;
