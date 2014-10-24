@@ -845,4 +845,10 @@ Expires: {2}</value>
   <data name="Package_ReserveCommand_ExistingOwner" xml:space="preserve">
     <value>Existing Owner: {0}</value>
   </data>
+  <data name="Package_DeleteCommand_InvalidPackagesConfig" xml:space="preserve">
+    <value>Either {0} doesn't exist or is not a valid packages config file.</value>
+  </data>
+  <data name="Package_DeleteCommand_InvalidArguments" xml:space="preserve">
+    <value>Either 'Id' or 'PackagesConfig' argument must be specified.</value>
+  </data>
 </root>

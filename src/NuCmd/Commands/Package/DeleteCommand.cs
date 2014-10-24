@@ -3,19 +3,20 @@ using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO;
 using System.Net;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using NuCmd.Models;
 using PowerArgs;
+using NuGet.Services.Operations.Helpers;
 
 namespace NuCmd.Commands.Package
 {
     [Description("Deletes a package from the primary datacenter in the target NuGet environment")]
     public class DeleteCommand : EnvironmentCommandBase
     {
-        [ArgRequired]
         [ArgPosition(0)]
         [ArgShortcut("i")]
         [ArgDescription("The ID of the package to delete")]
@@ -43,31 +44,40 @@ namespace NuCmd.Commands.Package
         [ArgDescription("Azure Storage Connection string for the package storage.")]
         public string StorageConnectionString { get; set; }
 
+        [ArgShortcut("q")]
+        [ArgDescription("Quiet mode - no prompt for entering the ID to confirm deletion. Use caution!!")]
+        public bool Quiet { get; set; }
+
+        [ArgShortcut("pc")]
+        [ArgDescription("Package config to be used for bulk delete scenarios")]
+        public string PackagesConfig { get; set; }
+
         private CloudStorageAccount StorageAccount { get; set; }
 
         protected override async Task OnExecute()
         {
+            if (!String.IsNullOrEmpty(PackagesConfig))
+            {
+                List<PackageConfigParser.Package> IdAndVersion = PackageConfigParser.GetIdAndVersionFromPackagesConfig(PackagesConfig);
+                if (IdAndVersion == null)
+                {
+                    await Console.WriteErrorLine(String.Format(Strings.Package_DeleteCommand_InvalidPackagesConfig, PackagesConfig));
+                }
+
+                await DeleteP(IdAndVersion);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(Id) && String.IsNullOrEmpty(PackagesConfig))
+            {
+                await Console.WriteErrorLine(Strings.Package_DeleteCommand_InvalidArguments);
+                return;
+            }
+
             if (String.IsNullOrWhiteSpace(Version) && !AllVersions)
             {
                 await Console.WriteErrorLine(Strings.Package_AllVersionsRequiredIfVersionNull);
                 return;
-            }
-
-            // Get Datacenter 0
-            var dc = GetDatacenter(0, required: false);
-            if (dc != null)
-            {
-                var defaults = await LoadDefaultsFromAzure(dc, DatabaseConnectionString, StorageConnectionString);
-                DatabaseConnectionString = defaults.DatabaseConnectionString;
-                StorageConnectionString = defaults.StorageConnectionString;
-            }
-
-            StorageAccount = CloudStorageAccount.Parse(StorageConnectionString);
-
-            // Parse the version
-            if (!String.IsNullOrWhiteSpace(Version))
-            {
-                Version = SemanticVersionHelper.Normalize(Version);
             }
 
             if (!String.IsNullOrWhiteSpace(Version) && AllVersions)
@@ -75,12 +85,47 @@ namespace NuCmd.Commands.Package
                 await Console.WriteErrorLine(Strings.Package_VersionAndAllVersionsSpecified);
                 return;
             }
-            
-            // Connect to the database
-            using (var conn = new SqlConnection(DatabaseConnectionString))
-            {
-                await conn.OpenAsync();
-                var packages = conn.Query(@"
+
+            PackageConfigParser.Package package = new PackageConfigParser.Package();
+            package.Id = Id;
+            package.Version = Version;
+
+            List<PackageConfigParser.Package> singlePackage = new List<PackageConfigParser.Package>();
+            singlePackage.Add(package);
+            await DeleteP(singlePackage);
+       }
+
+        private async Task DeleteP(List<PackageConfigParser.Package> IdAndVersion)
+        {
+            var dc = GetDatacenter(0, required: false);
+                if (dc != null)
+                {
+                    var defaults = await LoadDefaultsFromAzure(dc, DatabaseConnectionString, StorageConnectionString);
+                    DatabaseConnectionString = defaults.DatabaseConnectionString;
+                    StorageConnectionString = defaults.StorageConnectionString;
+                }
+
+                StorageAccount = CloudStorageAccount.Parse(StorageConnectionString);
+
+
+                // Connect to the database
+                using (var conn = new SqlConnection(DatabaseConnectionString))
+                {
+                    await conn.OpenAsync();
+                    foreach (PackageConfigParser.Package pkg in IdAndVersion)
+                    {
+                        Id = pkg.Id;
+                        Version = pkg.Version;
+
+                        // Parse the version
+                        if (!String.IsNullOrWhiteSpace(Version))
+                        {
+                            Version = SemanticVersionHelper.Normalize(Version);
+                        }
+
+                        
+
+                        var packages = conn.Query(@"
                     SELECT
                         p.[Key],
                         p.PackageRegistrationKey,
@@ -90,44 +135,46 @@ namespace NuCmd.Commands.Package
                     FROM Packages p
                     INNER JOIN PackageRegistrations pr ON p.PackageRegistrationKey = pr.[Key]
                     WHERE pr.Id = @Id AND (@AllVersions = 1 OR p.NormalizedVersion = @Version)", new
-                    {
-                        Id,
-                        AllVersions,
-                        Version
-                    });
+                                                                                               {
+                                                                                                   Id,
+                                                                                                   AllVersions,
+                                                                                                   Version
+                                                                                               });
 
-                await Console.WriteInfoLine(Strings.Package_DeleteCommand_DeleteList_Header, (dc == null ? "<unknown>" : dc.FullName));
-                foreach (var package in packages)
-                {
-                    await Console.WriteInfoLine(
-                        Strings.Package_DeleteCommand_DeleteList_Item,
-                        (string)package.Id,
-                        (string)package.Version);
-                }
+                         await Console.WriteInfoLine(Strings.Package_DeleteCommand_DeleteList_Header, (dc == null ? "<unknown>" : dc.FullName));
+                        foreach (var package in packages)
+                        {
+                            await Console.WriteInfoLine(
+                                Strings.Package_DeleteCommand_DeleteList_Item,
+                                (string)package.Id,
+                                (string)package.Version);
+                        }
 
-                // Ask the user to confirm by typing the ID
-                if(!WhatIf) 
-                { 
-                    await Console.WriteInfoLine(Strings.Package_DeleteCommand_NonWhatIf);
-                    string typed = await Console.Prompt(Strings.Package_DeleteCommand_DeleteList_Confirm);
-                    if (!String.Equals(typed, Id, StringComparison.Ordinal))
-                    {
-                        await Console.WriteErrorLine(Strings.Package_DeleteCommand_IncorrectId, typed);
-                        return;
+                        // Ask the user to confirm by typing the ID
+                        if (!WhatIf && !Quiet)
+                        {
+                            await Console.WriteInfoLine(Strings.Package_DeleteCommand_NonWhatIf);
+                            string typed = await Console.Prompt(Strings.Package_DeleteCommand_DeleteList_Confirm);
+                            if (!String.Equals(typed, Id, StringComparison.Ordinal))
+                            {
+                                await Console.WriteErrorLine(Strings.Package_DeleteCommand_IncorrectId, typed);
+                                return;
+                            }
+                        }
+
+                        foreach (var package in packages)
+                        {
+                            await DeletePackage(package, conn);
+                        }
+
+                        if (AllVersions)
+                        {
+                            await DeleteRegistration(conn);
+                        }
                     }
                 }
-                 
-                foreach (var package in packages)
-                {
-                    await DeletePackage(package, conn);
-                }
-
-                if (AllVersions)
-                {
-                    await DeleteRegistration(conn);
-                }
-            }
         }
+                
 
         private async Task DeletePackage(dynamic package, SqlConnection conn)
         {
@@ -333,7 +380,7 @@ namespace NuCmd.Commands.Package
             var container = client.GetContainerReference("packages");
             var blob = container.GetBlockBlobReference(
                 id + "." + version + ".nupkg");
-            
+
             var backupContainer = client.GetContainerReference("ng-backups");
             await backupContainer.CreateIfNotExistsAsync();
             var backupBlob = backupContainer.GetBlockBlobReference(
@@ -377,8 +424,8 @@ namespace NuCmd.Commands.Package
             if (!WhatIf)
             {
                 await blob.DeleteIfExistsAsync(
-                    DeleteSnapshotsOption.IncludeSnapshots, 
-                    AccessCondition.GenerateEmptyCondition(), 
+                    DeleteSnapshotsOption.IncludeSnapshots,
+                    AccessCondition.GenerateEmptyCondition(),
                     new BlobRequestOptions(), new OperationContext());
             }
         }
